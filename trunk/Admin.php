@@ -4,6 +4,7 @@
 	{
 		header("Location: LoginAdmin.php");
 	}
+	require "partage.php";
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -41,7 +42,7 @@
 	{
 		try{
 			$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-			$bdd = new PDO('mysql:host=localhost;dbname=LASER', 'root', 'root', $pdo_options);
+			$bdd = new PDO($pdo_path, $user, $pwd, $pdo_options);
 				$sql = 'DELETE FROM Regate WHERE ID_regate= :IDR';
 				$req = $bdd->prepare($sql);
 				$req->execute(array(
@@ -57,7 +58,8 @@
 	{
 		try{
 			$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-			$bdd = new PDO('mysql:host=localhost;dbname=LASER', 'root', 'root', $pdo_options);
+			//$bdd = new PDO('mysql:host=localhost;dbname=LASER', 'root', 'root', $pdo_options);
+			$bdd = new PDO($pdo_path, $user, $pwd, $pdo_options);
 			$date=$_POST['anne_destru']."-".$_POST['mois_destru']."-".$_POST['jour_destru'];
 			$sql = 'INSERT INTO Regate (org_login, org_passe,destruction,ID_administrateur) VALUES(:org_login,:org_passe,:destruction,:ID_administrateur)';
 			$req = $bdd->prepare($sql);
@@ -75,7 +77,8 @@
 	try{
 		// On se connecte à MySQL
     	$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-		$bdd = new PDO('mysql:host=localhost;dbname=LASER', 'root', 'root', $pdo_options);
+		//$bdd = new PDO('mysql:host=localhost;dbname=LASER', 'root', 'root', $pdo_options);
+		$bdd = new PDO($pdo_path, $user, $pwd, $pdo_options);
 		$req= $bdd->query('SELECT * FROM Regate');
 		echo '<table>';
 	    echo

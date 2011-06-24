@@ -1,8 +1,7 @@
-# script crŽŽ le : Thu May 26 10:19:33 CEST 2011 -   syntaxe MySQL ;
-
+# script crï¿½ï¿½ le : Thu May 26 10:19:33 CEST 2011 -   syntaxe MySQL ;
 # use  VOTRE_BASE_DE_DONNEE ;
 
-DROP TABLE IF EXISTS Regate ;
+DROP TABLE IF EXISTS Regate;
 CREATE TABLE Regate (ID_regate int AUTO_INCREMENT NOT NULL,
 org_login VARCHAR(10),
 org_passe VARCHAR(10),

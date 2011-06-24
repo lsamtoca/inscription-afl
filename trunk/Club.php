@@ -1,9 +1,12 @@
 <?php
-		session_start();
+	session_start();
 	if(isset($_SESSION["ID_regate"]))
 	{
 		header("Location: Regate.php");
 	}
+	require "partage.php";
+	
+
 	if(isset($_POST["submit"]))
 	{
 		/* Un des champs est manquant */
@@ -19,7 +22,8 @@
 			{
 
 				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host=localhost;dbname=LASER', 'root', 'root', $pdo_options);
+				//$bdd = new PDO('mysql:host=localhost;dbname=LASER', 'root', 'root', $pdo_options);
+				$bdd = new PDO($pdo_path, $user, $pwd, $pdo_options);
 				$login=$bdd->quote(htmlentities($_POST["login"]));
 				$pass=$bdd->quote(htmlentities($_POST["pass"]));
 				
