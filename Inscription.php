@@ -2,6 +2,38 @@
 
 require "partage.php";
   
+    function do_mail($to,$message){
+
+	$ME = "lsantoca@cmi.univ-mrs.fr";
+	$CC = "lsantoca@cmi.univ-mrs.fr,don.dpk@gmail.com";
+	$headers  = "From: $ME\r\n" ;
+    $headers .= "Reply-To: $ME\r\n";
+	$headers .= "CC: $CC\r\n" ;
+    $headers .= 'MIME-Version: 1.0' . "\r\n";
+	$headers .= 'Content-Type: text/plain; charset="UTF-8"' . "\r\n";
+	$headers .= 'X-Mailer: PHP/' . phpversion();	
+	$subject = "Inscription à la régate, confirmation";
+	
+	//Comment the following line wh  en not testing
+	$to=$ME;
+	
+
+/*    $headers = 'From: benchmark4fvca <henry@cmi.univ-mrs.fr>' . "\r\n" .
+            'Reply-To: benchmark4fvca <henry@cmi.univ-mrs.fr>' . "\r\n";
+    $to = $submitter['mail'];
+    $headers .= 'Cc: ' . $cc . "\r\n";
+    $headers .= 'Bcc: benchmark4fvca <henry@cmi.univ-mrs.fr>' . "\r\n";
+    $headers .= 'MIME-Version: 1.0' . "\r\n";
+    $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+    //$headers .= 'Reply-To: benchmark4fvca <toto@example.com>' . "\r\n";
+    $headers .= 'X-Mailer: PHP/' . phpversion();
+// envoi*/
+    
+    return (mail($to, $subject, $message, $headers) == FALSE);
+
+
+  }
+
 try
 {
 	// On se connecte à MySQL
@@ -30,6 +62,15 @@ try
 	));
 
     xhtml_pre("Pre-inscription faite");
+    
+    $url_conformation="http://???";
+    $message="Bonjour ".$_POST['Prenom'].",\n";
+    $message.="veuillez confirmer votre inscription à la regate en cliquant le lien suivant:\n";
+    $message.=$url_conformation."\n\n";
+    $message.="Merci,\n\t l'AFL (ou qui de droit)";
+    
+    do_mail($_POST['mail'],$message);
+    
 	echo $confirmation = $_POST['Prenom'].' '.$_POST['Nom']." vous allez recevoir un couriel sur <br />".$_POST['mail']."<br />Ce message contient un lien qui vous permetra de confirmer votre préinscription.<br />Vous avez 30min pour valider votre preinscription.";
 
     xhtml_post();

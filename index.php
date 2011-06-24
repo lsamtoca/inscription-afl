@@ -14,13 +14,13 @@ html_pre("Inscription aux regates AFL : page de test");
 <h2>Rôle : administrateur AFL (Martine, Pierre ?)</h2>
 
 <ul>
-   <li> <A href="Admin.php">gérer les clubs (et/où les évenements ?)</A> </li>
+   <li> <A href="Admin.php">gérer  les évenements et les clubs</A> </li>
 </ul>
 
 <h2>Rôle : club (organisateur d'une régate)</h2>
 
 <ul>
-   <li> <A href="Regate.php">gérer une régate</A> </li>
+   <li> <A href="Regate.php">gérer sa régate</A> </li>
 </ul>
 
 <h2>Rôle : coureur</h2>
