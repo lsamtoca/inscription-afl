@@ -1,6 +1,7 @@
 <?php
   require "partage.php";
   xhtml_pre("Préinscription");
+  
 ?>
 
 <div ><a><?php
