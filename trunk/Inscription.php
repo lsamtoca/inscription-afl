@@ -29,9 +29,10 @@ try
 		'ID_regate' => $_POST['IDR']
 	));
 
+    xhtml_pre("Pre-inscription faite");
 	echo $confirmation = $_POST['Prenom'].' '.$_POST['Nom']." vous allez recevoir un couriel sur <br />".$_POST['mail']."<br />Ce message contient un lien qui vous permetra de confirmer votre préinscription.<br />Vous avez 30min pour valider votre preinscription.";
 
-
+    xhtml_post();
 }
 catch(Exception $e)
 {

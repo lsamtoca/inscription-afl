@@ -2,7 +2,7 @@
 	session_start();
 	if(!isset($_SESSION["ID_regate"]))
 	{
-		header("Location: Club.php");
+		header("Location: LoginClub.php");
 	}
 
    require "partage.php";
@@ -30,7 +30,7 @@ try
     $donnees = $req->fetch();
     
     $DESC_REGATE= $donnees['description'];
-    $URL="http://localhost:8888/AFL/Formulaire.php?ID=".$_SESSION["ID_regate"];
+    $URL=format_url_regate($_SESSION["ID_regate"]);
     $req->closeCursor();
 	
 	if(isset($_POST['description']))
@@ -64,8 +64,10 @@ catch(Exception $e)
 <h2>Description de la régate</h2>
 <form action="" method="post">
 <textarea id="description" name="description" cols="50" rows="10"><?php echo $DESC_REGATE; ?></textarea>
-<input type="hidden" name="login" id="login" value=<?php echo '"'.$_POST['login'].'"' ?> >
-<input type="hidden" name="pass" id="pass" value=<?php echo '"'.$_POST['pass'].'"' ?> >
+
+<!--Why do we need the following lines ?-->
+<!--<input type="hidden" name="login" id="login" value=<?php echo '"'.$_POST['login'].'"' ?> >
+<input type="hidden" name="pass" id="pass" value=<?php echo '"'.$_POST['pass'].'"' ?> >-->
 <input type="submit" id="Modifier" value="Modifier" />
     </form>
 
