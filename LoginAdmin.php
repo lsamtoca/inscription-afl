@@ -1,5 +1,7 @@
 <?php
-		session_start();
+	session_start();
+	require "partage.php";
+	
 	if(isset($_SESSION["ID_administrateur"]))
 	{
 		header("Location: Admin.php");
@@ -19,7 +21,8 @@
 			{
 
 				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				$bdd = new PDO('mysql:host=localhost;dbname=LASER', 'root', 'root', $pdo_options);
+				//
+				$bdd = new PDO($pdo_path, $user, $pwd, $pdo_options);
 				$login=$bdd->quote(htmlentities($_POST["login"]));
 				$pass=$bdd->quote(htmlentities($_POST["pass"]));
 				

@@ -1,18 +1,15 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Préinscription</title>
-</head>
+<?php
+  require "partage.php";
+  xhtml_pre("Préinscription");
+?>
 
-<body>
 <div ><a><?php
 try
 {
 	// On se connecte à MySQL
     $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-	$bdd = new PDO('mysql:host=localhost;dbname=LASER', 'root', 'root', $pdo_options);
-
+	//$bdd = new PDO('mysql:host=localhost;dbname=LASER', 'root', 'root', $pdo_options);
+    $bdd = new PDO($pdo_path, $user, $pwd, $pdo_options);
     
     $req = $bdd->prepare('SELECT description FROM Regate WHERE ID_regate = ?');
 	$req->execute(array($_GET['ID']));
@@ -127,5 +124,8 @@ catch(Exception $e)
    	  document.getElementById('Cvoile').value='';
    	  document.getElementById('soumission').type='submit';  } 
 </script>
-</body>
-</html>
+
+
+<?php
+xhtml_post();
+?>

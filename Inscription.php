@@ -1,9 +1,13 @@
 <?php
+
+require "partage.php";
+  
 try
 {
 	// On se connecte à MySQL
     $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-	$bdd = new PDO('mysql:host=localhost;dbname=LASER', 'root', 'root', $pdo_options);
+	//$bdd = new PDO('mysql:host=localhost;dbname=LASER', 'root', 'root', $pdo_options);
+	$bdd = new PDO($pdo_path, $user, $pwd, $pdo_options);
 	
 	$date=$_POST['anne_naissance']."-".$_POST['mois_naissance']."-".$_POST['jour_naissance'];
 
