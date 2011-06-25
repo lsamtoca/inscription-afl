@@ -1,5 +1,5 @@
 <?php
-  require "paratge.php";
+  require "partage.php";
   xhtml_pre("Confirmation");
 ?>
 
@@ -7,7 +7,6 @@
 <div ><a>
 
 <?php
-
 
 try
 {

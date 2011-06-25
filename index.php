@@ -3,7 +3,7 @@ require "partage.php";
 html_pre("Inscription aux regates AFL : page de test");
 ?>
 
-<h2>Role : administrateur du programme (Luigi, David ?)</h2>
+<h2>Rôle : administrateur du programme (Luigi, David ?)</h2>
 
 <ul>
    <li> <A href="admin/init.php">initialiser la base des données</A> </li>
