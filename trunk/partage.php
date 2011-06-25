@@ -9,10 +9,13 @@ require "/home/lsantoca/public_html/basedesnoms/.AFLdb.php";
 $path_to_site_inscription="www.cmi.univ-mrs.fr/~lsantoca/inscription_afl/";
 
 function format_url_regate($id){
-
   global $path_to_site_inscription;
   return sprintf("http://%sFormulaire.php?ID=%d",$path_to_site_inscription,$id); 
+}
 
+function format_confirmation_regate($id_coureur){
+  global $path_to_site_inscription;
+  return sprintf("http://%sConfirmation.php?ID=%d",$path_to_site_inscription,$id_coureur); 
 }
 
 function xhtml_pre($title){//Afficher le prefixe xhtml
