@@ -7,6 +7,7 @@ ini_set('display_errors', '1');
 // ainsi que la fonction génerique connect()
 require "/home/lsantoca/public_html/basedesnoms/.AFLdb.php";
 $path_to_site_inscription="www.cmi.univ-mrs.fr/~lsantoca/inscription_afl/";
+$racine="/home/lsantoca/public_html/inscription_afl/";
 
 function format_url_regate($id){
   global $path_to_site_inscription;
