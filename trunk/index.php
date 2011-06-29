@@ -30,8 +30,8 @@ html_pre("Inscription aux regates AFL : page de test");
       Cette liste n'est pas nécessairement accessible sur le site AFL, mais ici sert pour tester.
     </li>
 <!--   <li> <A href="Formulaire.php">se pré-inscrire (à une régate?)</A> </li>-->
-   <li> <A href="Confirmation.php">se confirmer (à une régate?)</A> </li>
-   <li> <A href="Annullation.php">annuler sa participation (à une régate?)</A> </li>
+<!--   <li> <A href="Confirmation.php">se confirmer (à une régate?)</A> </li>-->
+<!--   <li> <A href="Annullation.php">annuler sa participation (à une régate?)</A> </li>-->
  </ul>
 
 <?php
