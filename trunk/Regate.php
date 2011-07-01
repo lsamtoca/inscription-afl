@@ -130,18 +130,20 @@ try
         	$statut='Coureur etrangé';
         }
         echo
-        	'<tr><th scope="col">'.$donnees['prenom'] .
-        	'</th><th scope="col">'.$donnees['nom'].
-        	'</th><th scope="col">'.$sexe.
-        	'</th><th scope="col">'.$donnees['prefix_voile'].' '.$donnees['num_voile'].
-        	'</th><th scope="col">'.$serie.
-        	'</th><th scope="col">'.$statut.
-        	'</th><th scope="col">'.$donnees['num_lic'].
-        	'</th><th scope="col">'.$adherant.
-        	'</th><th scope="col">'.$conf.
-        	'</th><th scope="col">'.$donnees['mail'].
-        	'</th><th scope="col">'.'<a href="Confirmation.php?ID='.$donnees['ID_inscrit'].'">Confirmer</a>'.
-        	'</th><th scope="col">'.'<a href="Annulation.php?ID='.$donnees['ID_inscrit'].'">Annuler</a>'.'</tr>';
+        	'<tr>'.
+        	'<td scope="col">'.$donnees['prenom'] .'</td>'.
+        	'<td scope="col">'.$donnees['nom'].'</td>'.
+        	'<td scope="col">'.$sexe.'</td>'.
+        	'<td scope="col">'.$donnees['prefix_voile'].' '.$donnees['num_voile'].'</td>'.
+        	'<td scope="col">'.$serie.'</td>'.
+        	'<td scope="col">'.$statut.'</td>'.
+        	'<td scope="col">'.$donnees['num_lic'].'</td>'.
+        	'<td scope="col">'.$adherant.'</td>'.
+        	'<td scope="col">'.$conf.'</td>'.
+        	'<td scope="col">'.$donnees['mail'].'</td>'.
+        	'<td scope="col">'.'<a href="Confirmation.php?ID='.$donnees['ID_inscrit'].'">Confirmer</a>'.'</td>'.
+        	'<td scope="col">'.'<a href="Annulation.php?ID='.$donnees['ID_inscrit'].'">Annuler</a>'.'</td>'.
+        	'</tr>';
     }
     echo '</table>';
    	$req->closeCursor();
@@ -154,6 +156,9 @@ catch(Exception $e)
 }
 
 ?>
+
+<br>
+Télécharger la <a href="Liste_inscrits_xls.php">liste des inscrits au format xls</a>.
 </div>
 
 <?php

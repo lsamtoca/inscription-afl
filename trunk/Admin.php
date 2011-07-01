@@ -5,21 +5,17 @@
 		header("Location: LoginAdmin.php");
 	}
 	require "partage.php";
+	xhtml_pre("Gestion des Événements (et des Clubs)");
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Gestion des Club</title>
 
 </head>
 <body>
 <div >
-       <h1>Gestion des Club</h1>
+       <h1>Gestion des Événements (et des Clubs)</h1>
        <p><a href="deconnexionAdmin.php">Deconnexion</a></p>
        		<form action="" method="post">
 			<fieldset>
-				<legend>Nouvel Evenement</legend>
+				<legend>Nouvel Événement</legend>
 				<label for="org_login">Login organisateur :</label>
 				<input name="org_login" type="text" id="org_login"/>
 				<br />
@@ -80,6 +76,7 @@
 		//$bdd = new PDO('mysql:host=localhost;dbname=LASER', 'root', 'root', $pdo_options);
 		$bdd = new PDO($pdo_path, $user, $pwd, $pdo_options);
 		$req= $bdd->query('SELECT * FROM Regate');
+		echo '<h2>Liste des évenements ouverts</h2>';
 		echo '<table>';
 	    echo
         	'<tr><th scope="col">'.'Login organisateur'.
@@ -87,10 +84,12 @@
         	'</th><th scope="col">'.'Date destruction';
     	while ($donnees = $req->fetch()){
 	        echo
-        	'<tr><th scope="col">'.$donnees['org_login'] .
-        	'</th><th scope="col">'.$donnees['org_passe'].
-        	'</th><th scope="col">'.$donnees['destruction'].
-        	'</th><th scope="col"><form action="" method="post"><input type="submit" name="submit" id="submit" value="X"/><input name="IDR" type="hidden" id="IDR" value='.$donnees['ID_regate'].'/></form></tr>';
+        	'<tr>'.
+        	'<td scope="col">'.$donnees['org_login'] . '</td>'.
+        	'<td scope="col">'.$donnees['org_passe'].'</td>'.
+        	'<td scope="col">'.$donnees['destruction'].'</td>'.
+        	'<td scope="col"><form action="" method="post"><input type="submit" name="submit" id="submit" value="X"/><input name="IDR" type="hidden" id="IDR" value='.$donnees['ID_regate'].'/></form>'.'</td>'.
+        	'</tr>';
     		}
     	echo '</table>';
    	   	$req->closeCursor();
