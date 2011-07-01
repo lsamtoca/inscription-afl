@@ -60,7 +60,7 @@ catch(Exception $e)
 	<label for="radio2">Pas encore licencié</label>
 
 	<input type="radio" name="statut" id="radio3" value="3"/>
-	<label for="radio3">Coureur etrangé</label>
+	<label for="radio3">Coureur étranger</label>
     <br /> 
 	<label for="AFL">Adhérant à l'AFL :</label>
    	<input type="radio" name="adherant" id="radio9" value="1"/>
