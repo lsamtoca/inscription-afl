@@ -2,12 +2,22 @@
 
 error_reporting(-1);
 ini_set('display_errors', '1');
+
 // Le fichier suivant, à placer dans un endroit protegé, definit les variables
 // $host, $user, $pwd, $db, et $pdo_path="mysql:host=$host;dbname=$db"
 // ainsi que la fonction génerique connect()
-require "/home/lsantoca/public_html/basedesnoms/.AFLdb.php";
-$path_to_site_inscription="www.cmi.univ-mrs.fr/~lsantoca/inscription_afl/";
-$racine="/home/lsantoca/public_html/inscription_afl/";
+
+// require "/home/lsantoca/public_html/basedesnoms/.AFLdb.php";
+// $path_to_site_inscription="www.cmi.univ-mrs.fr/~lsantoca/inscription_afl/";
+// $racine="/home/lsantoca/public_html/inscription_afl/";
+
+$unix_base="/homez.462/xnrgates/www/";
+require "$unix_base"."basedesnoms/.AFLdb.php";
+
+$www_site="xn--rgateslaser-bbb.info/";
+$racine="inscriptions_afl/";
+$path_to_site_inscription="$www_site"."$racine";
+
 
 function format_url_regate($id){
   global $path_to_site_inscription;

@@ -15,7 +15,7 @@ require "partage.php";
 	$subject = "Inscription à la régate, confirmation";
 	
 	//Comment the following line wh  en not testing
-	$to=$ME;
+	//$to=$ME;
 	
 
 /*    $headers = 'From: benchmark4fvca <henry@cmi.univ-mrs.fr>' . "\r\n" .
@@ -30,7 +30,6 @@ require "partage.php";
 // envoi*/
     
     return (mail($to, $subject, $message, $headers) == FALSE);
-
 
   }
 

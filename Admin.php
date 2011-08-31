@@ -8,11 +8,9 @@
 	xhtml_pre("Gestion des Événements (et des Clubs)");
 ?>
 
-</head>
-<body>
 <div >
        <h1>Gestion des Événements (et des Clubs)</h1>
-       <p><a href="deconnexionAdmin.php">Deconnexion</a></p>
+       <p><a href="deconnexion.php">Deconnexion</a></p>
        		<form action="" method="post">
 			<fieldset>
 				<legend>Nouvel Événement</legend>
@@ -101,5 +99,5 @@
 	}
 ?>
 </div>
-</body>
-</html>
+
+<?php xhtml_post(); ?>
