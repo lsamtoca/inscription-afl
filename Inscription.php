@@ -4,7 +4,8 @@ require "partage.php";
   
     function do_mail($to,$message){
 
-	$ME = "lsantoca@cmi.univ-mrs.fr";
+//	$ME = "lsantoca@cmi.univ-mrs.fr";
+	$ME = "postmaster@régateslaser.info";
 	$CC = "lsantoca@cmi.univ-mrs.fr,don.dpk@gmail.com,rochepierre06@hotmail.com,martine.antoine@gmail.com";
 	$headers  = "From: $ME\r\n" ;
     $headers .= "Reply-To: $ME\r\n";
@@ -42,13 +43,18 @@ try
 	
 	$date=$_POST['anne_naissance']."-".$_POST['mois_naissance']."-".$_POST['jour_naissance'];
 
-	$sql = 'INSERT INTO Inscrit (nom, prenom,naissance,num_lic,prefix_voile,num_voile,serie,adherant,sexe,conf,mail,statut,ID_regate)VALUES(:nom,:prenom,:naissance,:num_lic,:prefix_voile,:num_voile,:serie,:adherant,:sexe,:conf,:mail,:statut,:ID_regate)';
+	$sql = 'INSERT INTO Inscrit (nom, prenom,naissance,num_lic,num_club,nom_club,
+	prefix_voile,num_voile,serie,adherant,sexe,conf,mail,statut,ID_regate)
+	VALUES(:nom,:prenom,:naissance,:num_lic,:num_club,:nom_club,
+	:prefix_voile,:num_voile,:serie,:adherant,:sexe,:conf,:mail,:statut,:ID_regate)';
 	$req = $bdd->prepare($sql);
 	$req->execute(array(
 		'nom' => $_POST['Nom'],
 		'prenom' => $_POST['Prenom'],
 		'naissance' => $date,
 		'num_lic' => $_POST['lic'],
+		'num_club' => $_POST['num_club'],
+		'nom_club' => $_POST['nom_club'],
 		'prefix_voile' => $_POST['Cvoile'],
 		'num_voile' => $_POST['Nvoile'],
 		'serie' => $_POST['serie'],
@@ -60,12 +66,12 @@ try
 		'ID_regate' => $_POST['IDR']
 	));
 
-    xhtml_pre("Pre-inscription faite");
+    xhtml_pre("Vous êtes préinscrit");
 
     //Nous avons bésoin de connaître l'ID du coureur
     $sql=sprintf("SELECT `ID_inscrit` FROM `Inscrit` WHERE `nom`='%s' and `prenom`='%s' and `ID_regate`='%s' order by `ID_inscrit` DESC",
     $_POST['Nom'],$_POST['Prenom'],$_POST['IDR']);
-    echo $sql . "<br>";
+    //echo $sql . "<br>";
     
     $req = $bdd->query($sql);
     
@@ -79,12 +85,19 @@ try
     $message="Bonjour ".$_POST['Prenom'].",\n\n";
     $message.="veuillez confirmer votre inscription à la regate en cliquant le lien suivant:\n";
     $message.=$url_conformation."\n\n";
-    $message.="Merci,\n\t l'AFL (ou qui de droit)";
+    $message.="Bon vent,\n\t l'AFL";
     
     do_mail($_POST['mail'],$message);
     
-	echo $confirmation = $_POST['Prenom'].' '.$_POST['Nom']." vous allez recevoir un couriel sur <br />".$_POST['mail']."<br />Ce message contient un lien qui vous permetra de confirmer votre préinscription.<br />Vous avez 30min pour valider votre preinscription.";
+	echo $_POST['Prenom'].' '.$_POST['Nom']." vous allez recevoir un courriel à l'adresse <br />";
+	echo "\t".$_POST['mail']."<br />";
+	echo "Ce message contient un lien qui vous permetra de confirmer votre préinscription.";
+	echo "<p>Bon vent,<br />\t l'AFL</p>";
+	// Decommentez la ligne suivante  au cas où cela soit implementé
+	//echo "<br />Vous avez 30min pour valider votre preinscription.";
 
+
+    echo "Retour à la <a href=\"http://$path_to_site_inscription\">page d'accueil</a>.";
    }
 
     xhtml_post();

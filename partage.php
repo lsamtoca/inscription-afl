@@ -14,7 +14,7 @@ ini_set('display_errors', '1');
 $unix_base="/homez.462/xnrgates/www/";
 require "$unix_base"."basedesnoms/.AFLdb.php";
 
-$www_site="xn--rgateslaser-bbb.info/";
+$www_site="régateslaser.info/";
 $racine="inscriptions_afl/";
 $path_to_site_inscription="$www_site"."$racine";
 
@@ -40,6 +40,7 @@ echo "
 </head>
 
 <body>
+<h1>$title</h1>
 ";
 }
 
@@ -69,7 +70,7 @@ $title
 
 echo "</head>
 <body>
-<h2>$title</h2>
+<h1>$title</h1>
 "
 ;
 

@@ -21,12 +21,14 @@ try
     
     if(isset($donnees['prenom']))
     {
-	    echo $donnees['prenom'].' '.$donnees['nom'];
+
     	$sql = 'UPDATE Inscrit SET conf="1" WHERE ID_inscrit =?';
    		$req->closeCursor();
 		$req = $bdd->prepare($sql);
 		$req->execute(array($_GET['ID']));
-		echo ' Votre inscription est confirmée';
+		
+	    echo "Bonjour ".$donnees['prenom'].' '.$donnees['nom'].",<br />";
+		echo 'votre inscription est maintenant confirmée !!!';
 
     }
     else

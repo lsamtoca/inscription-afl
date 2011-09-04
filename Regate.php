@@ -6,7 +6,7 @@
 	}
 
    require "partage.php";
-   xhtml_pre("Géstion de la régate");
+   xhtml_pre("Géstion de votre régate");
 ?>
 
 <div >
@@ -14,64 +14,186 @@
        <p><a href="deconnexion.php">Deconnexion</a></p>
 
 </div>
+
 <?php
 
-try
-{
+try{
+	// On se connecte à MySQL
+    $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+	//$bdd = new PDO('mysql:host=localhost;dbname=LASER', 'root', 'root', $pdo_options);
+	$bdd = new PDO($pdo_path, $user, $pwd, $pdo_options);
+		
+	$fields=array('titre','description','cv_organisateur','lieu','date_debut','date_fin','droits');
+	foreach($fields as $field)
+	{
+	   if(isset($_POST[$field]))
+       {
+//	       echo "N. $field : " . $_POST[$field];
+	    
+	       $sql = "UPDATE Regate SET `$field`=? WHERE ID_regate =?";
+		   $req = $bdd->prepare($sql);
+    	   $req->execute(array($_POST[$field],$_SESSION["ID_regate"]));
+    	   $req->closeCursor();
+       }
+	}
+	
+}
+catch(Exception $e){
+	// En cas d'erreur, on affiche un message et on arrête tout
+    die('Erreur : '.$e->getMessage());
+}
 
 
+try{
 	// On se connecte à MySQL
     $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 	//$bdd = new PDO('mysql:host=localhost;dbname=LASER', 'root', 'root', $pdo_options);
 	$bdd = new PDO($pdo_path, $user, $pwd, $pdo_options);
 	
-	$req = $bdd->prepare('SELECT ID_regate, description FROM Regate WHERE ID_regate=?');
+	$req = $bdd->prepare('SELECT `ID_regate`, `titre`,`description`, `cv_organisateur`,`lieu`,`date_debut`,`date_fin`,`droits` FROM Regate WHERE ID_regate=?');
 	$req->execute(array($_SESSION["ID_regate"]));
     $donnees = $req->fetch();
+    $req->closeCursor();	
     
+    $TITRE_REGATE= $donnees['titre'];
     $DESC_REGATE= $donnees['description'];
+    $CV_ORGANISATEUR=$donnees['cv_organisateur'];
+    $LIEU=$donnees['lieu'];
+    $DATE_DEBUT_REGATE=$donnees['date_debut'];
+    $DATE_FIN_REGATE=$donnees['date_fin'];
+    $DROITS=$donnees['droits'];
+    
     $URL=format_url_regate($_SESSION["ID_regate"]);
-    $req->closeCursor();
-	
-	if(isset($_POST['description']))
-    {
-	    $DESC_REGATE=$_POST['description'];
-	    echo 'Nouvelle description  :';
-	    echo $_POST['description'];
-	    $sql = 'UPDATE Regate SET description=? WHERE ID_regate =?';
-		$req = $bdd->prepare($sql);
-
-    	$req->execute(array($_POST['description'],$_SESSION["ID_regate"]));
-
-		$req->closeCursor();
-
-
-    }
-
 }
-catch(Exception $e)
-{
+catch(Exception $e){
 	// En cas d'erreur, on affiche un message et on arrête tout
     die('Erreur : '.$e->getMessage());
 }
 
 ?>
+
+<div >
+
+<h2>Renseignements sur la régate</h2>
+
+<form action="" method="post">
+<fieldset>
+<label>
+Titre :</label>
+<textarea id="titre" name="titre" cols="50" rows="1"><?php echo $TITRE_REGATE; ?></textarea>
+<br />
+<label>
+Description :
+<textarea id="description" name="description" cols="50" rows="10"><?php echo $DESC_REGATE; ?></textarea>
+</label>
+
+<hr />
+
+<label>
+Lieu  :
+</label>
+<textarea id="lieu" name="lieu" cols="50" rows="2"><?php echo $LIEU; ?></textarea>
+
+<label>
+Cercle organisateur :
+</label>
+<textarea id="cv_organisateur" name="cv_organisateur" cols="50" rows="1"><?php echo $CV_ORGANISATEUR; ?></textarea>
+
+<br />
+<label>
+Date debut :
+</label>
+<!--<textarea id="date_debut" name="date_debut" cols="50" rows="1"><?php echo $DATE_DEBUT_REGATE; ?></textarea>-->
+<input type="date" name="date_debut" value=<?php echo "$DATE_DEBUT_REGATE";?> />
+
+<label>
+Date fin :
+</label>
+<!--<textarea id="date_fin" name="date_fin" cols="50" rows="1"><?php echo $DATE_FIN_REGATE; ?></textarea>-->
+<input type="date" name="date_fin" value=<?php echo "$DATE_FIN_REGATE";?> />
+
+<hr />
+
+<label>
+Droits d'inscription :
+</label>
+<input type="number" min="0" max="100" name="droits" value=<?php echo "$DROITS";?> />
+
+
+
+<input type="submit" id="Modifier" value="Modifier" />
+
+</fieldset>
+</form>
+
+<!--
+
+<form action="" method="post">
+<table><TR><TD>
+Titre :</TD>
+<TD>
+<textarea id="titre" name="titre" cols="50" rows="1"><?php echo $TITRE_REGATE; ?></textarea>
+</TD></TR>
+
+<TR><TD>
+Description :
+</TD><TD>
+<form action="" method="post">
+<textarea id="description" name="description" cols="50" rows="10"><?php echo $DESC_REGATE; ?></textarea>
+</TD></TR>
+
+<TR><TD>
+Cercle organisateur :
+</TD><td>
+<textarea id="cv_organisateur" name="cv_organisateur" cols="50" rows="1"><?php echo $CV_ORGANISATEUR; ?></textarea>
+</td></TR>
+
+<TR><TD>
+Lieu  :
+</TD><td>
+<textarea id="lieu" name="lieu" cols="50" rows="2"><?php echo $LIEU; ?></textarea>
+</td></TR>
+
+<tr><TD>
+Date debut :
+</TD><td>
+<!--<textarea id="date_debut" name="date_debut" cols="50" rows="1"><?php echo $DATE_DEBUT_REGATE; ?></textarea>-->
+<input type="date" name="date_debut" value=<?php echo "$DATE_DEBUT_REGATE";?> />
+</td></tr>
+
+<tr><TD>
+Date fin :
+</TD><td>
+<!--<textarea id="date_fin" name="date_fin" cols="50" rows="1"><?php echo $DATE_FIN_REGATE; ?></textarea>-->
+<input type="date" name="date_fin" value=<?php echo "$DATE_FIN_REGATE";?> />
+</td></tr>
+
+<tr><TD>
+Droits d'inscription
+</TD><td>
+<input type="number" min="0" max="100" name="droits" value=<?php echo "$DROITS";?> />
+</td></tr>
+
+
+<tr><TD></TD><td>
+
+<input type="submit" id="Modifier" value="Modifier" />
+</td></tr>
+</table>
+
+</form>
+
+-->
+
+</div>
+
+
 <div >
 <h2>URL d'inscription</h2>
 <a href="<?php echo $URL; ?>"><?php echo $URL; ?></a>
 </div>
-<div >
-<h2>Description de la régate</h2>
-<form action="" method="post">
-<textarea id="description" name="description" cols="50" rows="10"><?php echo $DESC_REGATE; ?></textarea>
 
-<!--Why do we need the following lines ?-->
-<!--<input type="hidden" name="login" id="login" value=<?php echo '"'.$_POST['login'].'"' ?> >
-<input type="hidden" name="pass" id="pass" value=<?php echo '"'.$_POST['pass'].'"' ?> >-->
-<input type="submit" id="Modifier" value="Modifier" />
-    </form>
-
-</div>
+<!-- Inscrits -->
 <div >
 <h2>Liste des inscrits</h2>
 <?php
