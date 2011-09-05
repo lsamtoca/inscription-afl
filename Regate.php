@@ -10,7 +10,6 @@
 ?>
 
 <div >
-       <h1>Gestion de la régate</h1>
        <p><a href="deconnexion.php">Deconnexion</a></p>
 
 </div>
@@ -99,7 +98,8 @@ Cercle organisateur :
 </label>
 <textarea id="cv_organisateur" name="cv_organisateur" cols="50" rows="1"><?php echo $CV_ORGANISATEUR; ?></textarea>
 
-<br />
+<hr />
+
 <label>
 Date debut :
 </label>
@@ -117,73 +117,16 @@ Date fin :
 <label>
 Droits d'inscription :
 </label>
-<input type="number" min="0" max="100" name="droits" value=<?php echo "$DROITS";?> />
+<input type="number" min="0" max="100" name="droits" value=<?php echo "$DROITS";?> /> &#8364;
 
 
+<br>
 
 <input type="submit" id="Modifier" value="Modifier" />
 
 </fieldset>
 </form>
 
-<!--
-
-<form action="" method="post">
-<table><TR><TD>
-Titre :</TD>
-<TD>
-<textarea id="titre" name="titre" cols="50" rows="1"><?php echo $TITRE_REGATE; ?></textarea>
-</TD></TR>
-
-<TR><TD>
-Description :
-</TD><TD>
-<form action="" method="post">
-<textarea id="description" name="description" cols="50" rows="10"><?php echo $DESC_REGATE; ?></textarea>
-</TD></TR>
-
-<TR><TD>
-Cercle organisateur :
-</TD><td>
-<textarea id="cv_organisateur" name="cv_organisateur" cols="50" rows="1"><?php echo $CV_ORGANISATEUR; ?></textarea>
-</td></TR>
-
-<TR><TD>
-Lieu  :
-</TD><td>
-<textarea id="lieu" name="lieu" cols="50" rows="2"><?php echo $LIEU; ?></textarea>
-</td></TR>
-
-<tr><TD>
-Date debut :
-</TD><td>
-<!--<textarea id="date_debut" name="date_debut" cols="50" rows="1"><?php echo $DATE_DEBUT_REGATE; ?></textarea>-->
-<input type="date" name="date_debut" value=<?php echo "$DATE_DEBUT_REGATE";?> />
-</td></tr>
-
-<tr><TD>
-Date fin :
-</TD><td>
-<!--<textarea id="date_fin" name="date_fin" cols="50" rows="1"><?php echo $DATE_FIN_REGATE; ?></textarea>-->
-<input type="date" name="date_fin" value=<?php echo "$DATE_FIN_REGATE";?> />
-</td></tr>
-
-<tr><TD>
-Droits d'inscription
-</TD><td>
-<input type="number" min="0" max="100" name="droits" value=<?php echo "$DROITS";?> />
-</td></tr>
-
-
-<tr><TD></TD><td>
-
-<input type="submit" id="Modifier" value="Modifier" />
-</td></tr>
-</table>
-
-</form>
-
--->
 
 </div>
 

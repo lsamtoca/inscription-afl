@@ -1,10 +1,17 @@
 <?php
+
+  session_start();
+  if(!isset($_SESSION["ID_regate"]))
+  {
+		header("Location: LoginClub.php");
+  }
+
   require "partage.php";
-  xhtml_pre("Confirmation");
+  xhtml_pre("Annullation d'une inscription");
 ?>
 
 
-<div ><a>
+<div >
 
 <?php
 try
@@ -20,12 +27,14 @@ try
     
     if(isset($donnees['prenom']))
     {
-	    echo $donnees['prenom'].' '.$donnees['nom'];
+
     	$sql = 'DELETE FROM Inscrit WHERE ID_inscrit =?';
    		$req->closeCursor();
 		$req = $bdd->prepare($sql);
 		$req->execute(array($_GET['ID']));
-		echo ' Votre inscription est annulé';
+	    
+	    echo $donnees['prenom'].' '.$donnees['nom'];
+		echo ' : inscription annulé';
 
     }
     else
@@ -46,7 +55,13 @@ catch(Exception $e)
 }
 
 ?>
-</a></div>
+
+</div>
+
+<p></p>
+<div>
+Retour à la page de <a href="Regate.php">gestion de la régate</a>.
+</div>
 
 
 <?php

@@ -6,7 +6,7 @@ require "partage.php";
 
 //	$ME = "lsantoca@cmi.univ-mrs.fr";
 	$ME = "postmaster@régateslaser.info";
-	$CC = "lsantoca@cmi.univ-mrs.fr,don.dpk@gmail.com,rochepierre06@hotmail.com,martine.antoine@gmail.com";
+	$CC = "lsantoca@cmi.univ-mrs.fr";//.",don.dpk@gmail.com,rochepierre06@hotmail.com,martine.antoine@gmail.com";
 	$headers  = "From: $ME\r\n" ;
     $headers .= "Reply-To: $ME\r\n";
 	$headers .= "CC: $CC\r\n" ;
@@ -41,7 +41,7 @@ try
 	//$bdd = new PDO('mysql:host=localhost;dbname=LASER', 'root', 'root', $pdo_options);
 	$bdd = new PDO($pdo_path, $user, $pwd, $pdo_options);
 	
-	$date=$_POST['anne_naissance']."-".$_POST['mois_naissance']."-".$_POST['jour_naissance'];
+//	$date=$_POST['anne_naissance']."-".$_POST['mois_naissance']."-".$_POST['jour_naissance'];
 
 	$sql = 'INSERT INTO Inscrit (nom, prenom,naissance,num_lic,num_club,nom_club,
 	prefix_voile,num_voile,serie,adherant,sexe,conf,mail,statut,ID_regate)
@@ -51,7 +51,8 @@ try
 	$req->execute(array(
 		'nom' => $_POST['Nom'],
 		'prenom' => $_POST['Prenom'],
-		'naissance' => $date,
+//		'naissance' => $date,
+        'naissance' => $_POST['naissance'],
 		'num_lic' => $_POST['lic'],
 		'num_club' => $_POST['num_club'],
 		'nom_club' => $_POST['nom_club'],
