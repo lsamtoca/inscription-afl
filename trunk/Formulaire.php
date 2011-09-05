@@ -4,6 +4,20 @@
   
 ?>
 
+
+
+<script type="text/javascript" src="classes/calendarDateInput.js">
+
+/***********************************************
+* Jason's Date Input Calendar- By Jason Moon http://calendar.moonscript.com/dateinput.cfm
+* Script featured on and available at http://www.dynamicdrive.com
+* Keep this notice intact for use.
+***********************************************/
+
+</script>
+
+<script src="classes/javascript_form/gen_validatorv4.js" type="text/javascript"></script>
+
 <div >
 <?php
 try
@@ -45,7 +59,7 @@ catch(Exception $e)
 </div>
 
 <div>
-<form action="Inscription.php" method="post">
+<form id="mainform" action="Inscription.php" method="post">
 	<fieldset>
 	<legend>Préinscription</legend>
 	<input name="IDR" type="hidden" id="IDR" value=<?php echo '"'.$_GET['ID'].'"' ;?>/>
@@ -54,14 +68,20 @@ catch(Exception $e)
 	<label for="Nom">Nom :</label>
 	<input name="Nom" type="text" id="nom"/>
 	
-	<label for="Prenom">Prenom :</label>
+	<label for="Prenom">Prénom :</label>
 	<input name="Prenom" type="text" id="prenom"/>
     <br />
     
-    <label for="jour_naissance">Date de naissance :</label>
+  <!--  <label for="jour_naissance">Date de naissance :</label>
     <input name="jour_naissance" type="text" value="JJ" size="2" maxlength="2" />
     <input name="mois_naissance" type="text" value="MM" size="2" maxlength="2" />
-    <input name="anne_naissance" type="text" value="AAAA" size="4" maxlength="4" />
+    <input name="anne_naissance" type="text" value="AAAA" size="4" maxlength="4" />-->
+    
+    
+    <div class="tableplain">
+    <label for="naissance">Date de naissance :</label>
+    <script>DateInput('naissance', true, 'YYYY-MM-DD','2000-01-01')</script>
+    </div>
     <br />
     
     
@@ -90,7 +110,7 @@ catch(Exception $e)
     <input type="radio" name="statut" id="radio1" value="1"/>
 	<label for="radio1">Licencié FFV</label>
 
-	<input type="radio" name="statut" id="radio2" value="2" checked="true"/>
+	<input type="radio" name="statut" id="radio2" value="2" />
 	<label for="radio2">Pas encore licencié</label>
 
 	<input type="radio" name="statut" id="radio3" value="3"/>
@@ -101,24 +121,22 @@ catch(Exception $e)
    	<input type="radio" name="adherant" id="radio9" value="1"/>
 	<label for="radio9">Oui</label>
 
-	<input type="radio" name="adherant" id="radio10" value="0" checked="true"/>
+	<input type="radio" name="adherant" id="radio10" value="0" />
 	<label for="radio10">Non</label>
     <hr /> 
     
 <!-- Serie -->
     <input type="radio" name="serie" id="radio6" value="1"/>
 	<label for="radio6">Laser Standard</label>
-
 	<input type="radio" name="serie" id="radio7" value="2"/>
 	<label for="radio7">Laser Radial</label>
-
-	<input type="radio" name="serie" id="radio8" value="3" checked="true"/>
+	<input type="radio" name="serie" id="radio8" value="3" />
 	<label for="radio8">Laser 4.7</label>
     <br />
 
 	<label id="l_Cvoile" for="Cvoile"></label>
-	<input name="Cvoile" type="hidden" id="Cvoile" size="4" maxlenght="4"/>
-   	<input name="Nvoile" type="hidden" id="Nvoile" size="8" maxlenght="8"/>
+	<input name="Cvoile" type="hidden" id="Cvoile" size="3" maxlenght="3"/>
+   	<input name="Nvoile" type="hidden" id="Nvoile" size="6" maxlenght="6"/>
     <br />
     <label id="l_lic" for="lic"></label>
     <input name="lic" id="lic" type="hidden" size="8" maxlenght="8"/>
@@ -127,6 +145,29 @@ catch(Exception $e)
 </fieldset>
 
 </form>
+<script type="text/javascript">
+ var frmvalidator  = new Validator("mainform");
+ 
+
+ frmvalidator.addValidation("Nom","required","Champ Nom obligatoire");
+ frmvalidator.addValidation("Prenom","required","Champ Prénom obligatoire");
+ frmvalidator.addValidation("mail","required","Champ Courriel obligatoire"); 
+ frmvalidator.addValidation("Nvoile","required","Champ Numéro de Voile obligatoire"); 
+ frmvalidator.addValidation("naisance","required","Champ Date de naissance est obligatoire"); 
+     
+ frmvalidator.addValidation("serie","selone_radio","Choisssez : Standard, Radial, ou 4.7");
+ frmvalidator.addValidation("sexe","selone_radio","Etes vous homme ou femme ?");
+ frmvalidator.addValidation("statut","selone_radio","Licencié FFV ?");
+ frmvalidator.addValidation("adherant","selone_radio","Adhérant AFL ?");
+
+
+ frmvalidator.addValidation("mail","email","Le champ Courriel n'est pas un adresse email"); 
+ frmvalidator.addValidation("Nvoile","regexp=^[0-9]{1,6}$","Numéro de voile incorrecte"); 
+ frmvalidator.addValidation("Cvoile","regexp=^[A-Z]{3,3}$","Code pays sur la voile incorrecte");
+ frmvalidator.addValidation("lic","regexp=^[0-9]{7,7}[A-Z]$","Numéro de licence incorrecte");  
+</script>
+ 
+
 </div>
 
 <script type="text/javascript">
@@ -138,8 +179,8 @@ catch(Exception $e)
   cas_FFV.onclick = function()
   {
 	  document.getElementById('lic').type='text';
-	  document.getElementById('l_lic').innerHTML = '<label id="l_lic" for="lic">Vous devez présenter votre licence FFV visée par un médecin sportif ou présenter un cértificat médical de moins de trois mois<br />Numeros Licence :</label>';
-	  document.getElementById('l_Cvoile').innerHTML = '<label id="l_Cvoile" for="Cvoile">Numéros de voile :</label>';
+	  document.getElementById('l_lic').innerHTML = '<label id="l_lic" for="lic">Vous devez présenter votre licence FFV visée par un médecin sportif ou présenter un cértificat médical de moins de trois mois<br />Licence numéro :</label>';
+	  document.getElementById('l_Cvoile').innerHTML = '<label id="l_Cvoile" for="Cvoile">Numéro de voile :</label>';
 	  document.getElementById('Cvoile').type='text';
 	  document.getElementById('Nvoile').type='text';
   	  document.getElementById('Cvoile').value='FRA';
