@@ -24,3 +24,7 @@ td.mytable {
 /* width:50%;*/
  }
 
+.error_strings {
+  color:red;
+  background:yellow;
+}

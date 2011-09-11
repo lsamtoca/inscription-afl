@@ -4,7 +4,7 @@ session_start();
 require "partage.php";
 require "classes/PHPExcel.php";
 
-define("FILENAME",sprintf("%sinscrits.xlsx",$racine)); //constante: nom du fichier à générer
+//define("FILENAME",sprintf("%sinscrits.xlsx",$racine)); //constante: nom du fichier à générer
 
 function generate_excel(){
 
@@ -13,12 +13,12 @@ function generate_excel(){
 							 ->setLastModifiedBy("Luigi Santocanale")
 							 ->setTitle("Liste des inscrits à ma regate");
 
+    $condition=sprintf("WHERE  `ID_regate` = '%s'",$_SESSION['ID_regate']);
+    if(isset($_GET['confirme']) and $_GET['confirme']=='1')
+        $condition.=' AND `conf`=\'1\'';
+    $query="SELECT * FROM `Inscrit` " .$condition;
+    
     $conn=connect();
-
-//     $query=sprintf("SHOW COLUMNS FROM `Inscrit`");
-//     $res=mysql_query($query,$conn) or die('Problème lors de la réception des enregistrements '.$query);//Exécution de la requête
-
-    $query=sprintf("SELECT * FROM `Inscrit` WHERE  `ID_regate` = '%s'",$_SESSION['ID_regate']);
     $res=mysql_query($query,$conn) or die('Problème lors de la réception des enregistrements '.$query);//Exécution de la requête
 
 
