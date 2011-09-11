@@ -29,19 +29,27 @@ function format_confirmation_regate($id_coureur){
   return sprintf("http://%sConfirmation.php?ID=%d",$path_to_site_inscription,$id_coureur); 
 }
 
-function xhtml_pre($title){//Afficher le prefixe xhtml
+function xhtml_pre1($title){//Afficher le prefixe xhtml
 echo "
 <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
 <html xmlns=\"http://www.w3.org/1999/xhtml\">
 <head>
 <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />
 <link rel=\"STYLESHEET\" type=\"text/css\" href=\"afl.css\" >
-<title>$title</title>
-</head>
+<title>$title</title>";
+}
 
+function xhtml_pre2($title){//Afficher le prefixe xhtml
+echo "
+</head>
 <body>
 <h1>$title</h1>
 ";
+}
+
+function xhtml_pre($title){//Afficher le prefixe xhtml
+  xhtml_pre1($title);
+  xhtml_pre2($title);
 }
 
 function xhtml_post(){//Afficher le postfixe xhtml

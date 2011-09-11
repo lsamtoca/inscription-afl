@@ -9,9 +9,18 @@
    xhtml_pre("Géstion de votre régate");
 ?>
 
+<script type="text/javascript" src="classes/calendarDateInput.js">
+
+/***********************************************
+* Jason's Date Input Calendar- By Jason Moon http://calendar.moonscript.com/dateinput.cfm
+* Script featured on and available at http://www.dynamicdrive.com
+* Keep this notice intact for use.
+***********************************************/
+
+</script>
+
 <div >
        <p><a href="deconnexion.php">Deconnexion</a></p>
-
 </div>
 
 <?php
@@ -103,14 +112,31 @@ Cercle organisateur :
 <label>
 Date debut :
 </label>
-<!--<textarea id="date_debut" name="date_debut" cols="50" rows="1"><?php echo $DATE_DEBUT_REGATE; ?></textarea>-->
-<input type="date" name="date_debut" value=<?php echo "$DATE_DEBUT_REGATE";?> />
 
+<!--<textarea id="date_debut" name="date_debut" cols="50" rows="1"><?php echo $DATE_DEBUT_REGATE; ?></textarea>-->
+<!--<input type="date" name="date_debut" value=<?php echo "$DATE_DEBUT_REGATE";?> />-->
+
+
+<?php 
+$date='2011-09-10';
+if(isset($_POST['date_debut'])) 
+  $date=$_POST['date_debut'];
+echo "<script>DateInput('date_debut', true, 'YYYY-MM-DD','$date')</script>";
+?>
+
+    
 <label>
 Date fin :
 </label>
 <!--<textarea id="date_fin" name="date_fin" cols="50" rows="1"><?php echo $DATE_FIN_REGATE; ?></textarea>-->
-<input type="date" name="date_fin" value=<?php echo "$DATE_FIN_REGATE";?> />
+<!--<input type="date" name="date_fin" value=<?php echo "$DATE_FIN_REGATE";?> />-->
+<?php 
+$date='2011-09-10';
+if(isset($_POST['date_fin'])) 
+  $date=$_POST['date_fin'];
+echo "<script>DateInput('date_debut', true, 'YYYY-MM-DD','$date')</script>";
+?>
+
 
 <hr />
 
@@ -144,21 +170,21 @@ try
 {
 	$req = $bdd->prepare('SELECT * FROM Inscrit WHERE (ID_regate =?)');
 	$req->execute(array($_SESSION["ID_regate"]));
-	echo '<table>';
+	echo '<table class="mytable">';
 	        echo
-        	'<tr><th scope="col">'.'Prenom'.
-        	'</th><th scope="col">'.'Nom'.
-        	'</th><th scope="col">'.'Sexe'.
-        	'</th><th scope="col">'.'Numéros de voile'.
-        	'</th><th scope="col">'.'Série'.
-        	'</th><th scope="col">'.'Licence'.
-        	'</th><th scope="col">'.'Numéros de licence'.
-        	'</th><th scope="col">'.'Adherant AFL'.
-        	'</th><th scope="col">'.'Confirmation'.
-        	'</th><th scope="col">'.'Couriel'.'</tr>';
+        	'<tr class="mytable"><th scope="col">'.'Prenom'.
+        	'</th><th  class="mytable" scope="col">'.'Nom'.
+        	'</th><th  class="mytable" scope="col">'.'Sexe'.
+        	'</th><th  class="mytable" scope="col">'.'Numéros de voile'.
+        	'</th><th  class="mytable" scope="col">'.'Série'.
+        	'</th><th  class="mytable" scope="col">'.'Licence'.
+        	'</th><th  class="mytable" scope="col">'.'Numéros de licence'.
+        	'</th><th  class="mytable" scope="col">'.'Adherant AFL'.
+        	'</th><th  class="mytable" scope="col">'.'Confirmation'.
+        	'</th><th  class="mytable" scope="col">'.'Courriel'.'</tr>';
     while ($donnees = $req->fetch())
     {
-        if($donnees['sexe']==1){
+        if($donnees['sexe']=='M'){
         	$sexe='Homme';
         }
         else{
@@ -176,10 +202,10 @@ try
         else{
         	$conf='non';
         }
-        if($donnees['serie']==1){
+        if($donnees['serie']=='LAS'){
         	$serie='Laser Standard';
         }
-        elseif($donnees['serie']==2){
+        elseif($donnees['serie']=='LAR'){
         	$serie='Laser Radial';
         }
         else{
@@ -196,18 +222,18 @@ try
         }
         echo
         	'<tr>'.
-        	'<td scope="col">'.$donnees['prenom'] .'</td>'.
-        	'<td scope="col">'.$donnees['nom'].'</td>'.
-        	'<td scope="col">'.$sexe.'</td>'.
-        	'<td scope="col">'.$donnees['prefix_voile'].' '.$donnees['num_voile'].'</td>'.
-        	'<td scope="col">'.$serie.'</td>'.
-        	'<td scope="col">'.$statut.'</td>'.
-        	'<td scope="col">'.$donnees['num_lic'].'</td>'.
-        	'<td scope="col">'.$adherant.'</td>'.
-        	'<td scope="col">'.$conf.'</td>'.
-        	'<td scope="col">'.$donnees['mail'].'</td>'.
-        	'<td scope="col">'.'<a href="Confirmation.php?ID='.$donnees['ID_inscrit'].'">Confirmer</a>'.'</td>'.
-        	'<td scope="col">'.'<a href="Annulation.php?ID='.$donnees['ID_inscrit'].'">Annuler</a>'.'</td>'.
+        	'<td class="mytable" scope="col">'.$donnees['prenom'] .'</td>'.
+        	'<td class="mytable" scope="col">'.$donnees['nom'].'</td>'.
+        	'<td class="mytable" scope="col">'.$sexe.'</td>'.
+        	'<td class="mytable" scope="col">'.$donnees['prefix_voile'].' '.$donnees['num_voile'].'</td>'.
+        	'<td class="mytable" scope="col">'.$serie.'</td>'.
+        	'<td class="mytable" scope="col">'.$statut.'</td>'.
+        	'<td class="mytable" scope="col">'.$donnees['num_lic'].'</td>'.
+        	'<td class="mytable" scope="col">'.$adherant.'</td>'.
+        	'<td class="mytable" scope="col">'.$conf.'</td>'.
+        	'<td class="mytable" scope="col">'.$donnees['mail'].'</td>'.
+        	'<td class="mytable" scope="col">'.'<a href="Confirmation.php?ID='.$donnees['ID_inscrit'].'">Confirmer</a>'.'</td>'.
+        	'<td class="mytable" scope="col">'.'<a href="Annulation.php?ID='.$donnees['ID_inscrit'].'">Annuler</a>'.'</td>'.
         	'</tr>';
     }
     echo '</table>';
@@ -221,9 +247,31 @@ catch(Exception $e)
 }
 
 ?>
+</div>
 
-<br>
-Télécharger la <a href="Liste_inscrits_xls.php">liste des inscrits au format xls</a>.
+<!--Exportation des données-->
+<div>
+<h2>Exportation des données</h2>
+
+<ul>
+<li>
+Télécharger la liste des <strong>tous les inscrits</strong> au <a href="Liste_inscrits_xls.php">format xls</a>  (pour Excel).
+</li>
+<li>
+Télécharger la liste des <strong>inscrits ayant confirmé</strong> au <a href="Liste_inscrits_xls.php?confirme=1">format xls</a> (pour Excel).
+</li>
+</ul>
+
+<h3>Intégration avec le logiciel FREG</h3>
+<ul>
+<li>
+Télécharger la liste des <strong>tous les inscrits</strong> au <a href="Liste_inscrits_dbf.php">format dbf</a> (pour FREG, XBase, Excel,...).
+</li>
+<li>
+Télécharger la liste des <strong>inscrits ayant confirmé</strong> au <a href="Liste_inscrits_dbf.php?confirme=1">format dbf</a> (pour FREG, XBase, Excel,...).
+</li>
+</ul>
+Pour importer le fichier ins_dbf.dbf vers votre régate dans FREG, vous devez disposer du module FF_PRE_INS.EXE, à demander par courriel au support de FREG.
 </div>
 
 <?php
