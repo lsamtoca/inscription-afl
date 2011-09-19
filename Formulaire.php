@@ -75,7 +75,7 @@ catch(Exception $e)
 	
 	<label for="Prenom">Prénom :</label>
 	<input name="Prenom" type="text" id="prenom"/>
-	    <span id='mainform_Nom_errorloc' ></span>
+	    <span id='mainform_Nom_errorloc' class='error_strings'></span>
 	    <span id='mainform_Prenom_errorloc' class='error_strings'></span>
     <br />
         
@@ -96,7 +96,7 @@ catch(Exception $e)
 	<label for="radio4">Homme</label>
 	<input type="radio" name="sexe" id="radio5" value="F"/>
 	<label for="radio5">Femme</label>
-    <div id='mainform_sexe_errorloc' class='error_strings'></div>
+    <span id='mainform_sexe_errorloc' class='error_strings'></span>
 
     <hr />
 
@@ -134,15 +134,16 @@ catch(Exception $e)
     <hr />
     
 <!-- Statut : Licence et AFL -->
-    <input type="radio" name="statut" id="radio1" value="1"/>
+    <input type="radio" name="statut" id="radio1" value="Licencie"/>
 	<label for="radio1">Licencié FFV</label>
 
-	<input type="radio" name="statut" id="radio2" value="2" />
+	<input type="radio" name="statut" id="radio3" value="Etranger"/>
+	<label for="radio3">Coureur étranger</label>
+	    
+	<input type="radio" name="statut" id="radio2" value="Autre" />
 	<label for="radio2">Pas encore licencié</label>
 
-	<input type="radio" name="statut" id="radio3" value="3"/>
-	<label for="radio3">Coureur étranger</label>
-	    <span id='mainform_statut_errorloc' class='error_strings'></span>
+	<span id='mainform_statut_errorloc' class='error_strings'></span>
     <br /> 
 	
 	<label for="AFL">Adhérant à l'AFL :</label>
@@ -152,11 +153,23 @@ catch(Exception $e)
 	<input type="radio" name="adherant" id="radio10" value="0" />
 	<label for="radio10">Non</label>
     <span id='mainform_adherant_errorloc' class='error_strings'></span>
-    <br>
+    <br />
+    
     
     <label id="l_lic" for="lic"></label>
     <input name="lic" id="lic" type="hidden" size="8" maxlenght="8" value=""/>
+       
+    <label id="l_isaf_no" for="isaf_no"></label>
+    <input name="isaf_no" id="isaf_no" type="hidden" size="6" maxlenght="6" value=""/>
+    
     <span id='mainform_lic_errorloc' class='error_strings'></span>
+    <span id='mainform_isaf_no_errorloc' class='error_strings'></span>
+    </p>
+
+    <br />
+    
+    <div id="message"></div>
+    
     <hr /> 
 
 <!--  <div id='mainform_errorloc' class='error_strings'></div>-->
@@ -193,19 +206,24 @@ catch(Exception $e)
 
  frmvalidator.addValidation("num_club","req","Vous êtes licencié FFV : le numéro du Club obilgatoire",
         "VWZ_IsChecked(document.forms['mainform'].elements['statut'],'1')");
- frmvalidator.addValidation("num_club","regexp=^[0-9]{5}$","Champ Club no incorrecte");
+ frmvalidator.addValidation("num_club","regexp=^[0-9]{5}$","Champ Club no incorrecte (5 chifres)");
 
  frmvalidator.addValidation("serie","selone_radio","Choisssez : Standard, Radial, ou 4.7"); 
  frmvalidator.addValidation("Nvoile","required","Champ Numéro de Voile obligatoire"); 
- frmvalidator.addValidation("Nvoile","regexp=^[0-9]{1,6}$","Numéro de voile incorrecte"); 
- frmvalidator.addValidation("Cvoile","regexp=^[A-Z]{3,3}$","Code pays sur la voile incorrecte");
+ frmvalidator.addValidation("Nvoile","regexp=^[0-9]{1,6}$","Numéro de voile incorrecte (6 chiffres)"); 
+ frmvalidator.addValidation("Cvoile","regexp=^[A-Z]{3,3}$","Code pays sur la voile incorrecte (3 lettres)");
 
  frmvalidator.addValidation("statut","selone_radio","Licencié FFV ?");
  frmvalidator.addValidation("adherant","selone_radio","Adhérant AFL ?");
  
  frmvalidator.addValidation("lic","req","Vous êtes licencié FFV : le numéro de licence obilgatoire",
-        "VWZ_IsChecked(document.forms['mainform'].elements['statut'],'1')");
- frmvalidator.addValidation("lic","regexp=^[0-9]{7,7}[A-Z]$","Numéro de licence incorrecte");  
+        "VWZ_IsChecked(document.forms['mainform'].elements['statut'],'Licencie')");
+ frmvalidator.addValidation("lic","regexp=^[0-9]{7,7}[A-Z]$","Numéro de licence incorrecte (7 chiffres et 1 lettre)");  
+    
+ frmvalidator.addValidation("isaf_no","req","Vous êtes licencié FFV : le numéro de licence obilgatoire (7 chiffres et 1 lettre)",
+        "VWZ_IsChecked(document.forms['mainform'].elements['statut'],'Etranger')");
+ frmvalidator.addValidation("isaf_no","regexp=^[A-Z]{5}[0-9]$","Numéro ISAF incorrecte (5 lettres et 1 chiffre)");  
+
     
     //]]>
     
@@ -223,24 +241,54 @@ catch(Exception $e)
   cas_FFV.onclick = function()
   {
   
-      var message = "Vous devez présenter votre licence FFV visée par un médecin sportif ou présenter un cértificat médical de moins de trois mois.";
-	  var html= "<br />" + message + "<br /><label id=\"l_lic\" for=\"lic\">Licence numéro :</label>";
+      var message = "<p>Lors de l'inscription, "+
+        "vous devez présenter votre licence FFV visée par un médecin sportif ou présenter un cértificat médical de moins de trois mois.</p>";
 	  
 	  document.getElementById('lic').type='text';
-	  document.getElementById('l_lic').innerHTML = html;
+	  document.getElementById('l_lic').innerHTML = 'Licence numéro';
+	  document.getElementById('isaf_no').type='text';
+	  document.getElementById('l_isaf_no').innerHTML ='Numéro ISAF :';
 
-      frmvalidator.addValidation("lic","required","Numéro de licence obilgatoire");  
+	  document.getElementById('message').innerHTML = message;
+
   }
   cas_nonlic.onclick = function()
   {
-   	  document.getElementById('lic').type='hidden';
-  	  document.getElementById('l_lic').innerHTML = '<p>Vous devez :<ol><LI>vous licencier auprès d\'un club FFV de votre choix. Cette licence doit être visée par un médecin sportif.</LI><li>être affilié à l\'Association France Laser. Vous pouvez régulariser cette affiliation soit à l\'inscription, soit auprès de votre délégué laser local http://www.francelaser.org/ (divers -> liste des délégués), ou directement a l\'AFL.</li></ol></p>';
+   	  var message ="<p>Vous devez :<ol>" +
+   	    "<LI>vous licencier auprès d'un club FFV de votre choix. Cette licence doit être visée par un médecin sportif.</LI>" +
+   	    "<li>être affilié à l'Association France Laser. Vous pouvez régulariser cette affiliation soit à l'inscription, soit auprès de votre délégué laser local" +
+   	    "http://www.francelaser.org/ (divers -> liste des délégués), ou directement a l'AFL.</li>" +
+   	    "</ol></p>";
 
+   	  document.getElementById('lic').type='hidden';
+  	  document.getElementById('l_lic').innerHTML = '';
+  	  document.getElementById('mainform_lic_errorloc').innerHTML = '';
+	  
+	  document.getElementById('isaf_no').type='hidden';
+	  document.getElementById('l_isaf_no').innerHTML ='';
+  	  document.getElementById('mainform_isaf_no_errorloc').innerHTML = '';
+  	  
+	  document.getElementById('message').innerHTML = message;
+
+	  
   }
   cas_etr.onclick = function()
   {
+  
+      var message ="<p>Vous devez présenter lors de l'inscription au club :" +
+        "<ol><LI>un certificat médical de moins de trois mois,</LI>" +
+        "<li>un document attestant que vous avez une assurance responsabilité civile d'un montant d'au moins 1,5MEuros,</li>" +
+        "<li>une carte ILCA.</li></ol></p>";
+    	  
   	  document.getElementById('lic').type='hidden';
-  	  document.getElementById('l_lic').innerHTML = '<p>Vous devez présenter à l\'inscription au club :<ol><LI>un certificat médical de moins de trois mois,</LI><li>un document attestant que vous avez une assurance responsabilité civile d\'un montant d\'au moins 1,5MEuros,</li><li>une carte ILCA.</li></ol></p>';
+  	  document.getElementById('l_lic').innerHTML = '';
+  	  document.getElementById('mainform_lic_errorloc').innerHTML = '';
+  	  	  
+	  document.getElementById('isaf_no').type='text';
+	  document.getElementById('l_isaf_no').innerHTML ='Numéro ISAF :';
+ 	  
+  	  document.getElementById('message').innerHTML = message;
+
 
    } 
    	  

@@ -1,4 +1,9 @@
 <?php
+session_start();
+if(!isset($_SESSION["ID_regate"]))
+{
+		header("Location: LoginClub.php");
+}
 
 /* Format du ficheir dbf --
 
@@ -337,28 +342,6 @@ array('PHONE','C','20'),
 array('DATE_MAJ','D')
 );
 
-/*
-$fields=array(
-  array('VOILE1','C','9'),
-  array('CODE_PAYS','C','3'),
-  array('INS_EN','C','3'),
-  array('BAT_TYPE','C','30'),
-  array('NB_EQUIP','N','2','0'),
-  array('CROUPE','C','3'),
-  array('CLAS_CAT','C','5'),
-  array('E1_NOM','C','30'),
-  array('E1_PRE','C','15'),
-  array('E1_SEXE','C','1'),
-  array('E1_NAIS','C','4'),
-  array('E1_LIC','C','8'),
-  array('E1_CLUB','C','5'),
-  array('E1_CLUB_LI','C','20'),
-  array('E1_PAYS','C','3'),
-  array('E1_ISAF','C','10'),  
-  array('E1_EMAIL','C','60')
-);
-
-*/
 
   if(file_exists(FILENAME)) unlink (FILENAME); 
   $dbf = dbase_create (FILENAME, $fields) or die("Problème de création fichier dbf\n");
@@ -393,6 +376,7 @@ function generate_dbf(){
       'E1_SEXE' => array('sexe',''),
       'E1_NAIS' => array('E1_NAIS',''),
       'E1_LIC' => array('num_lic',''),
+      'E1_ISAF' => array('isaf_no',''),
       'E1_CLUB' => array('num_club',''),
       'E1_CLUB_LI' => array('nom_club',''),
       'E1_PAYS' => array('prefix_voile',''),
