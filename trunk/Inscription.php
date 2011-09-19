@@ -5,7 +5,7 @@ require "partage.php";
     function do_mail($to,$message){
 
 //	$ME = "lsantoca@cmi.univ-mrs.fr";
-	$ME = "postmaster@régateslaser.info";
+	$ME = "postmaster@regateslaser.info";
 	$CC = "lsantoca@cmi.univ-mrs.fr";//.",don.dpk@gmail.com,rochepierre06@hotmail.com,martine.antoine@gmail.com";
 	$headers  = "From: $ME\r\n" ;
     $headers .= "Reply-To: $ME\r\n";
@@ -43,9 +43,9 @@ try
 	
 //	$date=$_POST['anne_naissance']."-".$_POST['mois_naissance']."-".$_POST['jour_naissance'];
 
-	$sql = 'INSERT INTO Inscrit (nom, prenom,naissance,num_lic,num_club,nom_club,
+	$sql = 'INSERT INTO Inscrit (nom, prenom,naissance,num_lic,isaf_no,num_club,nom_club,
 	prefix_voile,num_voile,serie,adherant,sexe,conf,mail,statut,ID_regate)
-	VALUES(:nom,:prenom,:naissance,:num_lic,:num_club,:nom_club,
+	VALUES(:nom,:prenom,:naissance,:num_lic,:isaf_no,:num_club,:nom_club,
 	:prefix_voile,:num_voile,:serie,:adherant,:sexe,:conf,:mail,:statut,:ID_regate)';
 	$req = $bdd->prepare($sql);
 	$req->execute(array(
@@ -54,6 +54,7 @@ try
 //		'naissance' => $date,
         'naissance' => $_POST['naissance'],
 		'num_lic' => $_POST['lic'],
+		'isaf_no' => $_POST['isaf_no'],
 		'num_club' => $_POST['num_club'],
 		'nom_club' => $_POST['nom_club'],
 		'prefix_voile' => $_POST['Cvoile'],

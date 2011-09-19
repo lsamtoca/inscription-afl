@@ -6,7 +6,7 @@
 	}
 
    require "partage.php";
-   xhtml_pre("Géstion de votre régate");
+   xhtml_pre1("Géstion de votre régate");
 ?>
 
 <script type="text/javascript" src="classes/calendarDateInput.js">
@@ -18,6 +18,16 @@
 ***********************************************/
 
 </script>
+
+<script src="classes/javascript_form/gen_validatorv4.js" type="text/javascript">
+/***********************************************
+* http://www.javascript-coder.com/html-form/javascript-form-validation.phtml
+***********************************************/
+</script>
+
+<?php
+  xhtml_pre2("Préinscription");
+?>
 
 <div >
        <p><a href="deconnexion.php">Deconnexion</a></p>
@@ -84,26 +94,30 @@ catch(Exception $e){
 
 <h2>Renseignements sur la régate</h2>
 
-<form action="" method="post">
+<form id="mainform" action="" method="post">
 <fieldset>
 <label>
 Titre :</label>
 <textarea id="titre" name="titre" cols="50" rows="1"><?php echo $TITRE_REGATE; ?></textarea>
+<span id='mainform_titre_errorloc' class='error_strings'></span>
 <br />
 <label>
 Description :
-<textarea id="description" name="description" cols="50" rows="10"><?php echo $DESC_REGATE; ?></textarea>
 </label>
+<textarea id="description" name="description" cols="50" rows="10"><?php echo $DESC_REGATE; ?></textarea>
 
 <hr />
 
 <label>
 Lieu  :
 </label>
-<textarea id="lieu" name="lieu" cols="50" rows="2"><?php echo $LIEU; ?></textarea>
+<textarea id="lieu" name="lieu" cols="50" rows="1"><?php echo $LIEU; ?></textarea>
+<span id='mainform_lieu_errorloc' class='error_strings'></span>
+
+<br />
 
 <label>
-Cercle organisateur :
+Club organisateur :
 </label>
 <textarea id="cv_organisateur" name="cv_organisateur" cols="50" rows="1"><?php echo $CV_ORGANISATEUR; ?></textarea>
 
@@ -118,11 +132,12 @@ Date debut :
 
 
 <?php 
-$date='2011-09-10';
+/*$date='2011-09-10';
 if(isset($_POST['date_debut'])) 
-  $date=$_POST['date_debut'];
-echo "<script>DateInput('date_debut', true, 'YYYY-MM-DD','$date')</script>";
+  $date=$_POST['date_debut'];*/
+echo "<script>DateInput('date_debut', true, 'YYYY-MM-DD','$DATE_DEBUT_REGATE')</script>";
 ?>
+<span id='mainform_date_debut_errorloc' class='error_strings'></span>
 
     
 <label>
@@ -131,11 +146,12 @@ Date fin :
 <!--<textarea id="date_fin" name="date_fin" cols="50" rows="1"><?php echo $DATE_FIN_REGATE; ?></textarea>-->
 <!--<input type="date" name="date_fin" value=<?php echo "$DATE_FIN_REGATE";?> />-->
 <?php 
-$date='2011-09-10';
+/*$date='2011-09-10';
 if(isset($_POST['date_fin'])) 
-  $date=$_POST['date_fin'];
-echo "<script>DateInput('date_debut', true, 'YYYY-MM-DD','$date')</script>";
+  $date=$_POST['date_fin'];*/
+echo "<script>DateInput('date_fin', true, 'YYYY-MM-DD','$DATE_FIN_REGATE')</script>";
 ?>
+<span id='mainform_date_fin_errorloc' class='error_strings'></span>
 
 
 <hr />
@@ -152,7 +168,27 @@ Droits d'inscription :
 
 </fieldset>
 </form>
+<script language="JavaScript" type="text/javascript"
+    xml:space="preserve">
+ var frmvalidator  = new Validator("mainform");
+ 
+ frmvalidator.EnableOnPageErrorDisplay();
+ frmvalidator.EnableMsgsTogether();
 
+ frmvalidator.addValidation("titre","required","Champ Titre obligatoire");
+ frmvalidator.addValidation("date_debut","required","Champ Date debut obligatoire");
+ frmvalidator.addValidation("date_fin","required","Champ Date fin obligatoire");
+ frmvalidator.addValidation("lieu","required","Champ Lieu obligatoire");
+  
+ var year="[1-2][0-9]{3}";
+ var mois="0[1-9]|1[0-2]";
+ var jour="0[1-9]|[1-2][0-9]|3[0-1]";
+ var date= year + "-" + mois + "-" + jour;
+ frmvalidator.addValidation("date_debut","regexp=^" + date + "$","Champ Date debut a la forme YYYY-MM-DD"); 
+ frmvalidator.addValidation("date_fin","regexp=^" + date + "$","Champ Date fin a la forme YYYY-MM-DD"); 
+ 
+  
+</script>
 
 </div>
 
@@ -211,14 +247,14 @@ try
         else{
         	$serie='Laser 4.7';
         }
-        if($donnees['statut']==1){
+        if($donnees['statut']=='Licencie'){
         	$statut='Licencié FFV';
         }
-        elseif($donnees['statut']==2){
-        	$statut='Pas encore licencié';
+        elseif($donnees['statut']=='Etranger'){
+               	$statut='Coureur étranger';
         }
         else{
-        	$statut='Coureur etrangé';
+        	$statut='Pas encore licencié';
         }
         echo
         	'<tr>'.
@@ -255,20 +291,20 @@ catch(Exception $e)
 
 <ul>
 <li>
-Télécharger la liste des <strong>tous les inscrits</strong> au <a href="Liste_inscrits_xls.php">format xls</a>  (pour Excel).
+Télécharger la liste des <strong>tous les inscrits</strong> au <a href="Liste_inscrits_xls.php">format xls</a>  (pour Excel, OpenOffice).
 </li>
 <li>
-Télécharger la liste des <strong>inscrits ayant confirmé</strong> au <a href="Liste_inscrits_xls.php?confirme=1">format xls</a> (pour Excel).
+Télécharger la liste des <strong>inscrits ayant confirmé</strong> au <a href="Liste_inscrits_xls.php?confirme=1">format xls</a> (pour Excel, OpenOffice).
 </li>
 </ul>
 
 <h3>Intégration avec le logiciel FREG</h3>
 <ul>
 <li>
-Télécharger la liste des <strong>tous les inscrits</strong> au <a href="Liste_inscrits_dbf.php">format dbf</a> (pour FREG, XBase, Excel,...).
+Télécharger la liste des <strong>tous les inscrits</strong> au <a href="Liste_inscrits_dbf.php">format dbf</a> (pour FREG, XBase, Excel, OpenOffice,...).
 </li>
 <li>
-Télécharger la liste des <strong>inscrits ayant confirmé</strong> au <a href="Liste_inscrits_dbf.php?confirme=1">format dbf</a> (pour FREG, XBase, Excel,...).
+Télécharger la liste des <strong>inscrits ayant confirmé</strong> au <a href="Liste_inscrits_dbf.php?confirme=1">format dbf</a> (pour FREG, XBase, Excel, OpenOffice, ...).
 </li>
 </ul>
 Pour importer le fichier ins_dbf.dbf vers votre régate dans FREG, vous devez disposer du module FF_PRE_INS.EXE, à demander par courriel au support de FREG.

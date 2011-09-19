@@ -2,6 +2,10 @@ body {
   font-family:sans-serif;
 }
 
+label {
+  vertical-align:top;
+}
+
 table.mytable {
   margin:2px;
   padding: 2px;
@@ -27,4 +31,5 @@ td.mytable {
 .error_strings {
   color:red;
   background:yellow;
+  vertical-align:top;
 }

@@ -1,13 +1,41 @@
 <?php
 session_start();
+if(!isset($_SESSION["ID_regate"]))
+{
+		header("Location: LoginClub.php");
+}
 
 require "partage.php";
 require "classes/PHPExcel.php";
 
 //define("FILENAME",sprintf("%sinscrits.xlsx",$racine)); //constante: nom du fichier à générer
 
+$fields=array(
+  'nom' => 'Nom',
+  'prenom' => 'Prénom',
+  //
+  'prefix_voile' => 'Code pays',
+  'num_voile' => 'Numero voile',
+  'serie' => 'Série',
+  //    
+  'naissance' => 'Date de naissance',
+  'sexe' => 'Sexe',
+  'mail' => 'Courriel',
+  //
+  'statut' =>'Statut coureur',
+  'num_lic' => 'Licence no.',
+  'isaf_no' => 'No. ISAF',
+  'nom_club' => 'Club',
+  'num_club' => 'Club no.',
+  'adherant' => 'Adhérant AFL (1=ou, 0=non)',
+  //
+  'conf' => 'Confirmé'
+);
+
 function generate_excel(){
 
+    global $fields;
+    
     $excel=new PHPExcel();
 	$excel->getProperties()->setCreator("Luigi Santocanale")
 							 ->setLastModifiedBy("Luigi Santocanale")
@@ -26,25 +54,39 @@ function generate_excel(){
     $column_no=65;
 
     $i = 0; 
-    while ($i < mysql_num_fields($res)) { 
-      $meta = mysql_fetch_field($res, $i); 
-        
-       $excel->setActiveSheetIndex(0)
- 		    ->setCellValue(chr($column_no+$i).$row_no,$meta->name);
+//     while ($i < mysql_num_fields($res)) { 
+//       $meta = mysql_fetch_field($res, $i); 
+//         
+//        $excel->setActiveSheetIndex(0)
+//  		    ->setCellValue(chr($column_no+$i).$row_no,$meta->name);
+// 
+//       $i++; 
+//     }  
 
-      $i++; 
-    }  
+	foreach($fields as $key => $value)
+    {
+		  	$excel->setActiveSheetIndex(0)
+		                ->setCellValue(chr($column_no).$row_no,$value);
+		    $column_no++;
+    }
 
 	$row_no++;
-	while($row=mysql_fetch_object($res)){//Parcours du résultat de la requête
+	while($row=mysql_fetch_assoc($res)){//Parcours du résultat de la requête
 		
 		$column_no=65;//C'est ici qu'on va jouer sur les codes ascii
-		foreach($row as $key => $value)
+		
+	    foreach($fields as $field => $value)
+		{
+		  	$excel->setActiveSheetIndex(0)
+		                ->setCellValue(chr($column_no).$row_no,$row[$field]);
+		    $column_no++;
+		}
+/*		foreach($row as $key => $value)
 		{
 		  	$excel->setActiveSheetIndex(0)
 		                ->setCellValue(chr($column_no).$row_no,$value);
 		    $column_no++;
-		}
+		}*/
 		$row_no++;
 	}
 
