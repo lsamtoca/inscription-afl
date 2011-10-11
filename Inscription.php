@@ -5,8 +5,9 @@ require "partage.php";
     function do_mail($to,$message){
 
 //	$ME = "lsantoca@cmi.univ-mrs.fr";
-	$ME = "postmaster@regateslaser.info";
-	$CC = "lsantoca@cmi.univ-mrs.fr";//.",don.dpk@gmail.com,rochepierre06@hotmail.com,martine.antoine@gmail.com";
+	$ME = "inscriptions-afl@regateslaser.info";
+	$CC="inscriptions-afl@regateslaser.info";
+	//.",don.dpk@gmail.com,rochepierre06@hotmail.com,martine.antoine@gmail.com,lsantoca@cmi.univ-mrs.fr";
 	$headers  = "From: $ME\r\n" ;
     $headers .= "Reply-To: $ME\r\n";
 	$headers .= "CC: $CC\r\n" ;
@@ -99,7 +100,10 @@ try
 	//echo "<br />Vous avez 30min pour valider votre preinscription.";
 
 
-    echo "Retour à la <a href=\"http://$path_to_site_inscription\">page d'accueil</a>.";
+    echo "Retour au <a href=\"";
+    echo format_url_regate($_POST['IDR']);
+    echo "\">formulaire d'inscription</a>.";
+    
    }
 
     xhtml_post();
