@@ -24,6 +24,11 @@ function format_url_regate($id){
   return sprintf("http://%sFormulaire.php?ID=%d",$path_to_site_inscription,$id); 
 }
 
+function format_url_preinscrits($id){
+  global $path_to_site_inscription;
+  return sprintf("http://%sPreinscrits.php?regate=%d",$path_to_site_inscription,$id); 
+}
+
 function format_confirmation_regate($id_coureur){
   global $path_to_site_inscription;
   return sprintf("http://%sConfirmation.php?ID=%d",$path_to_site_inscription,$id_coureur); 

@@ -9,7 +9,7 @@
 ?>
 
 <div >
-       <h1>Gestion des Événements (et des Clubs)</h1>
+ <!--      <h1>Gestion des Événements (et des Clubs)</h1>-->
        <p><a href="deconnexion.php">Deconnexion</a></p>
        		<form action="" method="post">
 			<fieldset>
@@ -37,10 +37,14 @@
 		try{
 			$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 			$bdd = new PDO($pdo_path, $user, $pwd, $pdo_options);
-				$sql = 'DELETE FROM Regate WHERE ID_regate= :IDR';
-				$req = $bdd->prepare($sql);
-				$req->execute(array(
-				'IDR' => $_POST['IDR']));
+			// First, delete all coureurs whose ID is $_POST['IDR']
+			$sql = 'DELETE FROM Inscrit WHERE ID_regate= :IDR';
+			$req = $bdd->prepare($sql);
+			$req->execute(array('IDR' => $_POST['IDR']));
+			// Second, delete the regata 
+			$sql = 'DELETE FROM Regate WHERE ID_regate= :IDR';
+			$req = $bdd->prepare($sql);
+			$req->execute(array('IDR' => $_POST['IDR']));
 			}
 			catch(Exception $e){
 				// En cas d'erreur, on affiche un message et on arrête tout

@@ -82,6 +82,7 @@ try{
     $DROITS=$donnees['droits'];
     
     $URL=format_url_regate($_SESSION["ID_regate"]);
+    $URLPRE=format_url_preinscrits($_SESSION["ID_regate"]);
 }
 catch(Exception $e){
 	// En cas d'erreur, on affiche un message et on arrête tout
@@ -196,6 +197,11 @@ Droits d'inscription :
 <div >
 <h2>URL d'inscription</h2>
 <a href="<?php echo $URL; ?>"><?php echo $URL; ?></a>
+</div>
+
+<div >
+<h2>URL pour consulter la liste des préinscrits (ayant confirmé)</h2>
+<a href="<?php echo $URLPRE; ?>"><?php echo $URLPRE; ?></a>
 </div>
 
 <!-- Inscrits -->

@@ -84,7 +84,7 @@ catch(Exception $e)
       <td>    <label for="naissance">Date de naissance :</label></td>
       <td>
       <!--    <input name="naissance" type="text" id="naissance" value="YYYY-MM-DD" size="10" maxlength="10" /> -->
-    <script>DateInput('naissance', true, 'YYYY-MM-DD','2000-01-01')</script> 
+    <script>DateInput('naissance', true, 'YYYY-MM-DD','1994-01-01')</script> 
     </td>
     <td>    <div id='mainform_naissance_errorloc' class='error_strings'></div></td>
     </tr></table>
@@ -156,11 +156,11 @@ catch(Exception $e)
     <br />
     
     
-    <label id="l_lic" for="lic"></label>
+    <label id="l_lic" for="lic"><span id="l_lic_span"></span></label>
     <input name="lic" id="lic" type="hidden" size="8" maxlenght="8" value=""/>
        
     <label id="l_isaf_no" for="isaf_no"></label>
-    <input name="isaf_no" id="isaf_no" type="hidden" size="6" maxlenght="6" value=""/>
+    <input name="isaf_no" id="isaf_no" type="hidden" size="7" maxlenght="7" value=""/>
     
     <span id='mainform_lic_errorloc' class='error_strings'></span>
     <span id='mainform_isaf_no_errorloc' class='error_strings'></span>
@@ -204,7 +204,7 @@ catch(Exception $e)
  frmvalidator.addValidation("mail","required","Champ Courriel obligatoire"); 
  frmvalidator.addValidation("mail","email","Le champ Courriel n'est pas un adresse email"); 
 
- frmvalidator.addValidation("num_club","req","Vous êtes licencié FFV : le numéro du Club obilgatoire",
+ frmvalidator.addValidation("num_club","req","Vous êtes licencié FFV : le numéro du Club obligatoire",
         "VWZ_IsChecked(document.forms['mainform'].elements['statut'],'1')");
  frmvalidator.addValidation("num_club","regexp=^[0-9]{5}$","Champ Club no incorrecte (5 chifres)");
 
@@ -216,13 +216,13 @@ catch(Exception $e)
  frmvalidator.addValidation("statut","selone_radio","Licencié FFV ?");
  frmvalidator.addValidation("adherant","selone_radio","Adhérant AFL ?");
  
- frmvalidator.addValidation("lic","req","Vous êtes licencié FFV : le numéro de licence obilgatoire",
+ frmvalidator.addValidation("lic","req","Vous êtes licencié FFV : le numéro de licence obligatoire",
         "VWZ_IsChecked(document.forms['mainform'].elements['statut'],'Licencie')");
  frmvalidator.addValidation("lic","regexp=^[0-9]{7,7}[A-Z]$","Numéro de licence incorrecte (7 chiffres et 1 lettre)");  
     
- frmvalidator.addValidation("isaf_no","req","Vous êtes licencié FFV : le numéro de licence obilgatoire (7 chiffres et 1 lettre)",
+ frmvalidator.addValidation("isaf_no","req","Vous êtes coureur étranger : le numéro de ISAF est obligatoire",
         "VWZ_IsChecked(document.forms['mainform'].elements['statut'],'Etranger')");
- frmvalidator.addValidation("isaf_no","regexp=^[A-Z]{5}[0-9]$","Numéro ISAF incorrecte (5 lettres et 1 chiffre)");  
+ frmvalidator.addValidation("isaf_no","regexp=^[A-Z]{5}[0-9]{1,2}$","Numéro ISAF incorrecte (5 lettres et au plus 2 chiffre)");  
 
     
     //]]>
@@ -231,7 +231,8 @@ catch(Exception $e)
 </div>
 
 <script type="text/javascript">
-
+ //<![CDATA[
+ 
   var cas_FFV = document.getElementById('radio1');
   var cas_nonlic = document.getElementById('radio2');
   var cas_etr = document.getElementById('radio3');
@@ -245,7 +246,7 @@ catch(Exception $e)
         "vous devez présenter votre licence FFV visée par un médecin sportif ou présenter un cértificat médical de moins de trois mois.</p>";
 	  
 	  document.getElementById('lic').type='text';
-	  document.getElementById('l_lic').innerHTML = 'Licence numéro';
+	  document.getElementById('l_lic_span').innerHTML = 'Licence numéro';
 	  document.getElementById('isaf_no').type='text';
 	  document.getElementById('l_isaf_no').innerHTML ='Numéro ISAF :';
 
@@ -261,7 +262,7 @@ catch(Exception $e)
    	    "</ol></p>";
 
    	  document.getElementById('lic').type='hidden';
-  	  document.getElementById('l_lic').innerHTML = '';
+  	  document.getElementById('l_lic_span').innerHTML = '';
   	  document.getElementById('mainform_lic_errorloc').innerHTML = '';
 	  
 	  document.getElementById('isaf_no').type='hidden';
@@ -281,7 +282,7 @@ catch(Exception $e)
         "<li>une carte ILCA.</li></ol></p>";
     	  
   	  document.getElementById('lic').type='hidden';
-  	  document.getElementById('l_lic').innerHTML = '';
+  	  document.getElementById('l_lic_span').innerHTML = '';
   	  document.getElementById('mainform_lic_errorloc').innerHTML = '';
   	  	  
 	  document.getElementById('isaf_no').type='text';
@@ -291,7 +292,10 @@ catch(Exception $e)
 
 
    } 
-   	  
+   	 
+   	 
+   cas_FFV.click();
+    //]]>
    	  
 </script>
 
