@@ -37,14 +37,16 @@
 		try{
 			$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 			$bdd = new PDO($pdo_path, $user, $pwd, $pdo_options);
+			// We do not want to delete records of a race .... 
+			// ... instead move to another table !!!
 			// First, delete all coureurs whose ID is $_POST['IDR']
-			$sql = 'DELETE FROM Inscrit WHERE ID_regate= :IDR';
-			$req = $bdd->prepare($sql);
-			$req->execute(array('IDR' => $_POST['IDR']));
+// 			$sql = 'DELETE FROM Inscrit WHERE ID_regate= :IDR';
+// 			$req = $bdd->prepare($sql);
+// 			$req->execute(array('IDR' => $_POST['IDR']));
 			// Second, delete the regata 
-			$sql = 'DELETE FROM Regate WHERE ID_regate= :IDR';
+/*			$sql = 'DELETE FROM Regate WHERE ID_regate= :IDR';
 			$req = $bdd->prepare($sql);
-			$req->execute(array('IDR' => $_POST['IDR']));
+			$req->execute(array('IDR' => $_POST['IDR']));*/
 			}
 			catch(Exception $e){
 				// En cas d'erreur, on affiche un message et on arrête tout

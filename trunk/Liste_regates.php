@@ -1,6 +1,6 @@
 <?php
   require "partage.php";
-  html_pre("Régates ouvertes à l'inscription");
+  xhtml_pre("Régates ouvertes à l'inscription");
   
   try
   {
@@ -47,5 +47,5 @@ catch(Exception $e)
   
   
   
-  html_post();
+  xhtml_post();
 ?>
