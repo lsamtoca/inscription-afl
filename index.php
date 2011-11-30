@@ -1,6 +1,6 @@
 <?php
 require "partage.php";
-html_pre("Inscription aux régates de l'AFL");
+xhtml_pre("Inscription aux régates de l'AFL");
 ?>
 
 
@@ -25,5 +25,5 @@ Vous êtes
 
 
 <?php
-html_post();
+xhtml_post();
 ?>

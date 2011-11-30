@@ -14,9 +14,9 @@ require "partage.php";
     $headers .= 'MIME-Version: 1.0' . "\r\n";
 	$headers .= 'Content-Type: text/plain; charset="UTF-8"' . "\r\n";
 	$headers .= 'X-Mailer: PHP/' . phpversion();	
-	$subject = "Inscription à la régate, confirmation";
+	$subject = my_quoted_printable_encode ("Inscription à la régate, confirmation",'58','subject');
 	
-	//Comment the following line wh  en not testing
+	//Comment the following line when not testing
 	//$to=$ME;
 	
 
@@ -69,7 +69,7 @@ try
 		'ID_regate' => $_POST['IDR']
 	));
 
-    xhtml_pre("Vous êtes préinscrit");
+    xhtml_pre("Vous êtes (presque) préinscrit");
 
     //Nous avons bésoin de connaître l'ID du coureur
     $sql=sprintf("SELECT `ID_inscrit` FROM `Inscrit` WHERE `nom`='%s' and `prenom`='%s' and `ID_regate`='%s' order by `ID_inscrit` DESC",
@@ -84,25 +84,47 @@ try
     else  { // Tout est OK
     $row = $req->fetch();
     
-    $url_conformation=format_confirmation_regate($row['ID_inscrit']);
-    $message="Bonjour ".$_POST['Prenom'].",\n\n";
-    $message.="veuillez confirmer votre inscription à la regate en cliquant le lien suivant:\n";
-    $message.=$url_conformation."\n\n";
-    $message.="Bon vent,\n\t l'AFL";
+    $url_confirmation=format_confirmation_regate($row['ID_inscrit']);
     
-    do_mail($_POST['mail'],$message);
+    $message_email_fr="Bonjour ".$_POST['Prenom'].",\n\n"
+      ."veuillez confirmer votre inscription à la regate en cliquant le lien suivant:\n"
+      .$url_confirmation."\n\n"
+      ."Bon vent,\n\t l'AFL";
     
-	echo $_POST['Prenom'].' '.$_POST['Nom']." vous allez recevoir un courriel à l'adresse <br />";
-	echo "\t".$_POST['mail']."<br />";
-	echo "Ce message contient un lien qui vous permetra de confirmer votre préinscription.";
-	echo "<p>Bon vent,<br />\t l'AFL</p>";
-	// Decommentez la ligne suivante  au cas où cela soit implementé
+    $message_email_en="Hello ".$_POST['Prenom'].",\n\n"
+      ."please confirm your registration to the race by clicking on the following link:\n"
+      .$url_confirmation."\n\n"
+      ."Bon vent,\n\t the AFL";
+
+     if($_POST['lang']=='en') 
+        do_mail($_POST['mail'],$message_email_en);
+     else
+        do_mail($_POST['mail'],$message_email_fr);
+    
+    $message_html_fr= $_POST['Prenom'].' '.$_POST['Nom']
+      .', nous vous demandons de confirmer votre préinscription. <br /><br/>'
+      .'Vous allez recevoir un courriel à l\'adresse <br />'
+      .'<div style="margin-left:20mm;margin-top:5mm"><address>'.$_POST['mail'].'</address></div><br />'
+      .'Ce courriel contient un lien qui vous permettra de confirmer votre préinscription.';
+	// Decommenter la ligne suivante  au cas où cela soit implementé
 	//echo "<br />Vous avez 30min pour valider votre preinscription.";
+    $message_html_en= $_POST['Prenom'].' '.$_POST['Nom']
+      .', we ask you to confirm your preregistration. <br /><br/>'
+      ."You'll receive an email at your address <br />"
+      .'<div style="margin-left:20mm;margin-top:5mm"><address>'.$_POST['mail'].'</address></div><br />'
+      .'This email contains a link by which you\'ll be able to confirm your pregistration.';
 
+    
+    if($_POST['lang']=='en') 
+      echo $message_html_en;
+     else
+      echo $message_html_fr;
 
+    echo '<p>';
     echo "Retour au <a href=\"";
     echo format_url_regate($_POST['IDR']);
     echo "\">formulaire d'inscription</a>.";
+    echo '</p>';
     
    }
 
