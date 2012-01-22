@@ -265,4 +265,20 @@ function my_quoted_printable_encode($input, $line_max = 75, $subject) {
         return trim($output);
     } // end my_quoted_printable_encode 
 
+function nom_normaliser($nom){
+  $noms=explode(' ',$nom);
+  
+  $i=0;
+  foreach($noms as $n)
+  {
+    $ns=explode('-',$n);
+    $j=0;
+    foreach($ns as $m)
+      $ns[$j++]=ucwords(strtolower($m));
+    $noms[$i++]=implode('-',$ns);
+  }
+  return implode(' ',$noms);
+  
+}
+
 ?>

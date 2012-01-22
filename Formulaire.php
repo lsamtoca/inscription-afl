@@ -104,7 +104,7 @@ try
     $sql = 'SELECT `ID_regate`,`titre`,`lieu`,`description`,
 	 DATE_FORMAT(`date_debut`, \'%d-%m-%Y\') as `date_debut`,
 	 DATE_FORMAT(`date_fin`, \'%d-%m-%Y\') as `date_fin`,
-	 `date_cloture_preinscriptions`
+	 `date_limite_preinscriptions`
 	 FROM `Regate` 
 	 WHERE ID_regate = ?';
     $req = $bdd->prepare($sql);
@@ -140,22 +140,23 @@ try
     echo '</p>'."\n";
     
 
-    if($row['date_cloture_preinscriptions'] != ''){
+    if($row['date_limite_preinscriptions'] != ''){
           
       $now = new DateTime;
-      $cloture = new DateTime($row['date_cloture_preinscriptions']);
+      $limite = new DateTime($row['date_limite_preinscriptions']);
+      $limite->setTime(23,59);
       
       echo '<p>';
       echo '<span id="deadline"></span>'."\n";
       echo '<script type="text/javascript">';
-      echo 'double_label("deadline","Date de cloture des préinscriptions : le ","Deadline for preregistration: ",true)'."\n";
+      echo 'double_label("deadline","Date ultime pour se préinscrire : le ","Deadline for preregistration: ",true)'."\n";
       echo '</script>'."\n";
-      echo $cloture->format( 'd-m-Y' );
+      echo $limite->format( 'd-m-Y' );
       echo '</p>'."\n";
  
-      if($now > $cloture){
+      if($now > $limite){
             echo '<p>';
-            echo 'La date limite pour se préinscrire à cette régate, le '. $cloture->format( 'd-m-Y' ) . ' est passée. <br /> ';
+            echo 'La date limite pour se préinscrire à cette régate, le '. $limite->format( 'd-m-Y' ) . ' est passée. <br /> ';
             echo 'Il n\'est plus possible se préinscrire à cette régate :-(';
             echo '</p>';
             xhtml_post();

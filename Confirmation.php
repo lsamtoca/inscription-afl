@@ -4,6 +4,7 @@
 ?>
 
 
+
 <div ><a>
 
 <?php
@@ -15,17 +16,17 @@ try
 	//$bdd = new PDO('mysql:host=localhost;dbname=LASER', 'root', 'root', $pdo_options)
     $bdd = new PDO($pdo_path, $user, $pwd, $pdo_options);
     
-    $req = $bdd->prepare('SELECT nom , prenom FROM Inscrit WHERE ID_inscrit = ?');
+    $req = $bdd->prepare('SELECT nom, prenom FROM Inscrit WHERE ID_inscrit = ?');
 	$req->execute(array($_GET['ID']));
     $donnees = $req->fetch();
     
-    if(isset($donnees['prenom']))
+    if(isset($donnees['prenom'])) // Hack pour dire qu'on a trouvé
     {
-
-    	$sql = 'UPDATE Inscrit SET conf="1" WHERE ID_inscrit =?';
    		$req->closeCursor();
+
+    	$sql = 'UPDATE Inscrit SET `conf`=?, `date confirmation`=? WHERE ID_inscrit =?';
 		$req = $bdd->prepare($sql);
-		$req->execute(array($_GET['ID']));
+		$req->execute(array(1,date('Y-m-d G:i:s'),$_GET['ID']));
 		
 	    echo "Bonjour ".$donnees['prenom'].' '.$donnees['nom'].",<br />";
 		echo 'votre inscription est maintenant confirmée !!!';
@@ -33,7 +34,7 @@ try
     }
     else
     {
-    	echo 'ERREUR';
+    	echo 'ERREUR : nous n\'avons pas trouvé votre pré-inscription dans la base de données :-(' ;
     }
     
 

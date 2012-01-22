@@ -27,12 +27,14 @@
 				$login=$bdd->quote(htmlentities($_POST["login"]));
 				$pass=$bdd->quote(htmlentities($_POST["pass"]));
 				
-				$requete=$bdd->query("select ID_regate from Regate where org_login=$login and org_passe=$pass ;");
+				$requete=$bdd->query("select `ID_regate`,`titre` from Regate where org_login=$login and org_passe=$pass ;");
 				$nbligne=$requete->rowCount();
 				if($nbligne==1)
 				{
 					$reponse=$requete->fetch(PDO::FETCH_ASSOC);
-					$_SESSION["ID_regate"]=$reponse["ID_regate"];
+					$_SESSION['ID_regate']=$reponse['ID_regate'];
+					$_SESSION['titre_regate']=$reponse['titre'];
+					$_SESSION['debut_regate']=$reponse['date_debut'];
 					$requete->closeCursor();
 					$bdd=null;
 					header("Location: Regate.php");
@@ -52,7 +54,7 @@
 
 ?>
 
-<?php xhtml_pre("Géstion de la régate, login"); ?>
+<?php xhtml_pre("Gestion de la régate, login"); ?>
 
 <form action="" method="post">
 	<fieldset>
