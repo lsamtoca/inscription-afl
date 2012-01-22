@@ -37,7 +37,7 @@ try{
 	//$bdd = new PDO('mysql:host=localhost;dbname=LASER', 'root', 'root', $pdo_options);
 	$bdd = new PDO($pdo_path, $user, $pwd, $pdo_options);
 		
-	$fields=array('titre','description','cv_organisateur','lieu','date_debut','date_fin','date_cloture_preinscriptions','droits');
+	$fields=array('titre','description','cv_organisateur','lieu','date_debut','date_fin','date_limite_preinscriptions','droits');
 	foreach($fields as $field)
 	{
 	   if(isset($_POST[$field]))
@@ -64,7 +64,7 @@ try{
 	//$bdd = new PDO('mysql:host=localhost;dbname=LASER', 'root', 'root', $pdo_options);
 	$bdd = new PDO($pdo_path, $user, $pwd, $pdo_options);
 	
-	$req = $bdd->prepare('SELECT `ID_regate`, `titre`,`description`, `cv_organisateur`,`lieu`,`date_debut`,`date_fin`,`date_cloture_preinscriptions`,`droits` FROM Regate WHERE ID_regate=?');
+	$req = $bdd->prepare('SELECT `ID_regate`, `titre`,`description`, `cv_organisateur`,`lieu`,`date_debut`,`date_fin`,`date_limite_preinscriptions`,`droits` FROM Regate WHERE ID_regate=?');
 	$req->execute(array($_SESSION["ID_regate"]));
     $donnees = $req->fetch();
     $req->closeCursor();	
@@ -75,7 +75,7 @@ try{
     $LIEU=$donnees['lieu'];
     $DATE_DEBUT_REGATE=$donnees['date_debut'];
     $DATE_FIN_REGATE=$donnees['date_fin'];
-    $DATE_CLOTURE_PREINSCRIPTIONS=$donnees['date_cloture_preinscriptions'];
+    $DATE_LIMITE_PREINSCRIPTIONS=$donnees['date_limite_preinscriptions'];
     $DROITS=$donnees['droits'];
     
     $URL=format_url_regate($_SESSION["ID_regate"]);
@@ -91,7 +91,7 @@ catch(Exception $e){
 
 function renseignements(){
 
-global $TITRE_REGATE, $DESC_REGATE, $LIEU, $CV_ORGANISATEUR, $DATE_DEBUT_REGATE, $DATE_FIN_REGATE, $DATE_CLOTURE_PREINSCRIPTIONS, $DROITS;
+global $TITRE_REGATE, $DESC_REGATE, $LIEU, $CV_ORGANISATEUR, $DATE_DEBUT_REGATE, $DATE_FIN_REGATE, $DATE_LIMITE_PREINSCRIPTIONS, $DROITS;
 
 echo "
 <div >
@@ -141,10 +141,10 @@ Date fin :
 <span id='mainform_date_fin_errorloc' class='error_strings'></span>";
 
 
-echo "Date de cloture des préinscriptions :
+echo "Date limite pour se pré-inscrire sur le web :
 </label>
-<script>DateInput('date_cloture_preinscriptions', true, 'YYYY-MM-DD','$DATE_CLOTURE_PREINSCRIPTIONS')</script>
-<span id='mainform_date_cloture_preinscriptions_errorloc' class='error_strings'></span>";
+<script>DateInput('date_limite_preinscriptions', true, 'YYYY-MM-DD','$DATE_LIMITE_PREINSCRIPTIONS')</script>
+<span id='mainform_date_limite_preinscriptions_errorloc' class='error_strings'></span>";
 
 /* <label>
  Droits d'inscription :
@@ -179,7 +179,7 @@ echo '
  var date= year + "-" + mois + "-" + jour;
  frmvalidator.addValidation("date_debut","regexp=^" + date + "$","Champ Date debut a la forme YYYY-MM-DD"); 
  frmvalidator.addValidation("date_fin","regexp=^" + date + "$","Champ Date fin a la forme YYYY-MM-DD"); 
- frmvalidator.addValidation("date_cloture_preinscriptions","regexp=^" + date + "$","Champ Date cloture a la forme YYYY-MM-DD"); 
+ frmvalidator.addValidation("date_limite_preinscriptions","regexp=^" + date + "$","Champ Date limite a la forme YYYY-MM-DD"); 
 </script>
 
 </div>
@@ -332,15 +332,15 @@ function menu(){
 <div id="menu">
   <ul>
   <LI><a href="?item=renseignements">Formulaire renseignements sur la régate</a></LI>
-  <LI><A href="?item=urls">Adresses formulaire inscription et liste des préinscripts</A></LI>
-  <LI><A href="?item=inscrits">Liste des préinscripts</A></LI>
+  <LI><A href="?item=urls">Adresses formulaire inscription et liste des préinscrits</A></LI>
+  <LI><A href="?item=inscrits">Liste des préinscrits</A></LI>
   <LI><A href="?item=exportation">Exportation des données (et intégration avec FREG)</A></LI>
   <LI><a href="?item=mail">Envoyer un courriel à tous les préinscrits</a></LI>
   <LI>Imprimer des listes pour l\'accueil des participants :
     <ol> 
-    <li><a href="?item=emargements&serie=LA4&nocontext&nobackground">Laser 4.7</a></li>
-    <li><a href="?item=emargements&serie=LAR&nocontext&nobackground">Laser radial</a></li>
-    <li><a href="?item=emargements&serie=LAS&nocontext&nobackground">Laser standard</a></li>
+    <li><a href="accueil_participants?serie=LA4">Laser 4.7</a></li>
+    <li><a href="accueil_participants?serie=LAR">Laser radial</a></li>
+    <li><a href="accueil_participants?serie=LAS">Laser standard</a></li>
     </ol>
   </LI>
   <!-- <LI><a href="deconnexion.php">Deconnexion</a></LI> -->
@@ -446,15 +446,15 @@ function mails(){
   
   $req = $bdd->prepare('SELECT mail FROM Inscrit WHERE (ID_regate =?)');
   $req->execute(array($_SESSION["ID_regate"]));  
-  $i=0;
+
+  $i=0; $mails[0] = "";
   while($mail=$req->fetchColumn(0)) $mails[$i++]=$mail;
   $mails_all=implode(',',$mails);
-  
   unset($mails);
   
   $req = $bdd->prepare('SELECT mail FROM Inscrit WHERE (ID_regate =?) and conf=1');
   $req->execute(array($_SESSION["ID_regate"]));  
-  $i=0;
+  $i=0;$mails[0] = "";
   while($mail=$req->fetchColumn(0)) $mails[$i++]=$mail;
   $mails_confirme=implode(',',$mails);
   
@@ -462,7 +462,7 @@ function mails(){
   
   $req = $bdd->prepare('SELECT mail FROM Inscrit WHERE (ID_regate =?) and conf=0');
   $req->execute(array($_SESSION["ID_regate"]));  
-  $i=0;
+  $i=0;$mails[0] = "";
   while($mail=$req->fetchColumn(0)) $mails[$i++]=$mail;
   $mails_pas_confirme=implode(',',$mails);
 

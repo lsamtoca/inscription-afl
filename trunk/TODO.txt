@@ -1,3 +1,1 @@
-* Ajouter une exportation des coureurs inscrits en format excel
-
 * 

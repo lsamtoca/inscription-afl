@@ -2,6 +2,32 @@
   require "partage.php";
   xhtml_pre("Régates ouvertes à l'inscription");
   
+  function do_liste($req,$titre){
+    echo "<h2>$titre</h2>\n";
+    
+
+	echo '<ul>';
+	if($req->rowCount() == 0) {
+	 echo '<li>Aucune</li>';
+	} else {
+	
+  	 while($row=$req->fetch()){
+	 
+	   echo "<li>";
+	   if($row['date_debut'] != "00-00-0000" and $row['date_fin'] != "00-00-0000")
+	     printf("Du %s au %s : ",$row['date_debut'],$row['date_fin']);
+	   printf("<a href=\"%s\">%s</a>",format_url_regate($row['ID_regate']),$row['titre']);
+	 
+	   if($row['lieu'] != "")
+	     printf(" à %s",$row['lieu']);
+       echo ".</li>\n";
+     
+	 }
+	 }
+    echo '</ul>';  
+  }
+  
+  
   try
   {
 	// On se connecte à MySQL
@@ -13,27 +39,18 @@
 	$sql = 'SELECT `ID_regate`,`titre`,`lieu`,
 	 DATE_FORMAT(`date_debut`, \'%d-%m-%Y\') as `date_debut`,
 	 DATE_FORMAT(`date_fin`, \'%d-%m-%Y\') as `date_fin` FROM `Regate` 
-	 WHERE 1 order by `date_debut`';
+	 WHERE `date_limite_preinscriptions` >= DATE(NOW()) order by `date_debut`';
 	$req = $bdd->query($sql);
 	
+	do_liste($req,'Régates à venir');
 	
-	echo '<ul>';
-	while($row=$req->fetch()){
-	 
-	 echo "<li>";
-	 
-	 if($row['date_debut'] != "00-00-0000" and $row['date_fin'] != "00-00-0000")
-	   printf("Du %s au %s : ",$row['date_debut'],$row['date_fin']);
-	 printf("<a href=\"%s\">%s</a>",format_url_regate($row['ID_regate']),$row['titre']);
-	 
-	 if($row['lieu'] != "")
-	   printf(" à %s",$row['lieu']);
-     
-     echo ".</li>\n";
-     
-	}
-    echo '</ul>';
-
+    $sql = 'SELECT `ID_regate`,`titre`,`lieu`,
+	 DATE_FORMAT(`date_debut`, \'%d-%m-%Y\') as `date_debut`,
+	 DATE_FORMAT(`date_fin`, \'%d-%m-%Y\') as `date_fin` FROM `Regate` 
+	 WHERE `date_limite_preinscriptions` <= DATE(NOW()) order by `date_debut`';
+	$req = $bdd->query($sql);
+	
+	do_liste($req,'Régates passées ou closes à la pré-inscription');
 
 }
 catch(Exception $e)
@@ -42,6 +59,8 @@ catch(Exception $e)
     die('Erreur : '.$e->getMessage());
 }
 
+  
+  
   
   
   

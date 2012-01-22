@@ -45,9 +45,9 @@ try
 //	$date=$_POST['anne_naissance']."-".$_POST['mois_naissance']."-".$_POST['jour_naissance'];
 
 	$sql = 'INSERT INTO Inscrit (nom, prenom,naissance,num_lic,isaf_no,num_club,nom_club,
-	prefix_voile,num_voile,serie,adherant,sexe,conf,mail,statut,ID_regate)
+	prefix_voile,num_voile,serie,adherant,sexe,conf,mail,statut,ID_regate,`date preinscription`)
 	VALUES(:nom,:prenom,:naissance,:num_lic,:isaf_no,:num_club,:nom_club,
-	:prefix_voile,:num_voile,:serie,:adherant,:sexe,:conf,:mail,:statut,:ID_regate)';
+	:prefix_voile,:num_voile,:serie,:adherant,:sexe,:conf,:mail,:statut,:ID_regate,:date_preinscription)';
 	$req = $bdd->prepare($sql);
 	$req->execute(array(
 		'nom' => $_POST['Nom'],
@@ -66,7 +66,8 @@ try
 		'conf' => "0",
 		'mail' => $_POST['mail'],
 		'statut' => $_POST['statut'],
-		'ID_regate' => $_POST['IDR']
+		'ID_regate' => $_POST['IDR'],
+		'date_preinscription' =>  date('Y-m-d G:i:s')
 	));
 
     xhtml_pre("Vous êtes (presque) préinscrit");
@@ -87,7 +88,7 @@ try
     $url_confirmation=format_confirmation_regate($row['ID_inscrit']);
     
     $message_email_fr="Bonjour ".$_POST['Prenom'].",\n\n"
-      ."veuillez confirmer votre inscription à la regate en cliquant le lien suivant:\n"
+      ."veuillez confirmer votre inscription à la régate en cliquant le lien suivant:\n"
       .$url_confirmation."\n\n"
       ."Bon vent,\n\t l'AFL";
     

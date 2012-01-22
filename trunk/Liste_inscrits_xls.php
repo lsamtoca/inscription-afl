@@ -8,7 +8,7 @@ if(!isset($_SESSION["ID_regate"]))
 require "partage.php";
 require "classes/PHPExcel.php";
 
-//define("FILENAME",sprintf("%sinscrits.xlsx",$racine)); //constante: nom du fichier à générer
+//define("FILENAME",sprintf("%sinscrits.xlsx",$racine)); //constante: nom du fichier à generer
 
 $fields=array(
   'nom' => 'Nom',
@@ -29,7 +29,9 @@ $fields=array(
   'num_club' => 'Club no.',
   'adherant' => 'Adhérant AFL (1=ou, 0=non)',
   //
-  'conf' => 'Confirmé'
+  'conf' => 'Confirmé',
+  'date preinscription' => 'Date préinscription',
+  'date confirmation' => 'Date confirmation',
 );
 
 function generate_excel(){
@@ -97,7 +99,7 @@ function generate_excel(){
 
 $excel=generate_excel();
 
-// Redirect output to a client’s web browser (Excel5)
+// Redirect output to a client's web browser (Excel5)
 header('Content-Type: application/vnd.ms-excel');
 header('Content-Disposition: attachment;filename="liste_inscrits.xls"');
 header('Cache-Control: max-age=0');

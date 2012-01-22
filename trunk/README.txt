@@ -1,28 +1,30 @@
 Liste des fichier dans le projet
 
 1) partage.php :
-du code partagÈ par les autres fichiers
+code partag√© par les autres fichiers
 
 2) AFLdb.php
-fichier contenant les donnÈes du db du serveur 
+fichier contenant les don√©es du db du serveur 
 (en particulier login et mdp)
-‡ cacher quelques part
+√† cacher quelques part
 
 3) index.php
 pour pouvoir exemplifier le programme
 
 4) Liste_regates.php
-Liste des regates disponibles ‡ l'inscription
+Liste des regates ouvertes √† l'inscription
 (pour pouvoir exemplifier le programme)
 
 5) Formulaire.php
-Le formulaire pour pouvoir se prÈinscrire
+Le formulaire pour pouvoir se prÔøΩinscrire
 Quel est la difference avec preinscription ?
 
 6) Regate.php
-Afin qu'un club puisse decrire sa regate est gerer les inscrits
+Fichier principal, pour g√©rer une r√©gate.
+Afin qu'un club puisse d√©crire la regate qu'il organise, et
+g√©rer les inscrits
 7) LoginClub.php
-Un club doit se loguer avant utiliser Regate.php
+Un club doit se logguer avant utiliser Regate.php
 
 8) Admin.php
 Creer un nouveau evenement et donner les mdps aux organisateurs
