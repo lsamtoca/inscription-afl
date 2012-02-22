@@ -393,7 +393,7 @@ function generate_dbf(){
              $value=$correspondence[$field[0]];
              
              if($value[1] == '')
-              $record[$i]=$row[$value[0]];
+              $record[$i]= utf8_decode($row[$value[0]]);
              else
               $record[$i]= $value[1];
           }

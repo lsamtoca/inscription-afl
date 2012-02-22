@@ -8,6 +8,8 @@
 	}
 
    require "partage.php";
+   require_once('mailer.php');
+    
    xhtml_pre1("Gestion de votre régate");
 ?>
 
@@ -30,23 +32,21 @@
 <?php
   xhtml_pre2("Gestion de votre régate");
 
-// Update the informations on the database of these are set
+// Update the informations on the database if these are set
 try{
 	// On se connecte à MySQL
     $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 	//$bdd = new PDO('mysql:host=localhost;dbname=LASER', 'root', 'root', $pdo_options);
 	$bdd = new PDO($pdo_path, $user, $pwd, $pdo_options);
 		
-	$fields=array('titre','description','cv_organisateur','lieu','date_debut','date_fin','date_limite_preinscriptions','droits');
+	$fields=array('titre','description','cv_organisateur','lieu','date_debut','date_fin','date_limite_preinscriptions','droits','courriel');
 	foreach($fields as $field)
 	{
 	   if(isset($_POST[$field]))
-       {
-//	       echo "N. $field : " . $_POST[$field];
-	    
+       {	    
 	       $sql = "UPDATE Regate SET `$field`=? WHERE ID_regate =?";
 		   $req = $bdd->prepare($sql);
-    	   $req->execute(array($_POST[$field],$_SESSION["ID_regate"]));
+    	   $req->execute(array(clean_post_var($_POST[$field]),$_SESSION["ID_regate"]));
     	   $req->closeCursor();
        }
 	}
@@ -64,7 +64,7 @@ try{
 	//$bdd = new PDO('mysql:host=localhost;dbname=LASER', 'root', 'root', $pdo_options);
 	$bdd = new PDO($pdo_path, $user, $pwd, $pdo_options);
 	
-	$req = $bdd->prepare('SELECT `ID_regate`, `titre`,`description`, `cv_organisateur`,`lieu`,`date_debut`,`date_fin`,`date_limite_preinscriptions`,`droits` FROM Regate WHERE ID_regate=?');
+	$req = $bdd->prepare('SELECT `ID_regate`, `titre`,`description`, `cv_organisateur`,`lieu`,`date_debut`,`date_fin`,`date_limite_preinscriptions`,`droits`,`courriel` FROM Regate WHERE ID_regate=?');
 	$req->execute(array($_SESSION["ID_regate"]));
     $donnees = $req->fetch();
     $req->closeCursor();	
@@ -72,6 +72,7 @@ try{
     $TITRE_REGATE= $donnees['titre'];
     $DESC_REGATE= $donnees['description'];
     $CV_ORGANISATEUR=$donnees['cv_organisateur'];
+    $COURRIEL=$donnees['courriel'];
     $LIEU=$donnees['lieu'];
     $DATE_DEBUT_REGATE=$donnees['date_debut'];
     $DATE_FIN_REGATE=$donnees['date_fin'];
@@ -91,7 +92,7 @@ catch(Exception $e){
 
 function renseignements(){
 
-global $TITRE_REGATE, $DESC_REGATE, $LIEU, $CV_ORGANISATEUR, $DATE_DEBUT_REGATE, $DATE_FIN_REGATE, $DATE_LIMITE_PREINSCRIPTIONS, $DROITS;
+global $TITRE_REGATE, $DESC_REGATE, $LIEU, $CV_ORGANISATEUR, $DATE_DEBUT_REGATE, $DATE_FIN_REGATE, $DATE_LIMITE_PREINSCRIPTIONS, $DROITS,$COURRIEL;
 
 echo "
 <div >
@@ -125,6 +126,14 @@ Lieu  :
 Club organisateur :
 </label>
 <textarea id='cv_organisateur' name='cv_organisateur' cols='50' rows='1'>$CV_ORGANISATEUR</textarea>
+
+<br />
+
+<label>
+Courriel du club :
+</label>
+<textarea id='courriel' name='courriel' cols='50' rows='1'>$COURRIEL</textarea>
+<span id='mainform_courriel_errorloc' class='error_strings'></span>
 
 <hr />
 ";
@@ -172,6 +181,8 @@ echo '
  frmvalidator.addValidation("date_debut","required","Champ Date debut obligatoire");
  frmvalidator.addValidation("date_fin","required","Champ Date fin obligatoire");
  frmvalidator.addValidation("lieu","required","Champ Lieu obligatoire");
+ frmvalidator.addValidation("courriel","required","Champ Courriel du club obligatoire");
+ frmvalidator.addValidation("courriel","email","Champ Courriel du club n\'est pas un adresse email valide");
   
  var year="[1-2][0-9]{3}";
  var mois="0[1-9]|1[0-2]";
@@ -376,69 +387,34 @@ function mails(){
   
   global $bdd;
   
-
+  // Oblige to fill the information about email
+  if(! filter_var($_SESSION['courriel'], FILTER_VALIDATE_EMAIL))
+  {
+    echo 'L\'adresse \''. $_SESSION['courriel'] .'\' n\'est pas un adresse email valide.<br />';
+    echo 'Veuillez compléter le champ Courriel dans le <a href="?item=renseignements">formulaire renseignements sur la régate</a>.<br />';
+    echo 'Ensuite, logguez vous à nouveau.';
+    return;
+  }
+  
+  
   if(isset($_POST['envoyer_mail'])){
     
-    $ME = "inscriptions-afl@regateslaser.info";
-	$CC="inscriptions-afl@regateslaser.info";
-	if(!$_POST['cc']=="")
-	   $CC .=','.$_POST['cc'];
-    
-    $to=$_POST['to'];
-    $subject = my_quoted_printable_encode ($_POST['objet'],58,'subject');
-//    $message = $_POST['message'];
-  
-	 
-	$headers  = "From: $ME\r\n" ;
-    $headers .= "Reply-To: $ME\r\n";
-	$headers .= "CC: $CC\r\n" ;
-    $headers .= 'MIME-Version: 1.0' . "\r\n";
-    //create a boundary string. It must be unique
-    //so we use the MD5 algorithm to generate a random hash
-    $random_hash = md5(date('r', time())); 
-    $php_mixed="PHP-mixed-$random_hash";
-    $php_alt="PHP-alt-$random_hash";
-	$headers .= "Content-Type: multipart/mixed; boundary=\"$php_mixed\"" . "\r\n";
-	$headers .= "This is a multi-part message in MIME format.\r\n"; 
-//	$headers .= 'Content-Type: text/plain; charset="UTF-8"' . "\r\n";
-	$headers .= 'X-Mailer: PHP/' . phpversion();	
-    
-    //define the body of the message.
-    $message='--'.$php_mixed. "\r\n";
-/*    $message.="Content-Type: multipart/alternative; boundary=\"$php_alt\"" . "\r\n";     
-    $message.='--'.$php_alt. "\r\n";*/
-    $message.='Content-Type: text/plain; charset="UTF-8"'. "\r\n";
-    $message.='Content-Transfer-Encoding: 8bit' . "\r\n\r\n";
-    $message.= $_POST['message']. "\r\n". "\r\n";
-/*    $message.='--'.$php_alt.'--'. "\r\n";*/
-    
-    
-    if($_FILES['attachment']['error'] == 0){
-      //echo 'piece jointe trouvée';
-      $attachment_tmp_name=$_FILES['attachment']['tmp_name'];
-      $attachment_name=$_FILES['attachment']['name'];
-      $attachment_type=$_FILES['attachment']['type'];
-      
-      // The attachment
-      //read the attachment file contents into a string,
-      //encode it with MIME base64,
-      //and split it into smaller chunks
-      $attachment = chunk_split(base64_encode(file_get_contents($attachment_tmp_name)));
+    // From = replyto = to
+    if(isset($_SESSION['courriel']) and $_SESSION['courriel'] != '')
+      $sender=$_SESSION['courriel'];
+    else
+      $sender= "inscriptions-afl@regateslaser.info";
+    $to=$sender;
 
-      $message.='--'.$php_mixed . "\r\n";
-      $message.="Content-Type: $attachment_type; name=\"$attachment_name\"" . "\r\n";
-      $message.='Content-Transfer-Encoding: base64' . "\r\n";
-      $message.='Content-Disposition: attachment' . "\r\n"  . "\r\n";
-      $message.=$attachment. "\r\n"  . "\r\n";
-    }
-   
-    // Fin
-    $message.='--'.$php_mixed.'--'. "\r\n";
+    $subject = clean_post_var($_POST['objet']);
+    $message = clean_post_var($_POST['message']);
 
-//  echo '<pre>'.$message.'</pre>';
-    if(mail($to, $subject, $message, $headers))
-     echo "Message envoyé à:\n\t$to";
-    
+    $bcc=$_POST['to']; // destinataires en BCC
+    $cc=$_POST['cc'];
+
+    if(send_mail_text_attachement($sender,$to,$subject,$message,$cc,$bcc))
+     echo "Message envoyé à:\n\t$bcc";
+
     return;
   }
   

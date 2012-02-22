@@ -20,9 +20,10 @@
 	 
 	   if($row['lieu'] != "")
 	     printf(" à %s",$row['lieu']);
+       echo ". ";
+       printf("<a href=\"%s\">Liste des préinscrits</a>",format_url_preinscrits($row['ID_regate']));
        echo ".</li>\n";
-     
-	 }
+	   }
 	 }
     echo '</ul>';  
   }
@@ -36,18 +37,20 @@
 	$bdd = new PDO($pdo_path, $user, $pwd, $pdo_options);
 	
 	
-	$sql = 'SELECT `ID_regate`,`titre`,`lieu`,
+	$sql = 'SELECT `ID_regate`,`titre`,`lieu`, 
+	`date_debut` as `date`,
 	 DATE_FORMAT(`date_debut`, \'%d-%m-%Y\') as `date_debut`,
 	 DATE_FORMAT(`date_fin`, \'%d-%m-%Y\') as `date_fin` FROM `Regate` 
-	 WHERE `date_limite_preinscriptions` >= DATE(NOW()) order by `date_debut`';
+	 WHERE `date_limite_preinscriptions` >= DATE(NOW()) order by `date`';
 	$req = $bdd->query($sql);
 	
 	do_liste($req,'Régates à venir');
 	
     $sql = 'SELECT `ID_regate`,`titre`,`lieu`,
+     `date_debut` as `date`,
 	 DATE_FORMAT(`date_debut`, \'%d-%m-%Y\') as `date_debut`,
 	 DATE_FORMAT(`date_fin`, \'%d-%m-%Y\') as `date_fin` FROM `Regate` 
-	 WHERE `date_limite_preinscriptions` <= DATE(NOW()) order by `date_debut`';
+	 WHERE `date_limite_preinscriptions` < DATE(NOW()) order by `date`';
 	$req = $bdd->query($sql);
 	
 	do_liste($req,'Régates passées ou closes à la pré-inscription');
