@@ -1,15 +1,15 @@
 <?php
 	session_start();
-	require "partage.php";
+	require 'partage.php';
 	
-	if(isset($_SESSION["ID_administrateur"]))
+	if(isset($_SESSION['ID_administrateur']))
 	{
-		header("Location: Admin.php");
+		header('Location: Admin.php');
 	}
-	if(isset($_POST["submit"]))
+	if(isset($_POST['submit']))
 	{
 		/* Un des champs est manquant */
-		if(!isset($_POST["login"]) || !isset($_POST["pass"]))
+		if(!isset($_POST['login']) || !isset($_POST['pass']))
 			$error_login="<span style='color:red'><br /><br />Un ou plusieurs champs sont manquants.</span>";
 
 		else if($_POST["pass"]=="" || $_POST["login"]=="")

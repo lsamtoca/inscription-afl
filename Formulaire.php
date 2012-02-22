@@ -1,7 +1,122 @@
 <?php
   require "partage.php";
-  xhtml_pre1("Préinscription");
+  
+  //
+  // Demander les infos sur la régate
+  //
+  try{
+    $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+    $bdd = new PDO($pdo_path, $user, $pwd, $pdo_options);
+    $sql = 'SELECT `ID_regate`,`titre`,`lieu`,`description`, ' .
+	 'DATE_FORMAT(`date_debut`, \'%d-%m-%Y\') as `date_debut`, '.
+	 'DATE_FORMAT(`date_fin`, \'%d-%m-%Y\') as `date_fin`, '.
+	 '`date_limite_preinscriptions` '.
+	 'FROM `Regate` '.
+	 'WHERE ID_regate = ?';
+    $req = $bdd->prepare($sql);
+	$req->execute(array($_GET['regate']));
+	if($req->RowCount() == 0)
+	 die('Cette régate n\'existe pas :-(');
+	 
+    // Tout ce qu'on veut savoir sur la regate 
+    $regate = $req->fetch();
+    $URLPRE=format_url_preinscrits($_GET['regate']);
+    if($regate['date_limite_preinscriptions'] != ''){
+      $now = new DateTime;
+      $limite = new DateTime($regate['date_limite_preinscriptions']);
+      $limite->setTime(23,59);
+    }
+
+    }catch(Exception $e){
+	// En cas d'erreur, on affiche un message et on arrête tout
+    die('Erreur : '.$e->getMessage());
+    }
+  
+  // Pre-rmplissage du formulaire
+  
+  // Association :
+  // bd => form
+  $association = array(
+    	'nom' => 'Nom',
+		'prenom' => 'Prenom',
+        'naissance' => 'naissance',
+		'num_lic' => 'lic',
+		'isaf_no' => 'isaf_no',
+		'num_club' => 'num_club',
+		'nom_club' => 'nom_club',
+		'prefix_voile' => 'Cvoile',
+		'num_voile' => 'Nvoile',
+		'serie' => 'serie',
+		'adherant' => 'adherant',
+		'sexe' => 'sexe',
+		//'conf' => '0',
+		'mail' => 'mail',
+		'statut' => 'statut',
+		'prefix_voile' => 'C_voile',
+        'num_voile' => 'N_voile',
+        //'ID_regate' => 'IDR',
+		//'date_preinscription' =>  date('Y-m-d G:i:s')
+  );
+  
+  foreach($association as $field_bd => $field_form)
+        $data[$field_form] = '';
+  
+  $data['naissance']='1994-01-01';
+  $data['search_lic']='';
+  $data['M']='';
+  $data['F']='';
+  
+  $data['LAS']='';
+  $data['LAR']='';
+  $data['LA4']='';
+  
+  $data['Licencie']='';
+  $data['Etranger']='';
+  $data['Autre']='';
+
+  $data['ad_AFL']='';
+  $data['non_ad_AFL']='';
+  
+  //
+  // Si on demande de pre-remplir le formulaire
+  //
+
+  if(isset($_POST['search_submit'])){
+  try {
+  
+    $sql="Select * from `Inscrit` where `num_lic`=? order by `date preinscription` desc";
+//    echo $sql;
+    $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+	$bdd = new PDO($pdo_path, $user, $pwd, $pdo_options);
+    $req = $bdd->prepare($sql);
+	$req->execute(array($_POST['search_lic']));
+    if($req->rowCount() > 0){
+      $row=$req->fetch();
+      foreach($association as $field_bd => $field_form)
+        $data[$field_form] = $row[$field_bd];
+        
+      $data[$row['sexe']] ='checked';
+      $data[$row['serie']]='checked';
+      $data[$row['statut']]='checked';
+        
+      if($row['adherant'] == '1')
+          $data['ad_AFL']='checked';
+      else
+          $data['non_ad_AFL']='checked';
+      }
+    }catch(Exception $e)
+    {
+	 // En cas d'erreur, on affiche un message et on arrête tout
+      die('Erreur : '.$e->getMessage());
+    }
+  
+    $data['search_lic']=$_POST['search_lic'];
+  
+  }
 ?>
+
+
+<?php   xhtml_pre1("Préinscription"); ?>
 
 <script type="text/javascript" src="classes/calendarDateInput.js">
 /***********************************************
@@ -25,13 +140,44 @@ var strings_en = [];
 var labels = [];
 var langue = 'fr';
 
+function debug_labels(){
+  var msg='';
+  for(i in labels){
+    msg=msg + "\n" + labels[i] + " :\n" + get_string(labels[i]);
+  }
+  alert(msg);
+}
+
+// function double_label_test(french,english,at_begin){
+// 
+//   alert(this.partentNode.nodeName);
+//   label=this.partentNode.nodeName;
+//   
+//   strings_fr[label]=french;
+//   strings_en[label]=english;
+//   
+//   var found=false;
+//   for(l in labels){
+//     if(l==label) { found=true; break;}
+//     }
+//   if(!found)
+//     labels.push(label);
+//     
+//   if(at_begin) {
+//     if(langue=='fr')
+//       document.getElementById(label).innerHTML=strings_fr[label];
+//     else  
+//       document.getElementById(label).innerHTML=strings_en[label];
+//       }
+// }
+
 function double_label(label,french,english,at_begin){
   strings_fr[label]=french;
   strings_en[label]=english;
   
   var found=false;
-  for(l in labels){
-    if(l==label) { found=true; break;}
+  for(i in labels){
+    if(labels[i]==label) { found=true; break;}
     }
   if(!found)
     labels.push(label);
@@ -54,6 +200,8 @@ function get_string(label){
 function set_anglais(){  
    langue='en';
    document.getElementById('input_lang').value='en';
+   
+   add_validations_searchform();
    add_validations_mainform();
    
    for (i in labels) {
@@ -65,9 +213,10 @@ function set_anglais(){
 function set_francais(){
     langue='fr';
     document.getElementById('input_lang').value='fr';
-       
+    
+    add_validations_searchform();       
     add_validations_mainform();
-
+    
    for (i in labels) {
     if(! document.getElementById(labels[i]).innerHTML=='')
       document.getElementById(labels[i]).innerHTML=strings_fr[labels[i]];
@@ -82,101 +231,194 @@ function switch_language(){
     
 }
 
+// A bunch of function to ease handling 
+// of validation and double language
+
+function my_validation_required(form,champ,validator){ 
+
+   double_label(form+'_'+champ+'_errorloc',
+    'Le champ '+ strings_fr['l_'+champ]+ ' est obligatoire',
+    'Field '+ strings_en['l_'+champ]+ ' is required',
+    false);
+    
+//   alert(get_string(form+'_'+champ+'_errorloc'));
+   validator.addValidation(champ,'required',get_string(form+'_'+champ+'_errorloc'));
+}
+
+function my_validation_required_condition(form,champ,validator,condition,expl_fr,expl_en){ 
+
+   double_label(form+'_'+champ+'_errorloc',
+    expl_fr + ' : le champ '+ strings_fr['l_'+champ]+ ' est obligatoire',
+    expl_en + ': field '+ strings_en['l_'+champ]+ ' is required',
+    false);
+    
+//   alert(get_string(form+'_'+champ+'_errorloc'));
+   validator.addValidation(champ,'required',get_string(form+'_'+champ+'_errorloc'),condition);
+}
+
+function my_validation_email(form,champ,validator){ 
+    double_label(form+'_'+champ+'_errorloc',
+    'Le champ '+ strings_fr['l_'+champ]+ ' n\'est pas une adresse email valide',
+    'Field '+ strings_en['l_'+champ]+ ' is not a valid email address',
+    false);
+   
+   validator.addValidation(champ,'email',get_string(form+'_'+champ+'_errorloc'));
+}
+
+function my_validation_radio(form,champ,validator,french,english){
+    double_label(form+'_'+champ+'_errorloc',french,english,false);  
+    validator.addValidation(champ,'selone_radio',get_string(form+'_'+champ+'_errorloc')); 
+}
+
+function my_validation_regexp(form,champ,validator,regexp,french,english){
+    double_label(form+'_'+champ+'_errorloc',
+    'Le champ '+ strings_fr['l_'+champ]+ ' n\'est pas de la forme ' + french,
+    'Field '+ strings_en['l_'+champ]+ ' is not of the form ' + english,
+    false);
+  
+/*    debug_labels();
+    alert(form+'_'+champ+'_errorloc' + "\n" + get_string(form+'_'+champ+'_errorloc'));*/
+    validator.addValidation(champ,'regexp=^'+regexp+'$',get_string(form+'_'+champ+'_errorloc'));
+}
+
 
 //]]>
 </script>
 
-<?php
-  xhtml_pre2("Préinscription");
-?>
-
-
+<?php xhtml_pre2("Préinscription");?>
 
 <div id='infos_regate'>
-<?php
 
-// Ce code permet de reperer et afficher les infos sur la regate
-try
-{
-    $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-    $bdd = new PDO($pdo_path, $user, $pwd, $pdo_options);
-    
-    $sql = 'SELECT `ID_regate`,`titre`,`lieu`,`description`,
-	 DATE_FORMAT(`date_debut`, \'%d-%m-%Y\') as `date_debut`,
-	 DATE_FORMAT(`date_fin`, \'%d-%m-%Y\') as `date_fin`,
-	 `date_limite_preinscriptions`
-	 FROM `Regate` 
-	 WHERE ID_regate = ?';
-    $req = $bdd->prepare($sql);
-	$req->execute(array($_GET['regate']));
-    $row = $req->fetch();
-        
-    
-    
-    echo '<p>';
-    // Affichage dates
-    if($row['date_debut'] != "00-00-0000" and $row['date_fin'] != "00-00-0000")
-	   printf("Du %s au %s : ",$row['date_debut'],$row['date_fin']);
-	
-	// Affichage titre et lieu
-	printf("<b>%s</b>",$row['titre']); 
-	if($row['lieu'] != "")
-	   printf(" à %s",$row['lieu']);
-	echo '.';
-	echo '</p>'."\n";
-    
-    // Affichage description
-    echo '<p>';
-    echo $row['description'];
-    echo '</p>'."\n";
-  
-    // Lien sur la liste des préinscrits
-    $URLPRE=format_url_preinscrits($_GET['regate']);
-    echo '<p>';
-    echo "<a href='$URLPRE'><span id='liste_preinscrits'></span></a>" ."\n";
-    echo '<script type="text/javascript">'."\n";
-    echo 'double_label("liste_preinscrits","Liste des préinscrits.","Preregistered sailoirs.",true)'."\n";
-    echo '</script>'."\n";
-    echo '</p>'."\n";
-    
+<!--Dates, titre, description-->
 
-    if($row['date_limite_preinscriptions'] != ''){
-          
-      $now = new DateTime;
-      $limite = new DateTime($row['date_limite_preinscriptions']);
-      $limite->setTime(23,59);
-      
-      echo '<p>';
-      echo '<span id="deadline"></span>'."\n";
-      echo '<script type="text/javascript">';
-      echo 'double_label("deadline","Date ultime pour se préinscrire : le ","Deadline for preregistration: ",true)'."\n";
-      echo '</script>'."\n";
-      echo $limite->format( 'd-m-Y' );
-      echo '</p>'."\n";
- 
-      if($now > $limite){
-            echo '<p>';
-            echo 'La date limite pour se préinscrire à cette régate, le '. $limite->format( 'd-m-Y' ) . ' est passée. <br /> ';
-            echo 'Il n\'est plus possible se préinscrire à cette régate :-(';
-            echo '</p>';
-            xhtml_post();
-            die('');
-       }
-    }
-    
-}
-catch(Exception $e)
-{
-	// En cas d'erreur, on affiche un message et on arrête tout
-    die('Erreur : '.$e->getMessage());
-}
-?>
+<p>
+<?php if($regate['date_debut'] != "00-00-0000" and $regate['date_fin'] != "00-00-0000"): ?>
+  Du <?php echo $regate['date_debut']; ?> au <?php echo $regate['date_fin']; ?> : 
+<?php endif; ?>
+<b><?php echo $regate['titre']; ?></b>
+<?php if($regate['lieu'] != ""): ?>
+ à <?php echo $regate['lieu']; ?>
+<?php endif; ?>.
+</p>
+<p><?php echo $regate['description']?></p>
 
-</div>
+<!--Lien sur la liste des préinscrits-->
+<p>
+<a href="<?php echo $URLPRE;?>">
+<span id='liste_preinscrits'></span></a>
+<script type="text/javascript">
+double_label("liste_preinscrits","Liste des préinscrits.","Preregistered sailoirs.",true)
+</script>
+</p>
 
+<!--Date limite pré-inscription-->
+
+<?php if($regate['date_limite_preinscriptions'] != ''): ?>
+<p>
+<span id="deadline"></span>
+<script type="text/javascript">
+double_label("deadline","Date ultime pour se préinscrire : le ","Deadline for preregistration: ",true)
+</script>
+<?php echo $limite->format( 'd-m-Y' ); ?>
+</p>
+
+<?php if($now > $limite): ?>
+<p>
+La date limite pour se préinscrire à cette régate, 
+le <?php echo $limite->format( 'd-m-Y' ); ?> est passée. 
+<br /> 
+Il n'est plus possible se préinscrire à cette régate :-
+</p>
+<?php xhtml_post(); die(''); ?>
+<?php endif; ?>
+<?php endif; ?>
+
+</div> <!--infos_regate-->
 
 <div id='choix_langue'>
-[<a onclick='switch_language()'><span id='choisir_langue'></span></a>]
+[<a onclick='switch_language()'>
+  <span id='choisir_langue'>
+  <script  type="text/javascript" xml:space="preserve">
+  double_label('choisir_langue','this form in English','ce formulaire en Français',true);
+  </script>
+  </span></a>]
+</div><!--choix langue-->
+
+<div id='search'>
+
+<fieldset>
+	<legend><span id='search_legend'>
+        <script  type="text/javascript" xml:space="preserve">
+          double_label('search_legend',
+            'Si vous avez déjà utilisé ce système, ' +
+            'vous pouvez compléter le formulaire avec un click. ' +
+            'Me chercher par ','Look for myself by',true);
+	     </script>
+	</span></legend>
+	
+	<form name="searchform" id="searchform" action="<?php echo $_SERVER['PHP_SELF']."?regate=".$_GET['regate'];?>" method="post" onsubmit="return validateForm();">
+	
+	<label for="search_lic"><span id='l_search_lic'>
+	    <script  type="text/javascript" xml:space="preserve">
+          double_label('l_search_lic','Numéro de licence ','Licence number',true);
+	     </script>
+	</span> : </label>
+    <input name="search_lic" id="search_lic" type="text" size="8" maxlength="8" value="<?php echo $data['search_lic']; ?>"/>
+    
+    <input name="search_submit" type='submit' value="Chercher">
+	<span id='searchform_search_lic_errorloc' class='error_strings'></span>
+
+	
+	</form>
+	
+</fieldset>	
+<script  type="text/javascript" xml:space="preserve">
+//<![CDATA[
+
+function add_validations_searchform(){
+
+  var searchvalidator  = new Validator('searchform');
+  // Choix de l'affichage des messages d'erreur
+  searchvalidator.EnableOnPageErrorDisplay();
+ // search_validator.EnableOnPageErrorDisplaySingleBox();
+  //search_validator.EnableMsgsTogether();
+ 
+  searchvalidator.clearAllValidations();
+  searchvalidator.formobj.old_onsubmit = null;
+     
+  
+  my_validation_required(
+    'searchform',
+    'search_lic',
+    searchvalidator,
+    'Il le faut',
+    'Needed');
+  
+  my_validation_regexp(
+      'searchform',
+      'search_lic',
+      searchvalidator,
+      '[0-9]{7,7}[A-Z]',
+      'NNNNNNNL (7 chiffres et 1 lettre)',
+      'NNNNNNNL (7 digits and 1 letter)');
+    
+
+ 
+/*  my_validation_required_condition('isaf_no',search_validator,
+    "VWZ_IsChecked(document.forms['mainform'].elements['statut'],'Etranger')",
+    "Vous êtes coureur étranger",
+    'You are an international sailor');
+  
+ my_validation_regexp('isaf_no',search_validator,'[A-Z]{5}[0-9]+',
+  'LLLLLN... (5 lettres et au moins 1 chiffre)',
+  'LLLLLN... (5 letters and at least 1 digit)');*/
+  
+}
+
+//]]>
+</script>
+
+
 </div>
 
 <div id='formulaire'>
@@ -190,10 +432,10 @@ catch(Exception $e)
 
 <!-- Donnés personnels : nom prenom, date naissance, sexe -->
 	<label for="Nom"><span id='l_Nom'></span>:</label>
-	<input name="Nom" type="text" id="Nom"/>
+	<input name="Nom" type="text" id="Nom" value="<?php echo $data['Nom']; ?>"/>
 	
 	<label for="Prenom"><span id='l_Prenom'></span>:</label>
-	<input name="Prenom" type="text" id="Prenom"/>
+	<input name="Prenom" type="text" id="Prenom" value="<?php echo $data['Prenom']; ?>"/>
 	    <span id='mainform_Nom_errorloc' class='error_strings'></span>
 	    <span id='mainform_Prenom_errorloc' class='error_strings'></span>
     <br />
@@ -203,108 +445,106 @@ catch(Exception $e)
       <td>    <label><span id='l_naissance'></span>:</label></td>
       <td>
       <!--    <input name="naissance" type="text" id="naissance" value="YYYY-MM-DD" size="10" maxlength="10" /> -->
-    <script type="text/javascript">DateInput('naissance', true, 'YYYY-MM-DD','1994-01-01')</script> 
-    </td>
-    <td>    <div id='mainform_naissance_errorloc' class='error_strings'></div></td>
-    </tr></table>
-  
-    <!--<br />-->
-    
-    
-    <input type="radio" name="sexe" id="radio4" value="M"/>
-	<label for="radio4"><span id='l_homme'></span></label>
-	<input type="radio" name="sexe" id="radio5" value="F"/>
-	<label for="radio5"><span id='l_femme'></span></label>
-    <span id='mainform_sexe_errorloc' class='error_strings'></span>
+    <script type="text/javascript">DateInput('naissance', true, 'YYYY-MM-DD','<?php echo $data['naissance']; ?>');</script>
+</td>
+<td>
+  <div id='mainform_naissance_errorloc' class='error_strings'>
+  </div>
+</td>
+</tr>
+</table>
 
-    <hr />
+<input type="radio" name="sexe" id="radio4" value="M" <?php echo $data['M']; ?> />
+<label for="radio4"><span id='l_homme'></span></label>
+
+<input type="radio" name="sexe" id="radio5" value="F" <?php echo $data['F']; ?> />
+<label for="radio5"><span id='l_femme'></span></label><span id='mainform_sexe_errorloc' class='error_strings'></span>
+
+<hr />
 
 <!-- Contact -->
-    <label for="mail"><span id='l_mail'></span> :</label>
-    <input name="mail" type="text" value="@" id="mail"/>
-    <span id='mainform_mail_errorloc' class='error_strings'></span>
-    
-	
-    <hr />
-    
+
+<label for="mail">
+  <span id='l_mail'></span>: </label>
+<input name="mail" id="mail" type="text" value="<?php echo $data['mail']; ?>" />
+
+<span id='mainform_mail_errorloc' class='error_strings'></span>
+
+
+<hr />
+
 <!-- Club -->
-    <label for="nom_club"><span id='l_nom_club'></span>:</label>
-    <input name="nom_club" type="text" id="nom_club"/>
-    <label for="num_club"><span id='l_num_club'></span>:</label>
-    <input name="num_club" type="text"  id="num_club" size="5" maxlength="5"/>
-    <span id='mainform_num_club_errorloc' class='error_strings'></span>
-       
-     <hr />
-    
+<label for="nom_club">
+  <span id='l_nom_club'></span>: </label>
+  <input name="nom_club" id="nom_club" type="text" value="<?php echo $data['nom_club']; ?>"/>
+
+<label for="num_club">
+<span id='l_num_club'></span>: </label>
+<input name="num_club" id="num_club" type="text" size="5" maxlength="5" value="<?php echo $data['num_club']; ?>"/>
+<span id='mainform_num_club_errorloc' class='error_strings'></span>
+<hr />
+
 <!-- Serie -->
-    <input type="radio" name="serie" id="radio6" value="LAS"/>
-	<label for="radio6">Laser Standard</label>
-	<input type="radio" name="serie" id="radio7" value="LAR"/>
-	<label for="radio7">Laser Radial</label>
-	<input type="radio" name="serie" id="radio8" value="LA4" />
-	<label for="radio8">Laser 4.7</label>
-        <span id='mainform_serie_errorloc' class='error_strings'></span>
-    <br />
 
-	<label for="Cvoile"><span id='l_Nvoile'></span>:</label>
-	<input name="Cvoile" type="text" id="Cvoile" size="3" maxlength="3" value="FRA"/>
-   	<input name="Nvoile" type="text" id="Nvoile" size="6" maxlength="6"/>
-        <span id='mainform_Cvoile_errorloc' class='error_strings'></span>    
-        <span id='mainform_Nvoile_errorloc' class='error_strings'></span>
-    <hr />
-    
+<input type="radio" name="serie" id="radio6" value="LAS" <?php echo $data['LAS']; ?>/>
+<label for="radio6">Laser Standard</label>
+
+<input type="radio" name="serie" id="radio7" value="LAR" <?php echo $data['LAR']; ?> />
+<label for="radio7">Laser Radial</label>
+
+<input type="radio" name="serie" id="radio8" value="LA4" <?php echo $data['LA4']; ?> />
+<label for="radio8">Laser 4.7</label><span id='mainform_serie_errorloc' class='error_strings'></span>
+<br />
+
+<label for="Cvoile"><span id='l_Nvoile'></span>:</label><input name="Cvoile" type="text" id="Cvoile" size="3" maxlength="3" value="<?php echo $data['C_voile']; ?>"/>
+<input name="Nvoile" type="text" id="Nvoile" size="6" maxlength="6" value="<?php echo $data['N_voile']; ?>"/>
+<span id='mainform_Cvoile_errorloc' class='error_strings'></span><span id='mainform_Nvoile_errorloc' class='error_strings'></span>
+<hr />
+
 <!-- Statut : Licence et AFL -->
-    <input type="radio" name="statut" id="radio1" value="Licencie"/>
-	<label for="radio1"><span id='l_ffv'></span></label>
 
-	<input type="radio" name="statut" id="radio3" value="Etranger"/>
-	<label for="radio3"><span id='l_etranger'></span></label>
-	    
-	<input type="radio" name="statut" id="radio2" value="Autre" />
-	<label for="radio2"><span id='l_autre'></span></label>
+<input type="radio" name="statut" id="radio1" value="Licencie" <?php echo $data['Licencie']; ?> />
+<label for="radio1"><span id='l_ffv'></span></label>
 
-	<span id='mainform_statut_errorloc' class='error_strings'></span>
-    <br /> 
-	
-	<label ><span id='l_afl'></span>:</label>
-   	<input type="radio" name="adherant" id="radio9" value="1"/>
-	<label for="radio9"><span id='l_oui'></span></label>
+<input type="radio" name="statut" id="radio3" value="Etranger" <?php echo $data['Etranger']; ?> />
+<label for="radio3"><span id='l_etranger'></span></label>
 
-	<input type="radio" name="adherant" id="radio10" value="0" />
-	<label for="radio10"><span id='l_non'></span></label>
-    <span id='mainform_adherant_errorloc' class='error_strings'></span>
-    <br />
-    
-    
-    <label for="lic"><span id='l_lic'></span></label>
-    <input name="lic" id="lic" type="hidden" size="8" maxlength="8" value=""/>
-       
-    <label for="isaf_no"><span id="l_isaf_no"></span></label>
-    <input name="isaf_no" id="isaf_no" type="hidden" size="7" value=""/>
-    
-    <span id='mainform_lic_errorloc' class='error_strings'></span>
-    <span id='mainform_isaf_no_errorloc' class='error_strings'></span>
-    
+<input type="radio" name="statut" id="radio2" value="Autre" <?php echo $data['Autre']; ?> />
+<label for="radio2"><span id='l_autre'></span></label>
 
-    <br />
-    
-    <div id="message"></div>
-    
-    <hr /> 
+<span id='mainform_statut_errorloc' class='error_strings'></span>
+<br />
 
-<!--  <div id='mainform_errorloc' class='error_strings'></div>-->
+<label ><span id='l_afl'></span>:</label>
+<input type="radio" name="adherant" id="radio9" value="1" <?php echo $data['ad_AFL']; ?> />
 
-    <input type="submit" name="maSoumission" id="soumission" value="Valider"/>
+<label for="radio9"><span id='l_oui'></span></label>
+
+<input type="radio" name="adherant" id="radio10" value="0" <?php echo $data['non_ad_AFL']; ?>/>
+<label for="radio10"><span id='l_non'></span></label>
+
+<span id='mainform_adherant_errorloc' class='error_strings'></span>
+<br />
+
+<label for="lic"><span id='l_lic'></span></label>
+<input name="lic" id="lic" type="hidden" size="8" maxlength="8" value="<?php echo $data['lic']; ?>"/>
+
+<label for="isaf_no"><span id="l_isaf_no"></span></label><input name="isaf_no" id="isaf_no" type="hidden" size="7" value="<?php echo $data['isaf_no']; ?>"/>
+<span id='mainform_lic_errorloc' class='error_strings'></span><span id='mainform_isaf_no_errorloc' class='error_strings'></span>
+<br />
+<div id="message">
+</div>
+<hr />
+
+<!--  <div id='mainform_errorloc' class='error_strings'></div>--><input type="submit" name="maSoumission" id="soumission" value="Valider"/>
 </fieldset>
-
-</form></div>
-
+</form>
+</div>
 <script  type="text/javascript" xml:space="preserve">
 //<![CDATA[
 
 // Un peu de chaines de caracteres
 
-double_label('choisir_langue','this form in English','ce formulaire en Français',true);
 
 double_label('legend','Préinscription ','Preregistration',true);
 double_label('l_Nom','Nom ','Family name',true);
@@ -322,8 +562,8 @@ double_label('l_autre','Pas encore licencié ','Not licenced yet',true);
 double_label('l_afl','Adhérant AFL ','AFL member',true);
 double_label('l_oui','Oui','Yes',true);
 double_label('l_non','Non','No',true);
-double_label('l_lic','Numéro licence :','Licence number:',false);
-double_label('l_isaf_no','Numéro ISAF :','ISAF number:',false);
+double_label('l_lic','Numéro licence : ','Licence number: ',false);
+double_label('l_isaf_no','Numéro ISAF : ','ISAF number: ',false);
 //double_label('maSoumission','Valider','Submit',true);
 
 
@@ -357,50 +597,6 @@ var message_etr_en ="<p>When registering at the Club you'll need to present :" +
  
 
 
-function my_validation_required(champ,validator){ 
-
-   double_label('mainform_'+champ+'_errorloc',
-    'Le champ '+ strings_fr['l_'+champ]+ ' est obligatoire',
-    'Field '+ strings_en['l_'+champ]+ ' is required',
-    false);
-    
-//   alert(get_string('mainform_'+champ+'_errorloc'));
-   validator.addValidation(champ,'required',get_string('mainform_'+champ+'_errorloc'));
-}
-
-function my_validation_required_condition(champ,validator,condition,expl_fr,expl_en){ 
-
-   double_label('mainform_'+champ+'_errorloc',
-    expl_fr + ' : le champ '+ strings_fr['l_'+champ]+ ' est obligatoire',
-    expl_en + ': field '+ strings_en['l_'+champ]+ ' is required',
-    false);
-    
-//   alert(get_string('mainform_'+champ+'_errorloc'));
-   validator.addValidation(champ,'required',get_string('mainform_'+champ+'_errorloc'),condition);
-}
-
-function my_validation_email(champ,validator){ 
-    double_label('mainform_'+champ+'_errorloc',
-    'Le champ '+ strings_fr['l_'+champ]+ ' n\'est pas une adresse email valide',
-    'Field '+ strings_en['l_'+champ]+ ' is not a valid email address',
-    false);
-   
-   validator.addValidation(champ,'email',get_string('mainform_'+champ+'_errorloc'));
-}
-
-function my_validation_radio(champ,validator,french,english){
-    double_label('mainform_'+champ+'_errorloc',french,english,false);  
-    validator.addValidation(champ,"selone_radio",get_string('mainform_'+champ+'_errorloc')); 
-}
-
-function my_validation_regexp(champ,validator,regexp,french,english){
-    double_label('mainform_'+champ+'_errorloc',
-    'Le champ '+ strings_fr['l_'+champ]+ ' n\'est pas de la forme ' + french,
-    'Field '+ strings_en['l_'+champ]+ ' is not of the form ' + english,
-    false);
-  
-    validator.addValidation(champ,'regexp=^'+regexp+'$',get_string('mainform_'+champ+'_errorloc'));
-}
 
  
  
@@ -415,66 +611,61 @@ frmvalidator.EnableOnPageErrorDisplay();
  frmvalidator.clearAllValidations();
  frmvalidator.formobj.old_onsubmit = null;
    
-  my_validation_required('Nom',frmvalidator);
-  my_validation_required('Prenom',frmvalidator);
-  my_validation_required('naissance',frmvalidator);
+  my_validation_required('mainform','Nom',frmvalidator);
+  my_validation_required('mainform','Prenom',frmvalidator);
+/*  my_validation_required('mainform','naissance',frmvalidator);*/
     
+  /*
+  Why this does not wotk anymore ?
   var year="[1-2][0-9]{3}";
   var mois="0[1-9]|1[0-2]";
   var jour="0[1-9]|[1-2][0-9]|3[0-1]";
   var date= year + "-" + mois + "-" + jour;
-  my_validation_regexp('naissance',frmvalidator,date,'AAAA-MM-JJ','YYYY-MM-DD'); 
+  my_validation_regexp('mainform','naissance',frmvalidator,date,'AAAA-MM-JJ','YYYY-MM-DD'); 
+  */
   
-  my_validation_radio('sexe',frmvalidator,'Etes vous homme ou femme ?','Are Male or Female ?');
+  my_validation_radio('mainform','sexe',frmvalidator,'Etes vous homme ou femme ?','Are you Male or Female ?');
   
-  my_validation_required('mail',frmvalidator);
-  my_validation_email('mail',frmvalidator); 
+  my_validation_required('mainform','mail',frmvalidator);
+  my_validation_email('mainform','mail',frmvalidator); 
 
-  my_validation_required_condition('num_club',frmvalidator,
+  my_validation_required_condition('mainform','num_club',frmvalidator,
     "VWZ_IsChecked(document.forms['mainform'].elements['statut'],'Licencie')",
     'Vous êtes licencié FFV',
     'You have an FFV licence');
 
-/*  frmvalidator.addValidation("num_club","req","Vous êtes licencié FFV : le numéro du Club obligatoire",
-        "VWZ_IsChecked(document.forms['mainform'].elements['statut'],'1')");*/
  
-  my_validation_regexp('num_club',frmvalidator,'[0-9]{5}','NNNNN (5 chiffres)','NNNNN (5 digits)');
+  my_validation_regexp('mainform','num_club',frmvalidator,'[0-9]{5}','NNNNN (5 chiffres)','NNNNN (5 digits)');
 
-  my_validation_radio('serie',frmvalidator,'Choisssez : Standard, Radial, ou 4.7','Choose : Standard, Radial, or 4.7');
+  my_validation_radio('mainform','serie',frmvalidator,'Choisssez : Standard, Radial, ou 4.7','Choose : Standard, Radial, or 4.7');
   
-  my_validation_required('Nvoile',frmvalidator);
-  my_validation_regexp('Nvoile',frmvalidator,'[0-9]{1,6}','NNNNNN (au plus 6 chiffres)','NNNNNN (at most 6 digits)');
-  my_validation_regexp('Cvoile',frmvalidator,'[A-Z]{3,3}','LLL (3 lettres)','LLL (3 letters');
+  my_validation_required('mainform','Nvoile',frmvalidator);
+  my_validation_regexp('mainform','Nvoile',frmvalidator,'[0-9]{1,6}','NNNNNN (au plus 6 chiffres)','NNNNNN (at most 6 digits)');
+  my_validation_regexp('mainform','Cvoile',frmvalidator,'[A-Z]{3,3}','LLL (3 lettres)','LLL (3 letters');
 
-  my_validation_radio('statut',frmvalidator,'Licencié FFV ?','Do you have an FFV licence?');
-  my_validation_radio('adherant',frmvalidator,'Adhérant AFL ?','Are you member of the AFL?');
+  my_validation_radio('mainform','statut',frmvalidator,'Licencié FFV ?','Do you have an FFV licence?');
+  my_validation_radio('mainform','adherant',frmvalidator,'Adhérant AFL ?','Are you member of the AFL?');
   
-  my_validation_required_condition('lic',frmvalidator,
+  my_validation_required_condition('mainform','lic',frmvalidator,
     "VWZ_IsChecked(document.forms['mainform'].elements['statut'],'Licencie')",
     'Vous êtes licencié FFV',
     'You have an FFV licence');
   
-/* frmvalidator.addValidation("lic","req","Vous êtes licencié FFV : le numéro de licence obligatoire",
-        "VWZ_IsChecked(document.forms['mainform'].elements['statut'],'Licencie')");*/
-//  frmvalidator.addValidation("lic","regexp=^[0-9]{7,7}[A-Z]$","Numéro de licence incorrecte (7 chiffres et 1 lettre)");  
-    my_validation_regexp('lic',frmvalidator,'[0-9]{7,7}[A-Z]',
+    my_validation_regexp('mainform','lic',frmvalidator,'[0-9]{7,7}[A-Z]',
       'NNNNNNNL (7 chiffres et 1 lettre)',
       'NNNNNNNL (7 digits and 1 letter)');
     
     
-//  frmvalidator.addValidation("isaf_no","req","Vous êtes coureur étranger : le numéro ISAF est obligatoire",
-//         "VWZ_IsChecked(document.forms['mainform'].elements['statut'],'Etranger')");
  
-  my_validation_required_condition('isaf_no',frmvalidator,
+  my_validation_required_condition('mainform','isaf_no',frmvalidator,
     "VWZ_IsChecked(document.forms['mainform'].elements['statut'],'Etranger')",
-    "Vous êtes coureur étranger",
+    'Vous êtes coureur étranger',
     'You are an international sailor');
   
- my_validation_regexp('isaf_no',frmvalidator,'[A-Z]{5}[0-9]+',
+ my_validation_regexp('mainform','isaf_no',frmvalidator,'[A-Z]{5}[0-9]+',
   'LLLLLN... (5 lettres et au moins 1 chiffre)',
   'LLLLLN... (5 letters and at least 1 digit)');
   
-//  frmvalidator.addValidation("isaf_no","regexp=^[A-Z]{5}[0-9]+$","Numéro ISAF incorrecte (5 lettres et au moins une chiffre)");  
 }
 
 set_francais();
@@ -507,7 +698,7 @@ function display_isaf_no(){
 
 function display_lic_no(){
 	  //document.getElementById('lic').type='text';
-	  changeInputType(document.getElementById('lic'),'text'); // IE sic :-(
+	  changeInputType(document.getElementById('lic'),'text'); // IE sic :-	  
 	  display_html('l_lic');
 }
 
@@ -560,11 +751,26 @@ function hide_lic_no(){
   }
    	 
    	 
-//]]>   	  
+//]]>
+
+<?php
+  switch($data['statut']){
+    case 'Licencie':
+      echo 'cas_FFV.onclick()'."\n";
+    break;
+  
+  case 'Etranger':
+      echo 'cas_etr.onclick()'."\n";
+  break;
+  case 'Autre':
+        echo 'cas_nonlic.onclick()'."\n";
+  default:
+  }
+
+?>
 </script>
 
 
 
-<?php
-xhtml_post();
-?>
+<?php 
+xhtml_post(); ?>
