@@ -383,6 +383,8 @@ function generate_dbf(){
       'E1_EMAIL' => array('mail','')
     );
 
+    setlocale(LC_ALL, 'fr_FR');
+	
 	while($row=mysql_fetch_assoc($res)){//Parcours du résultat de la requête
 
         $i=0;
@@ -392,8 +394,14 @@ function generate_dbf(){
           {
              $value=$correspondence[$field[0]];
              
-             if($value[1] == '')
-              $record[$i]= utf8_decode($row[$value[0]]);
+             if($value[1] == ''){
+              // $record[$i] = $row[$value[0]];
+              //$record[$i]= utf8_decode($row[$value[0]]);
+              $ascii_str = les;
+              if(($value[0] == 'prenom') or ($value[0] == 'nom'))
+                $ascii_str = strtoupper($ascii_str);
+              $record[$i] = iconv('UTF-8', 'ASCII//TRANSLIT', $ascii_str);
+              }
              else
               $record[$i]= $value[1];
           }
