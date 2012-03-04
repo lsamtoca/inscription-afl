@@ -1,6 +1,6 @@
 html, body {
   font-family:sans-serif;
-  color:white;  
+/*  color:white;*/
 /*  background-color:white;
   background-image:url(img/DSC00837.jpg);
   background-position:50% 50%;*/
@@ -10,6 +10,8 @@ html, body {
   padding: 0;
   
 }
+
+
 
 img#bg {
   position:fixed;
@@ -26,11 +28,27 @@ img#bg {
   z-index:1;
 } 
 
+/* Class white_over_dark */
+.white_over_dark {
+   color:white;
+}
+
+.white_over_dark A {
+  color:yellow;
+  text-decoration:none;
+}
+
+.white_over_dark A:hover {
+    text-decoration: underline;
+    /*color: #FF0000;*/
+    cursor:pointer;
+    }
 
 label {
   vertical-align:top;
 }
 
+/* Class mytable */
 table.mytable {
   margin:2px;
   padding: 2px;
@@ -94,12 +112,12 @@ td.mytable {
     padding-right: 1em;
 }
 
-#choix_langue A {
+coucou#choix_langue A {
     text-decoration:underline;
     color:blue;
 }
 
-#choix_langue A:hover { 
+couocu#choix_langue A:hover {
     /*text-decoration: none;*/
     /*color: #FF0000;*/
     cursor:pointer;

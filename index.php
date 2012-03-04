@@ -12,7 +12,7 @@ Vous êtes
     </li>
 </ul>
 
-<h3>Un club organisateur d'une régate :</h2>
+<h3>Un club organisateur d'une régate :</h3>
 <ul>
    <li> Gérez <A href="Regate.php">votre régate</A>. </li>
 </ul>
