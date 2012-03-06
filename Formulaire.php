@@ -483,7 +483,7 @@ if(isset($_POST['search_submit'])) {
             'searchform',
             'search_lic',
             searchvalidator,
-            '[0-9]{7,7}[A-Z]',
+            '[0-9]{7,7}[A-Za-z]',
             'NNNNNNNL (7 chiffres et 1 lettre)',
             'NNNNNNNL (7 digits and 1 letter)');
         }
@@ -516,7 +516,7 @@ if(isset($_POST['search_submit'])) {
             'searchform_isaf',
             'search_isaf',
             searchvalidator,
-            '[A-Z]{5}[0-9]+',
+            '[A-Za-z]{5}[0-9]+',
             'LLLLLN... (5 lettres et au moins 1 chiffre)',
             'LLLLLN... (5 letters and at least 1 digit)');
 
@@ -761,7 +761,7 @@ if(isset($_POST['search_submit'])) {
         'Vous êtes licencié FFV',
         'You have an FFV licence');
 
-        my_validation_regexp('mainform','lic',frmvalidator,'[0-9]{7,7}[A-Z]',
+        my_validation_regexp('mainform','lic',frmvalidator,'[0-9]{7,7}[A-Za-z]',
         'NNNNNNNL (7 chiffres et 1 lettre)',
         'NNNNNNNL (7 digits and 1 letter)');
 
@@ -772,7 +772,7 @@ if(isset($_POST['search_submit'])) {
         'Vous êtes coureur étranger',
         'You are an international sailor');
 
-        my_validation_regexp('mainform','isaf_no',frmvalidator,'[A-Z]{5}[0-9]+',
+        my_validation_regexp('mainform','isaf_no',frmvalidator,'[A-Za-z]{5}[0-9]+',
         'LLLLLN... (5 lettres et au moins 1 chiffre)',
         'LLLLLN... (5 letters and at least 1 digit)');
 

@@ -1,59 +1,39 @@
 <?php
-  require "partage.php";
-  xhtml_pre("Confirmation");
-?>
 
+require "partage.php";
 
-
-<div ><a>
-
-<?php
-
-try
-{
-	// On se connecte à MySQL
+try {
+    // On se connecte à la BD
     $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-	//$bdd = new PDO('mysql:host=localhost;dbname=LASER', 'root', 'root', $pdo_options)
     $bdd = new PDO($pdo_path, $user, $pwd, $pdo_options);
-    
+
+    // On cherche l'inscrit
     $req = $bdd->prepare('SELECT nom, prenom FROM Inscrit WHERE ID_inscrit = ?');
-	$req->execute(array($_GET['ID']));
+    $req->execute(array($_GET['ID']));
     $donnees = $req->fetch();
-    
-    if(isset($donnees['prenom'])) // Hack pour dire qu'on a trouvé
-    {
-   		$req->closeCursor();
+    $req->closeCursor();
 
-    	$sql = 'UPDATE Inscrit SET `conf`=?, `date confirmation`=? WHERE ID_inscrit =?';
-		$req = $bdd->prepare($sql);
-		$req->execute(array(1,date('Y-m-d G:i:s'),$_GET['ID']));
-		
-	    echo "Bonjour ".$donnees['prenom'].' '.$donnees['nom'].",<br />";
-		echo 'votre inscription est maintenant confirmée !!!';
+    isset($donnees['prenom']) or
+            die('ERREUR : nous n\'avons pas trouvé votre pré-inscription dans la base de données :-(');
 
-    }
-    else
-    {
-    	echo 'ERREUR : nous n\'avons pas trouvé votre pré-inscription dans la base de données :-(' ;
-    }
-    
-
-	
-	$req->closeCursor();
-
-
-}
-catch(Exception $e)
-{
-	// En cas d'erreur, on affiche un message et on arrête tout
+    $sql = 'UPDATE Inscrit SET `conf`=?, `date confirmation`=? WHERE ID_inscrit =?';
+    $req = $bdd->prepare($sql);
+    $req->execute(array(1,date('Y-m-d G:i:s'),$_GET['ID']));
+    $req->closeCursor();
+} catch(Exception $e) {
+    // En cas d'erreur, on affiche un message et on arrête tout
     die('Erreur : '.$e->getMessage());
 }
 
 ?>
 
-</a></div>
+<?php xhtml_pre('Confirmation'); ?>
 
+<div>
 
-<?php
-xhtml_post();
-?>
+    Bonjour <?php echo $donnees['prenom'].' '.$donnees['nom'] ?>,<br />
+    votre inscription est maintenant confirmée !!!
+
+</div>
+
+<?php xhtml_post(); ?>

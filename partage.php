@@ -69,6 +69,7 @@ function xhtml_pre1($title) {//Afficher le prefixe xhtml
 <head>
 <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />
 <link rel=\"STYLESHEET\" type=\"text/css\" href=\"afl.css\" />
+<link rel=\"icon\" type=\"image/png\" href=\"img/favicon.png\" />
 <title>$title</title>";
 }
 
@@ -84,8 +85,8 @@ function background() {
 //         echo 'Cucu'. $img . "\n";      
 //       echo sizeof($images) . "\n";
 
-        //$bg=$images[rand(0,sizeof($images)-1)];
-        $bg='img/background.jpg';
+        $bg=$images[rand(0,sizeof($images)-1)];
+        //$bg='img/background.jpg';
 
         echo "<div><img src='$bg' alt='background image' id='bg' /></div><!-- background -->"."\n\n";
 
