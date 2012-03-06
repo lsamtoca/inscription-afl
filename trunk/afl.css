@@ -28,13 +28,14 @@ img#bg {
   z-index:1;
 } 
 
-/* Class white_over_dark */
+/* Classe white_over_dark */
 .white_over_dark {
    color:white;
 }
 
 .white_over_dark A {
-  color:yellow;
+/*    color:#FFCC00;*/
+    color:yellow;
   text-decoration:none;
 }
 

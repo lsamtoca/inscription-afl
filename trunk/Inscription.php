@@ -26,12 +26,12 @@ function compose_mail($ID_inscrit,$titre_regate,$courriel_cv) {
     $message_email_fr="Bonjour ".$_POST['Prenom'].",\n\n"
             ."veuillez confirmer votre inscription à la régate '$titre_regate' en cliquant le lien suivant:\n"
             .$url_confirmation."\n\n"
-            ."Bon vent,\n\t l'AFL";
+            ."Bon vent,\n\t l'AFL (pour le club organisateur)";
 
     $message_email_en="Hello ".$_POST['Prenom'].",\n\n"
             ."please confirm your registration to the race '$titre_regate' by clicking on the following link:\n"
             .$url_confirmation."\n\n"
-            ."Bon vent,\n\t the AFL";
+            ."Bon vent,\n\t the AFL (for the organizing club)";
 
     if($_POST['lang']=='en')
         $message = $message_email_en;
@@ -58,12 +58,12 @@ try {
 	:prefix_voile,:num_voile,:serie,:adherant,:sexe,:conf,:mail,:statut,:ID_regate,:date_preinscription)';
     $req = $bdd->prepare($sql);
     $req->execute(array(
-            'nom' => $_POST['Nom'],
-            'prenom' => $_POST['Prenom'],
+            'nom' => nom_normaliser($_POST['Nom']),
+            'prenom' => nom_normaliser($_POST['Prenom']),
 //		'naissance' => $date,
             'naissance' => $_POST['naissance'],
-            'num_lic' => $_POST['lic'],
-            'isaf_no' => $_POST['isaf_no'],
+            'num_lic' => strtoupper($_POST['lic']),
+            'isaf_no' => strtoupper($_POST['isaf_no']),
             'num_club' => $_POST['num_club'],
             'nom_club' => $_POST['nom_club'],
             'prefix_voile' => $_POST['Cvoile'],
