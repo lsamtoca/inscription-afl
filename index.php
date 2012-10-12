@@ -17,12 +17,13 @@ Vous êtes
    <li> Gérez <A href="Regate.php">votre régate</A>. </li>
 </ul>
 
+<!--
 <h3>Administrateur AFL :</h3>
 
 <ul>
    <li> Gérez  <A href="Admin.php">les événements et les clubs</A>. </li>
 </ul>
-
+-->
 
 
 <?php

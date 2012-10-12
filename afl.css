@@ -55,8 +55,8 @@ table.mytable {
   padding: 2px;
   border-width:0.5px; 
   border-style:solid; 
-  border-color:black;
-  color:black;
+  border-color:white;
+  color:yellow;
   width:50%;
 }
 
@@ -69,7 +69,7 @@ td.mytable {
  padding: 5px;
  border-width:1px;
  border-style: dotted; 
- border-color:black;
+ border-color:white;
 /* width:50%;*/
  }
 

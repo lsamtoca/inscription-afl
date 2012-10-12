@@ -342,12 +342,13 @@ function menu(){
   echo '
 <div id="menu">
   <ul>
+  <li>Télécharger la <a href="docs/Notice_07-03-12.pdf">notice</a> d\'utilisation (mise à jour le 7/03/12). </li>
   <LI><a href="?item=renseignements">Formulaire renseignements sur la régate</a></LI>
   <LI><A href="?item=urls">Adresses formulaire inscription et liste des préinscrits</A></LI>
   <LI><A href="?item=inscrits">Liste des préinscrits</A></LI>
   <LI><A href="?item=exportation">Exportation des données (et intégration avec FREG)</A></LI>
   <LI><a href="?item=mail">Envoyer un courriel à tous les préinscrits</a></LI>
-  <LI>Imprimer des listes pour l\'accueil des participants :
+  <LI>Imprimer les fiches d\'enregistrements des participants :
     <ol> 
     <li><a href="accueil_participants?serie=LA4">Laser 4.7</a></li>
     <li><a href="accueil_participants?serie=LAR">Laser radial</a></li>
