@@ -67,6 +67,7 @@ function xhtml_pre1($title) {//Afficher le prefixe xhtml
 <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
 <html xmlns=\"http://www.w3.org/1999/xhtml\">
 <head>
+<meta name=\"robots\" content=\"noindex,nofollow\" />
 <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />
 <link rel=\"STYLESHEET\" type=\"text/css\" href=\"afl.css\" />
 <link rel=\"icon\" type=\"image/png\" href=\"img/favicon.png\" />
@@ -74,7 +75,10 @@ function xhtml_pre1($title) {//Afficher le prefixe xhtml
 }
 
 function background() {
-    if(!isset($_GET['nobackground'])) {
+    if(
+       !isset($_GET['nobackground'])
+       && !isset($_SESSION['ID_regate']) // Do not put an image if we are a Club
+     ) {
         ob_start();
         passthru('ls img/*.jpg',$ret_val);
         $listing=ob_get_contents();
@@ -91,6 +95,11 @@ function background() {
         echo "<div><img src='$bg' alt='background image' id='bg' /></div><!-- background -->"."\n\n";
 
     }
+
+    if(isset($_SESSION['ID_regate'])) {
+     echo "<div><img alt='' id='bg' style=\"background-color: cadetblue;\"/></div><!-- background -->"."\n\n";
+    }
+
 }
 
 function xhtml_pre2($title) {//Afficher le prefixe xhtml

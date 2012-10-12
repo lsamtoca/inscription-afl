@@ -1,6 +1,6 @@
 <?php
 	session_start();
-	if(isset($_SESSION["ID_regate"]))
+	if(isset($_SESSION['ID_regate']))
 	{
 		header("Location: Regate.php");
 	}
