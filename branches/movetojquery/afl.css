@@ -1,0 +1,156 @@
+html, body {
+  font-family:sans-serif;
+/*  color:white;*/
+/*  background-color:white;
+  background-image:url(img/DSC00837.jpg);
+  background-position:50% 50%;*/
+
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  
+}
+
+
+
+img#bg {
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+} 
+
+#content {
+  margin: 10pt;
+  padding:10pt;
+  position:relative;
+  z-index:1;
+} 
+
+/* Classe white_over_dark */
+.white_over_dark {
+   color:white;
+}
+
+.white_over_dark A {
+/*    color:#FFCC00;*/
+    color:yellow;
+  text-decoration:none;
+}
+
+.white_over_dark A:hover {
+    text-decoration: underline;
+    /*color: #FF0000;*/
+    cursor:pointer;
+    }
+
+label {
+  vertical-align:top;
+}
+
+/* Class mytable */
+table.mytable {
+  margin:2px;
+  padding: 2px;
+  border-width:0.5px; 
+  border-style:solid; 
+  border-color:white;
+  color:yellow;
+  width:50%;
+}
+
+th.mytable {   
+/* margin:2px;*/
+ padding: 5px;
+ }
+ 
+td.mytable { 
+ padding: 5px;
+ border-width:1px;
+ border-style: dotted; 
+ border-color:white;
+/* width:50%;*/
+ }
+
+.error_strings {
+  color:red;
+  background:yellow;
+  vertical-align:top;
+}
+
+#validhtml {
+    position: fixed;
+    width: auto;
+    height: auto;
+    top: auto;
+    right: 0;
+    bottom: 0.1em;
+    padding-right: 1em;
+    z-index:3;
+
+}
+
+#deconnexion {
+    position: fixed;
+    width: auto;
+    height: auto;
+    top: 0.1em;
+    right: 0;
+    bottom: auto;
+    padding-right: 1em;
+    z-index:2;
+  /*    background-color:white;*/
+}
+
+#choix_langue {
+    position: absolute;
+    width: auto;
+    height: auto;
+    top: 0.2em;
+    right: 0;
+    bottom: auto;
+    padding-right: 1em;
+}
+
+coucou#choix_langue A {
+    text-decoration:underline;
+    color:blue;
+}
+
+couocu#choix_langue A:hover {
+    /*text-decoration: none;*/
+    /*color: #FF0000;*/
+    cursor:pointer;
+    }
+    
+#back_to_menu {
+    position: fixed;
+    width: auto;
+    height: auto;
+    top: auto;
+    left: 0;
+    bottom: 0.1em;
+    padding-left: 1em;
+}
+
+
+/*#back_to_menu {
+    position: fixed;
+    width: auto;
+    height: auto;
+    top: 0.1em;
+    left: 0;
+    bottom: auto;
+    padding-left: 1em;
+}*/
+
+#bas {
+/*    background-color:white;*/
+    position: fixed;
+    width: 100%;
+    height: 2em;
+    top: auto;
+    bottom: 0em;
+    z-index:2;
+}
