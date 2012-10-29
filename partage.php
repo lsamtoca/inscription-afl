@@ -8,8 +8,12 @@ require_once 'databases/bds.php';
 if($_SERVER['HTTP_HOST'] == 'localhost') {
     $www_site='localhost/';
     $racine='~lsantoca/inscriptions_afl/';
+    $development=true;
 }
 else {
+    
+    $development=false;
+    
     $www_site='régateslaser.info/';
     $racine=basename(dirname(realpath(__FILE__))).'/';
 }
@@ -96,9 +100,9 @@ function background() {
 
     }
 
-    if(isset($_SESSION['ID_regate'])) {
+//    if(isset($_SESSION['ID_regate'])) {
      echo "<div><img alt='' id='bg' style=\"background-color: cadetblue;\"/></div><!-- background -->"."\n\n";
-    }
+//ß    }
 
 }
 
@@ -218,6 +222,10 @@ function clean_post_var($var) {
 function redirect($message,$time,$gowhere) {
     echo $message;
     printf("<script type=\"text/javascript\">setTimeout('location=(\"%s\")' ,%d);</script>",$gowhere,$time);
+}
+
+function self() {
+    return $_SERVER['PHP_SELF'] . "?regate=" . $_GET['regate'];
 }
 
 ?>
