@@ -1,0 +1,7 @@
+RewriteEngine On
+RewriteCond %{THE_REQUEST} !controller.php
+RewriteRule ^(.*)$ http://%{HTTP_HOST}/~lsantoca/inscriptions-afl_dev/controller.php?REQ=%{REQUEST_URI}&HOST=%{HTTP_HOST} [L]
+
+
+
+
