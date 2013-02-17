@@ -1,3 +1,12 @@
+function check_selector(str){
+    if($(str) == undefined)
+        console.log('Selector '+str+' not found');
+    else
+        console.log('Selector '+str+' OK');
+    
+};
+
+
 var mainform_required_fields = [
 'Nom',
 'Prenom',
@@ -55,21 +64,26 @@ function set_validations (){
 
     // Searchform
     $("#searchform").validate({
-        debug:true
+//        debug:true
     });
-//    $('#searchform :input[name="search_isaf"]').rules('remove');
-    $('#searchform :input[name="search_isaf"]')
-    .rules('add',{
-        'required': function (){
-            return
-            $('#searchform :input[name="search_lic"]').val()
-            == "";
-        },
-        'messages'  :{
-            'required':msg_validate_required
-        }
-    }
-    );
+ 
+     check_selector('#searchform :input[name="search_isaf"]');
+    
+//            $('#searchform :input[name="search_isaf"]').rules('remove');
+//    $('#searchform :input[name="search_isaf"]')
+//    .rules('add',{
+//        'required': function (){
+//            return
+//            true ;
+//            $('#searchform :input[name="search_lic"]').val()
+//            == "";
+//        },
+//        'messages'  :{
+//            'required':msg_validate_required
+//        }
+//    }
+//    );
+    
     add_regexp("searchform",searchform_regexp_fields);
     
 };

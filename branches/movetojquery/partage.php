@@ -6,8 +6,8 @@ ini_set('display_errors', '1');
 require_once 'databases/bds.php';
 
 if($_SERVER['HTTP_HOST'] == 'localhost') {
-    $www_site='localhost/';
-    $racine='~lsantoca/inscriptions_afl/';
+    $www_site='localhost';
+    $racine=dirname($_SERVER['REQUEST_URI']).'/';
     $development=true;
 }
 else {
@@ -25,13 +25,12 @@ else
 
 $path_to_site_inscription=$www_site.$racine;
 
-
 // Activation des assertions et mise en mode discret
 assert_options(ASSERT_ACTIVE, 1);
 assert_options(ASSERT_WARNING, 0);
 assert_options(ASSERT_QUIET_EVAL, 1);
 
-// Création d'un gestionnaire d'assertions
+// Création du gestionnaire d'assertions
 function my_assert_handler($file, $line, $code) {
     global $testing;
     if($testing) {
@@ -79,6 +78,7 @@ function xhtml_pre1($title) {//Afficher le prefixe xhtml
 }
 
 function background() {
+
     if(
        !isset($_GET['nobackground'])
        && !isset($_SESSION['ID_regate']) // Do not put an image if we are a Club
@@ -87,22 +87,19 @@ function background() {
         passthru('ls img/*.jpg',$ret_val);
         $listing=ob_get_contents();
         ob_end_clean();
+
         $images=explode("\n",trim($listing));
 
-//       foreach($images as $img)
-//         echo 'Cucu'. $img . "\n";      
-//       echo sizeof($images) . "\n";
-
         $bg=$images[rand(0,sizeof($images)-1)];
-        //$bg='img/background.jpg';
+//          $bg='img/background.jpg';
 
         echo "<div><img src='$bg' alt='background image' id='bg' /></div><!-- background -->"."\n\n";
 
     }
 
-//    if(isset($_SESSION['ID_regate'])) {
+    if(isset($_SESSION['ID_regate'])) {
      echo "<div><img alt='' id='bg' style=\"background-color: cadetblue;\"/></div><!-- background -->"."\n\n";
-//ß    }
+    }
 
 }
 
@@ -228,4 +225,22 @@ function self() {
     return $_SERVER['PHP_SELF'] . "?regate=" . $_GET['regate'];
 }
 
+
+// Definition des constantes
+define('HIDEMAILSTRING',str_repeat('*',8 ));
+
+// Errors
+
+function pageErreur($message){
+    html_pre('Erreur');
+    
+    echo '<h3>';
+    echo $message ;
+    echo '</h3>';
+    
+    html_post();
+    
+    exit(1);
+    
+}
 ?>
