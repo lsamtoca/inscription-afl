@@ -20,8 +20,9 @@
 <script src="js/ui.datepicker-fr.js" type="text/javascript"></script>
 
 <script src="js/Formulaire-i18n.js" type="text/javascript"></script>
-<script src="js/Formulaire-validation.js" type="text/javascript"></script>
+<!-- <script src="js/Formulaire-validation.js" type="text/javascript"></script>
 <script src="js/Formulaire-dynamic.js" type="text/javascript"></script>
+-->
 
 <script type="text/javascript">
 
@@ -29,7 +30,7 @@
 
         $("#naissance" ).datepicker({
             dateFormat : "dd/mm/yy",
-            defaultDate : "01/01/98",
+            defaultDate : "01/01/94",
             changeYear : true,
             yearRange : "c-20:c+20"
         });
@@ -90,7 +91,9 @@
 
 </div> <!--infos_regate-->
 
-
+<?php 
+//if(!isset($_POST['search_submit'])): 
+?> 
 
 <div id='search'>
 
@@ -100,8 +103,8 @@
             <legend id='search_legend'></legend>
             <label class="left" id='l_search_lic'></label>
             <input name="search_lic" id="search_lic" type="text"/>
-            <input name="search_submit" type='submit' value="Chercher">
-                
+  <!--          <input name="search_submit" type='submit' value="Chercher">
+      -->          
                 
             <label class="left" id='l_search_isaf'></label>
             <input name="search_isaf"
@@ -118,6 +121,9 @@
 
 <br />
 
+<?php 
+ // endif ; 
+?> 
 
 <div id='formulaire'>
 
@@ -127,9 +133,13 @@
 
             <input name="lang" type="hidden" id="input_lang" value="fr" />
             <input name="IDR" type="hidden" id="IDR" value=<?php echo '"' . $_GET['regate'] . '"'; ?>/>
+            <input name="conf" type="hidden" id="conf" 
+                   value="<?php echo $data['conf']; ?>" />
+            <input name="ID_inscrit" type="hidden" id="conf" 
+                   value="<?php echo $data['ID_inscrit']; ?>" />
 
             <!-- Donnés personnels : nom prenom, date naissance, sexe -->
-            <label class="left" for="Nom"id='l_Nom'></label>
+            <label class="left" for="Nom" id='l_Nom'></label>
             <input name="Nom" type="text" id="Nom" value="<?php echo $data['Nom']; ?>"/>
 
             <label class="left" for="Prenom" id='l_Prenom'></label>
@@ -161,20 +171,24 @@
             <hr />
 
             <!-- Club -->
-            <label class="left" for="nom_club" id='l_nom_club'></label>
+            <label class="left" id='l_nom_club'></label>
             <input name="nom_club" id="nom_club" type="text" 
                     value="<?php echo $data['nom_club']; ?>"/>
 
-            <label class="left" for="num_club" id='l_num_club'></label>
-            <input name="num_club" id="num_club" type="text" size="5"/>
+            <label class="left" id='l_num_club'></label>
+            <input name="num_club" id="num_club" type="text" size="5"
+                   value="<?php echo $data['num_club']; ?>"
+                   />
             <hr />
 
             <!-- Serie -->
 
-            <input type="radio" name="serie" id="radio_LA4" value="LA4" <?php echo $data['LA4']; ?> />
+            <input type="radio" name="serie" id="radio_LA4" value="LA4" 
+                    <?php echo $data['LA4']; ?> />
             <label for="radio_LA4">Laser 4.7</label>
             
-            <input type="radio" name="serie" id="radio_LAR" value="LAR" <?php echo $data['LAR']; ?> />
+            <input type="radio" name="serie" id="radio_LAR" value="LAR" 
+                    <?php echo $data['LAR']; ?> />
             <label for="radio_LAR">Laser Radial</label>
 
             <input type="radio" name="serie" id="radio_LAS" class="required"
@@ -190,23 +204,31 @@
 
             <!-- Statut : Licence et AFL -->
 
-            <input type="radio" class="required" name="statut" id="radio_ffv" value="Licencie" <?php echo $data['Licencie']; ?> />
+            <input type="radio" class="required" name="statut" id="radio_ffv" 
+                    value="Licencie" 
+                            <?php echo $data['Licencie']; ?> />
             <label id='l_ffv'></label>
 
-            <input type="radio" name="statut" id="radio_etranger" value="Etranger" <?php echo $data['Etranger']; ?> />
+            <input type="radio" name="statut" id="radio_etranger" 
+                    value="Etranger" 
+                            <?php echo $data['Etranger']; ?> />
             <label id='l_etranger'></label>
 
-            <input type="radio" name="statut" id="radio_autre" value="Autre" <?php echo $data['Autre']; ?> />
+            <input type="radio" name="statut" id="radio_autre" 
+                    value="Autre" 
+                    <?php echo $data['Autre']; ?> />
             <label id='l_autre'></label>
 
             <br />
 
             <label class="left" id='l_afl'></label>
-            <input type="radio" name="adherant" id="radio_adherant_oui" value="1" <?php echo $data['ad_AFL']; ?> />
+            <input type="radio" name="adherant" id="radio_adherant_oui" 
+                    value="1" <?php echo $data['ad_AFL_1']; ?> />
 
             <label id='l_oui'></label>
 
-            <input type="radio" name="adherant" id="radio_adherant_non" value="0" <?php echo $data['non_ad_AFL']; ?>/>
+            <input type="radio" name="adherant" id="radio_adherant_non" 
+                   value="0" <?php echo $data['ad_AFL_0']; ?>/>
             <label id='l_non'></label>
 
             <br />

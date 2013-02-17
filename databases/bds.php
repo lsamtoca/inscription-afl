@@ -2,9 +2,9 @@
 
 if($_SERVER['HTTP_HOST'] == 'localhost') {
     $host='localhost';
-    $user='inscriptions_afl';
-    $pwd='inscriptions_afl';
-    $db='inscriptions_afl';
+    $user='inscriptions-afl';
+    $pwd='inscriptions-afl';
+    $db='inscriptions-afl';
 }
 else {
     // Le fichier suivant, à placer dans un endroit protegé, definit les variables
