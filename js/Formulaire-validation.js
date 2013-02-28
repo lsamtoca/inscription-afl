@@ -1,12 +1,3 @@
-function check_selector(str){
-    if($(str) == undefined)
-        console.log('Selector '+str+' not found');
-    else
-        console.log('Selector '+str+' OK');
-    
-};
-
-
 var mainform_required_fields = [
 'Nom',
 'Prenom',
@@ -45,49 +36,77 @@ var searchform_regexp_fields = {
 
 $(document).ready(function (){
     
+    console.log('Ajout des validations au formulaires');    
     set_validations();    
-    console.log('Ajouté validation');
+    console.log('Ajout des validation terminé');
 
 });
+
 
 function set_validations (){
     
     // Mainform
     $("#mainform").validate({
-        debug:true
-    });
- 
+        // Put the debug option for debugging only
+        // -- the form won't be sent
+        //      debug:true
+        });
     add_email("mainform",mainform_email_fields);     
     add_required("mainform",mainform_required_fields);
     add_crequired("mainform",mainform_crequired_fields);
     add_regexp("mainform",mainform_regexp_fields);
-
-    // Searchform
-    $("#searchform").validate({
-//        debug:true
-    });
+    //   console.log('Ajouté validations mainform');
  
-     check_selector('#searchform :input[name="search_isaf"]');
+    // Searchform
+    if($('#searchform') != undefined){
+        
+        $('#searchform').validate({
+            // Put the debug option for debugging
+            // -- the form won't be sent
+            // debug:true,
+            submitHandler: function(form) {
+                if(
+                    ($('#searchform :input[name="search_lic"]')).val() == ''
+                    &&
+                    ($('#searchform :input[name="search_isaf"]')).val() == ''
+                    ){
+                    var message=msg_validate_search;
+                    alert(message);
+                    return false;
+                }
+                // do other stuff for a valid form
+                form.submit();
+            }
+        });
+
+        add_regexp('searchform',searchform_regexp_fields);
+                
+
+    //  console.log('Ajouté validations searchform');
+        
+    }
     
-//            $('#searchform :input[name="search_isaf"]').rules('remove');
-//    $('#searchform :input[name="search_isaf"]')
-//    .rules('add',{
-//        'required': function (){
-//            return
-//            true ;
-//            $('#searchform :input[name="search_lic"]').val()
-//            == "";
-//        },
-//        'messages'  :{
-//            'required':msg_validate_required
-//        }
-//    }
-//    );
     
-    add_regexp("searchform",searchform_regexp_fields);
     
 };
 
+
+function check_selector(str){
+    
+    if($(str) == undefined){
+        console.log('Selector '+str+' not found');
+    }
+    else {
+        console.log('Selector '+str+' OK');        
+    }
+    
+};
+
+
+
+
+
+ 
 function add_required(form_id,fields){
 
 
@@ -104,7 +123,7 @@ function add_required(form_id,fields){
             continue;
         }
         
- //       $(selector).rules('remove');            
+        //       $(selector).rules('remove');            
         $(selector).rules('add',
         {
             'required':true,
@@ -120,7 +139,7 @@ function add_required(form_id,fields){
 function add_crequired(form_id,fields){
 
     for (var field in fields){
-
+    
         var selector = 
         '#'+form_id+' ' +
         ':input[name="'+field+'"]';
@@ -145,7 +164,7 @@ function add_crequired(form_id,fields){
     
         eval(code);
 
-//        $(selector).rules('remove');
+        //        $(selector).rules('remove');
         $(selector).rules(
             'add',
             {
@@ -157,7 +176,8 @@ function add_crequired(form_id,fields){
             );
 
     }
-    
+
+    // console.log('Ajouté validation conditionally required');
 }
 
 // This does not wok anymore -- why ?
@@ -177,7 +197,7 @@ function add_email (form_id,fields){
             continue;
         }
         
-//        $(selector).rules('remove');            
+        //        $(selector).rules('remove');            
         $(selector).rules('add',
         {
             'email':true,
@@ -299,142 +319,4 @@ $(document).ready(function() {
 });
 
 
-/* Les validations anciennes
-
-    <script  type="text/javascript" xml:space="preserve">
-        //<![CDATA[
-
-        function add_validations_searchform(){
-
-            var searchvalidator  = new Validator('searchform');
-            // Choix de l'affichage des messages d'erreur
-            searchvalidator.EnableOnPageErrorDisplay();
-            // search_validator.EnableOnPageErrorDisplaySingleBox();
-            //search_validator.EnableMsgsTogether();
-
-            searchvalidator.clearAllValidations();
-            searchvalidator.formobj.old_onsubmit = null;
-
-
-            my_validation_required(
-            'searchform',
-            'search_lic',
-            searchvalidator,
-            'Champ nécessaire',
-            'Required');
-
-            my_validation_regexp(
-            'searchform',
-            'search_lic',
-            searchvalidator,
-            '[0-9]{7,7}[A-Za-z]',
-            'NNNNNNNL (7 chiffres et 1 lettre)',
-            'NNNNNNNL (7 digits and 1 letter)');
-        }
-
-        //]]>
-    </script>
-    <script  type="text/javascript" xml:space="preserve">
-        //<![CDATA[
-
-        function add_validations_searchform_isaf(){
-
-            var searchvalidator  = new Validator('searchform_isaf');
-            // Choix de l'affichage des messages d'erreur
-            searchvalidator.EnableOnPageErrorDisplay();
-            // search_validator.EnableOnPageErrorDisplaySingleBox();
-            //search_validator.EnableMsgsTogether();
-
-            searchvalidator.clearAllValidations();
-            searchvalidator.formobj.old_onsubmit = null;
-
-
-            my_validation_required(
-            'searchform_isaf',
-            'search_isaf',
-            searchvalidator,
-            'Champ demandé',
-            'Field required');
-
-            my_validation_regexp(
-            'searchform_isaf',
-            'search_isaf',
-            searchvalidator,
-            '[A-Za-z]{5}[0-9]+',
-            'LLLLLN... (5 lettres et au moins 1 chiffre)',
-            'LLLLLN... (5 letters and at least 1 digit)');
-
-        }
-
-        //]]>
-    </script>
-
-    function add_validations_mainform(){
-
-        var frmvalidator  = new Validator("mainform");
-        // Choix de l'affichage des messages d'erreur
-        frmvalidator.EnableOnPageErrorDisplay();
-        // frmvalidator.EnableOnPageErrorDisplaySingleBox();
-        //frmvalidator.EnableMsgsTogether();
-
-        frmvalidator.clearAllValidations();
-        frmvalidator.formobj.old_onsubmit = null;
-
-        my_validation_required('mainform','Nom',frmvalidator);
-        my_validation_required('mainform','Prenom',frmvalidator);
-        //  my_validation_required('mainform','naissance',frmvalidator);
-
-        
-  Why this does not wotk anymore ?
-  var year="[1-2][0-9]{3}";
-  var mois="0[1-9]|1[0-2]";
-  var jour="0[1-9]|[1-2][0-9]|3[0-1]";
-  var date= year + "-" + mois + "-" + jour;
-  my_validation_regexp('mainform','naissance',frmvalidator,date,'AAAA-MM-JJ','YYYY-MM-DD'); 
-        
-        my_validation_radio('mainform','sexe',frmvalidator,'Etes vous homme ou femme ?','Are you Male or Female ?');
-
-        my_validation_required('mainform','mail',frmvalidator);
-        my_validation_email('mainform','mail',frmvalidator);
-
-        my_validation_required_condition('mainform','num_club',frmvalidator,
-        "VWZ_IsChecked(document.forms['mainform'].elements['statut'],'Licencie')",
-        'Vous êtes licencié FFV',
-        'You have an FFV licence');
-
-
-        my_validation_regexp('mainform','num_club',frmvalidator,'[0-9]{5}','NNNNN (5 chiffres)','NNNNN (5 digits)');
-
-        my_validation_radio('mainform','serie',frmvalidator,'Choisssez : Standard, Radial, ou 4.7','Choose : Standard, Radial, or 4.7');
-
-        my_validation_required('mainform','Nvoile',frmvalidator);
-        my_validation_regexp('mainform','Nvoile',frmvalidator,'[0-9]{1,6}','NNNNNN (au plus 6 chiffres)','NNNNNN (at most 6 digits)');
-        my_validation_regexp('mainform','Cvoile',frmvalidator,'[A-Z]{3,3}','LLL (3 lettres)','LLL (3 letters');
-
-        my_validation_radio('mainform','statut',frmvalidator,'Licencié FFV ?','Do you have an FFV licence?');
-        my_validation_radio('mainform','adherant',frmvalidator,'Adhérant AFL ?','Are you member of the AFL?');
-
-        my_validation_required_condition('mainform','lic',frmvalidator,
-        "VWZ_IsChecked(document.forms['mainform'].elements['statut'],'Licencie')",
-        'Vous êtes licencié FFV',
-        'You have an FFV licence');
-
-        my_validation_regexp('mainform','lic',frmvalidator,'[0-9]{7,7}[A-Za-z]',
-        'NNNNNNNL (7 chiffres et 1 lettre)',
-        'NNNNNNNL (7 digits and 1 letter)');
-
-
-
-        my_validation_required_condition('mainform','isaf_no',frmvalidator,
-        "VWZ_IsChecked(document.forms['mainform'].elements['statut'],'Etranger')",
-        'Vous êtes coureur étranger',
-        'You are an international sailor');
-
-        my_validation_regexp('mainform','isaf_no',frmvalidator,'[A-Za-z]{5}[0-9]+',
-        'LLLLLN... (5 lettres et au moins 1 chiffre)',
-        'LLLLLN... (5 letters and at least 1 digit)');
-
-    }
-
-
-*/
+ */

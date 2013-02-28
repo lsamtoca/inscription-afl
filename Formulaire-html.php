@@ -20,9 +20,8 @@
 <script src="js/ui.datepicker-fr.js" type="text/javascript"></script>
 
 <script src="js/Formulaire-i18n.js" type="text/javascript"></script>
-<!-- <script src="js/Formulaire-validation.js" type="text/javascript"></script>
+<script src="js/Formulaire-validation.js" type="text/javascript"></script>
 <script src="js/Formulaire-dynamic.js" type="text/javascript"></script>
--->
 
 <script type="text/javascript">
 
@@ -52,7 +51,7 @@
 
     <p>
         <?php if ($regate['date_debut'] != "00-00-0000" and $regate['date_fin'] != "00-00-0000"): ?>
-            Du <?php echo $regate['date_debut']; ?> au <?php echo $regate['date_fin']; ?> :
+        Du <?php echo Regate_formatDebut($regate); ?> au <?php echo Regate_formatFin($regate); ?> :
         <?php endif; ?>
         <b><?php echo $regate['titre']; ?></b>
         <?php if ($regate['lieu'] != ""): ?>
@@ -73,13 +72,13 @@
     <?php if ($regate['date_limite_preinscriptions'] != ''): ?>
         <p>
             <span id="deadline"></span>
-            <?php echo $limite->format('d-m-Y'); ?>
+            <?php echo Regate_formatDeadline($regate); ?>
         </p>
 
-        <?php if ($now > $limite): ?>
+        <?php if(! Regate_estOuverte($regate)): ?>
             <p>
                 La date limite pour se préinscrire à cette régate,
-                le <?php echo $limite->format('d-m-Y'); ?> est passée.
+                le <?php echo Regate_formatDeadline($regate); ?> est passée.
                 <br />
                 Il n'est plus possible se préinscrire à cette régate :-(
             </p>
@@ -92,7 +91,7 @@
 </div> <!--infos_regate-->
 
 <?php 
-//if(!isset($_POST['search_submit'])): 
+if(!$confirmation): 
 ?> 
 
 <div id='search'>
@@ -122,7 +121,7 @@
 <br />
 
 <?php 
- // endif ; 
+ endif ; 
 ?> 
 
 <div id='formulaire'>
@@ -134,29 +133,29 @@
             <input name="lang" type="hidden" id="input_lang" value="fr" />
             <input name="IDR" type="hidden" id="IDR" value=<?php echo '"' . $_GET['regate'] . '"'; ?>/>
             <input name="conf" type="hidden" id="conf" 
-                   value="<?php echo $data['conf']; ?>" />
-            <input name="ID_inscrit" type="hidden" id="conf" 
-                   value="<?php echo $data['ID_inscrit']; ?>" />
+                   value="<?php echo $formData['conf']; ?>" />
+            <input name="ID_inscrit" type="hidden" id="ID_inscrit"
+                   value="<?php echo $formData['ID_inscrit']; ?>" />
 
             <!-- Donnés personnels : nom prenom, date naissance, sexe -->
             <label class="left" for="Nom" id='l_Nom'></label>
-            <input name="Nom" type="text" id="Nom" value="<?php echo $data['Nom']; ?>"/>
+            <input name="Nom" type="text" id="Nom" value="<?php echo $formData['Nom']; ?>"/>
 
             <label class="left" for="Prenom" id='l_Prenom'></label>
-            <input name="Prenom" type="text" id="Prenom" value="<?php echo $data['Prenom']; ?>"/>
+            <input name="Prenom" type="text" id="Prenom" value="<?php echo $formData['Prenom']; ?>"/>
             <br />
 
 
             <label class="left" id='l_naissance'></label>
-            <input name="naissance" type="text" id="naissance" value="<?php echo $data['naissance']; ?>" />
+            <input name="naissance" type="text" id="naissance" value="<?php echo $formData['naissance']; ?>" />
 	    <br />
             
 	    <input type="radio" name="sexe" id="radio_F" 
-                   value="F" <?php echo $data['F']; ?> />
+                   value="F" <?php echo $formData['F']; ?> />
             <label id='l_femme'></label>
 
             <input type="radio" name="sexe" id="radio_H" class="required"
-                    value="M" <?php echo $data['M']; ?> />
+                    value="M" <?php echo $formData['M']; ?> />
             <label id='l_homme'></label>
 
             <hr />
@@ -165,7 +164,7 @@
 
             <label class="left" id='l_mail'></label>
             <input type="text" name="mail" id="mail"  
-                    value="<?php echo $data['mail']; ?>" />
+                    value="<?php echo $formData['mail']; ?>" />
 
 
             <hr />
@@ -173,73 +172,73 @@
             <!-- Club -->
             <label class="left" id='l_nom_club'></label>
             <input name="nom_club" id="nom_club" type="text" 
-                    value="<?php echo $data['nom_club']; ?>"/>
+                    value="<?php echo $formData['nom_club']; ?>"/>
 
             <label class="left" id='l_num_club'></label>
             <input name="num_club" id="num_club" type="text" size="5"
-                   value="<?php echo $data['num_club']; ?>"
+                   value="<?php echo $formData['num_club']; ?>"
                    />
             <hr />
 
             <!-- Serie -->
 
             <input type="radio" name="serie" id="radio_LA4" value="LA4" 
-                    <?php echo $data['LA4']; ?> />
+                    <?php echo $formData['LA4']; ?> />
             <label for="radio_LA4">Laser 4.7</label>
             
             <input type="radio" name="serie" id="radio_LAR" value="LAR" 
-                    <?php echo $data['LAR']; ?> />
+                    <?php echo $formData['LAR']; ?> />
             <label for="radio_LAR">Laser Radial</label>
 
             <input type="radio" name="serie" id="radio_LAS" class="required"
-                   value="LAS" <?php echo $data['LAS']; ?>/>
+                   value="LAS" <?php echo $formData['LAS']; ?>/>
             <label for="radio_LAS">Laser Standard</label>
 
             <br />
 
             <label class="left" for="Cvoile" id='l_Nvoile'></label>
-            <input name="Cvoile" type="text" id="Cvoile" size="3" maxlength="3" value="<?php echo $data['Cvoile']; ?>"/>
-            <input name="Nvoile" type="text" id="Nvoile" size="6" maxlength="6" value="<?php echo $data['Nvoile']; ?>"/>
+            <input name="Cvoile" type="text" id="Cvoile" size="3" maxlength="3" value="<?php echo $formData['Cvoile']; ?>"/>
+            <input name="Nvoile" type="text" id="Nvoile" size="6" maxlength="6" value="<?php echo $formData['Nvoile']; ?>"/>
             <hr />
 
             <!-- Statut : Licence et AFL -->
 
             <input type="radio" class="required" name="statut" id="radio_ffv" 
                     value="Licencie" 
-                            <?php echo $data['Licencie']; ?> />
+                            <?php echo $formData['Licencie']; ?> />
             <label id='l_ffv'></label>
 
             <input type="radio" name="statut" id="radio_etranger" 
                     value="Etranger" 
-                            <?php echo $data['Etranger']; ?> />
+                            <?php echo $formData['Etranger']; ?> />
             <label id='l_etranger'></label>
 
             <input type="radio" name="statut" id="radio_autre" 
                     value="Autre" 
-                    <?php echo $data['Autre']; ?> />
+                    <?php echo $formData['Autre']; ?> />
             <label id='l_autre'></label>
 
             <br />
 
             <label class="left" id='l_afl'></label>
             <input type="radio" name="adherant" id="radio_adherant_oui" 
-                    value="1" <?php echo $data['ad_AFL_1']; ?> />
+                    value="1" <?php echo $formData['ad_AFL_1']; ?> />
 
             <label id='l_oui'></label>
 
             <input type="radio" name="adherant" id="radio_adherant_non" 
-                   value="0" <?php echo $data['ad_AFL_0']; ?>/>
+                   value="0" <?php echo $formData['ad_AFL_0']; ?>/>
             <label id='l_non'></label>
 
             <br />
 
             <label class="left" for="lic" id='l_lic'></label>
             <input type="text" name="lic" id="lic" 
-                   size="8" value="<?php echo $data['lic']; ?>"/>
+                   size="8" value="<?php echo $formData['lic']; ?>"/>
 
             <label class="left" for="isaf_no" id="l_isaf_no"></label>
             <input type="text" name="isaf_no" id="isaf_no" 
-                   size="10" value="<?php echo $data['isaf_no']; ?>"
+                   size="10" value="<?php echo $formData['isaf_no']; ?>"
                    />
             <br />
 

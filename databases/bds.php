@@ -1,17 +1,20 @@
 <?php
 
-if($_SERVER['HTTP_HOST'] == 'localhost') {
-    $host='localhost';
-    $user='inscriptions-afl';
-    $pwd='inscriptions-afl';
-    $db='inscriptions-afl';
-}
-else {
+$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+
+if ($_SERVER['HTTP_HOST'] == 'localhost') {
+    $host = 'localhost';
+    $user = 'inscriptions-afl';
+    $pwd = 'inscriptions-afl';
+    $db = 'inscriptions-afl';
+    // That is for my Mac !!!
+    //      $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_WARNING;
+} else {
     // Le fichier suivant, à placer dans un endroit protegé, definit les variables
     // $host, $user, $pwd, $db
     // pout l'acces à la bd
-    $unix_base='/homez.462/xnrgates/www/';
-    require $unix_base.'basedesnoms/.AFLdb.php';
+    $unix_base = '/homez.462/xnrgates/www/';
+    require $unix_base . 'basedesnoms/.AFLdb.php';
 }
 
 $pdo_path="mysql:host=$host;dbname=$db";
