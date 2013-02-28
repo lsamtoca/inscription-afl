@@ -1,54 +1,83 @@
 <?php
 
-
+// Il faut connaitre le nom de la regate ...
 if (!isset($_GET['regate'])) {
     pageErreur("A quelle régate souhaitez vous vous inscrire ?");
 }
+assert('isset($_GET[\'regate\'])');
+$ID_regate = $_GET['regate'];
 
+$premiere_inscription = TRUE;
+$confirmation = FALSE;
+$comingfromsearch = FALSE;
+$gotoinscription = FALSE;
+
+require_once 'php/hash.php';
+
+if (isset($_GET[$hashGetString])) {
+    $premiere_inscription = FALSE;
+    $comingfromsearch = FALSE;
+    $confirmation = TRUE;
+    $gotoinscription = false;
+    $hash = decodeHashFromHashString($_GET[$hashGetString]);
+    $ID_inscrit = decodeIdFromHashString($_GET[$hashGetString]);
+}
+
+if (isset($_POST['search_submit'])) {
+    $premiere_inscription = TRUE;
+    $comingfromsearch = TRUE;
+    $confirmation = FALSE;
+    $gotoinscription = TRUE;
+}
+
+// Radio buttons
+function set_zero_radio_buttons() {
+    global $formData;
+
+    $formData['F'] = '';
+    $formData['M'] = '';
+    $formData['LA4'] = '';
+    $formData['LAR'] = '';
+    $formData['LAS'] = '';
+    $formData['Licencie'] = '';
+    $formData['Etranger'] = '';
+    $formData['Autre'] = '';
+    $formData['ad_AFL_0'] = '';
+    $formData['ad_AFL_1'] = '';
+}
+
+function set_default_radio_buttons() {
+    global $formData;
+
+    set_zero_radio_buttons();
+
+    $formData['F'] = 'checked';
+    $formData['LA4'] = 'checked';
+    $formData['Autre'] = 'checked';
+    $formData['ad_AFL_0'] = 'checked';
+}
+
+function set_fromData_radio_buttons() {
+    global $formData;
+
+    set_zero_radio_buttons();
+
+    // Set radio  buttons
+    $formData[$formData['sexe']] = 'checked';
+    $formData[$formData['serie']] = 'checked';
+    $formData[$formData['statut']] = 'checked';
+    // This is a real hack
+    $formData['ad_AFL_' . $formData['adherant']] = 'checked';
+}
+
+require_once 'php/Regate.php';
 
 //
 // Récuellir les informations sur la régate
 //
-try {
-    $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-    $bdd = new PDO($pdo_path, $user, $pwd, $pdo_options);
-    $sql = 'SELECT `ID_regate`,`titre`,`lieu`,`description`, ' .
-            'DATE_FORMAT(`date_debut`, \'%d-%m-%Y\') as `date_debut`, ' .
-            'DATE_FORMAT(`date_fin`, \'%d-%m-%Y\') as `date_fin`, ' .
-            '`date_limite_preinscriptions` ' .
-            'FROM `Regate` ' .
-            'WHERE ID_regate = ?';
-    $req = $bdd->prepare($sql);
-    $req->execute(array($_GET['regate']));
-    if ($req->RowCount() == 0)
-        pageErreur('Cette régate n\'existe pas :-(');
-    // Tout ce qu'on veut savoir sur la regate
-    $regate = $req->fetch();
-} catch (Exception $e) {
-    // En cas d'erreur, on affiche un message et 
-    // on arrête tout de suite
-    if ($development) {
-        $_GET['regate'] = 0;
-        $regate['date_debut'] = "13-11-1967";
-        $regate['date_fin'] = "14-11-2067";
-        $regate['date_limite_preinscriptions'] = "13-11-2067";
-        $regate['titre'] = "Regate test";
-        $regate['lieu'] = "Marseille";
-        $regate['description'] = "Pour tester";
-    }
-    else
-        die('Erreur : ' . $e->getMessage());
-}
 
-// On etablit quand est le dernier moment 
-// - pour pouvoir se preinscrire
-$URLPRE = format_url_preinscrits($_GET['regate']);
-if ($regate['date_limite_preinscriptions'] != '') {
-    date_default_timezone_set('Europe/Paris');
-    $now = new DateTime;
-    $limite = new DateTime($regate['date_limite_preinscriptions']);
-    $limite->setTime(23, 59);
-}
+$regate = Regate_selectById($ID_regate);
+$URLPRE = format_url_preinscrits($ID_regate);
 
 // Pour le preremplissage du formulaire
 // Association :
@@ -68,7 +97,7 @@ $assoc_INSCRIT_form = array(
     'sexe' => 'sexe',
     'mail' => 'mail',
     'statut' => 'statut',
-     'conf' => 'conf',
+    'conf' => 'conf',
         //'ID_regate' => 'IDR',
         //'date_preinscription' =>  date('Y-m-d G:i:s')
 );
@@ -82,103 +111,118 @@ $assoc_COUREUR_form = array(
     'SEXE' => 'sexe',
 );
 
-
 function fill_form_from_scratch() {
-    global $assoc_INSCRIT_form, $data;
+    global $assoc_INSCRIT_form, $formData;
 
 
     // On preremplit tout en blanc
     foreach ($assoc_INSCRIT_form as $field_bd => $field_form)
-        $data[$field_form] = '';
+        $formData[$field_form] = '';
 
     // On preremplit avec des données pour tester
-    $data['naissance'] = '01/01/1994';
-    $data['conf'] = '0';
-    
+    $formData['naissance'] = '01/01/1994';
+    $formData['conf'] = '0';
+    $formData['ID_inscrit'] = '0';
+
     // Aucun des radio-buttons est coché
     // Sexe
-    $data['M'] = '';
-    $data['F'] = '';
-    // Serie
-    $data['LAS'] = '';
-    $data['LAR'] = '';
-    $data['LA4'] = '';
-    // Statut
-    $data['Licencie'] = '';
-    $data['Etranger'] = '';
-    $data['Autre'] = '';
-    // Adhérant
-    $data['ad_AFL_0'] = '';
-    $data['ad_AFL_1'] = '';
+    set_default_radio_buttons();
 
-    $data['ID_inscrit']='0';
-
-    
     // Pour quelle raison cela ?
-    $data['search_lic'] = '';
-    $data['search_isaf'] = '';
-
+    $formData['search_lic'] = '';
+    $formData['search_isaf'] = '';
 }
 
 function fill_form_from_db() {
 
-    global $assoc_INSCRIT_form, $data;
-    global $pdo_path, $user, $pwd;
+    global $assoc_INSCRIT_form, $formData;
+    global $pdo_path, $user, $pwd, $pdo_options;
+    global $gotoinscription, $confirmation;
+    global $ID_inscrit, $hash;
 
-    assert(isset($_POST['search_submit']));
+    assert(isset($_POST['search_submit']) or $confirmation);
+
+    // Determiner comment faire la recherche sur la DB
+    $field_value = '';
+    if (isset($_POST['search_lic'])) {
+        $field_key = 'num_lic';
+        $field_value = $_POST['search_lic'];
+        // $formData['search_lic'] = $_POST['search_lic'];
+  //      echo 'OK';
+    }
+    if ($field_value == '' and isset($_POST['search_isaf'])) {
+        $field_key = 'isaf_no';
+        $field_value = $_POST['search_isaf'];
+        // $formData['search_isaf'] = $_POST['search_isaf'];
+//        echo 'OK';
+    }
+    if ($confirmation) {
+        $field_key = 'ID_inscrit';
+        $field_value = $ID_inscrit;
+        // We need here to refill the form
+        $formData['conf'] = '1';
+        $formData['ID_inscrit'] = $ID_inscrit;
+ //       echo 'OK';
+    }
 
     try {
-        $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-        $bdd = new PDO($pdo_path, $user, $pwd, $pdo_options);
+        $bd = new PDO($pdo_path, $user, $pwd, $pdo_options);
 
-        // Faire d'abord la requête sur la table Inscrit
-        // Set the field to search for
-        $field_key = 'num_lic';
-        if (isset($_POST['search_isaf']))
-            $field_key = 'isaf_no';
-
-        // Set its value
-        if (isset($_POST['search_lic'])) {
-            $field_value = $_POST['search_lic'];
-            $data['search_lic'] = $_POST['search_lic'];
+        if (!$confirmation) {
+            $sql = "Select * from `Inscrit` "
+                    . "where $field_key=:field_value "
+                    . "order by `date preinscription` desc";
+            $req = $bd->prepare($sql);
+            $req->execute(array(
+                'field_value' => $field_value));
+        } else {
+            $sql = "SELECT * FROM `Inscrit` "
+                    . "WHERE $field_key=:field_value AND hash=:hash "
+                    . "ORDER BY `date preinscription` DESC";
+            $req = $bd->prepare($sql);
+            $req->execute(array(
+                'hash' => $hash,
+                'field_value' => $field_value));
         }
-        if (isset($_POST['search_isaf'])) {
-            $field_value = $_POST['search_isaf'];
-            $data['search_isaf'] = $_POST['search_isaf'];
-        }
 
-        $sql = "Select * from `Inscrit` where $field_key=? order by `date preinscription` desc";
-        $req = $bdd->prepare($sql);
-        $req->execute(array($field_value));
-        //        $req->debugDumpParams();
+        /*
+         * Test
+         */
+        //  $req->debugDumpParams();
+        //      pageErreur("'".$field_value."' --".$sql);
+        //   echo $req->rowCount();
+        //   exit;
         // Si on a trouvé qqchose on s'inscrit
+
         if ($req->rowCount() > 0) {
+
             $row = $req->fetch();
+
             foreach ($assoc_INSCRIT_form as $field_bd => $field_form) {
-                $_POST[$field_form] = $row[$field_bd];
-                $data[$field_form] = $row[$field_bd];
+                $formData[$field_form] = $_POST[$field_form] = $row[$field_bd];
             }
-            list($year, $month, $day) = sscanf($data['naissance'], '%04d-%02d-%02d');
+            $formData['naissance'] = $_POST['naissance'] =
+                    dateReformatMysqlToJquery($formData['naissance']);
 
-            /*
-              if (GOTOINSCRIPTIONDIRECT) {
+            if ($gotoinscription) {
 
-              $_POST['maSoumission'] = '';
-              $_POST['IDR'] = $_GET['regate'];
-              $_POST['lang'] = 'fr';
-              $_POST['no_email'] = true;
+                $_POST['ID_inscrit'] = '0';
+                $_POST['maSoumission'] = '';
+                $_POST['IDR'] = $_GET['regate'];
+                $_POST['lang'] = 'fr';
+                $_POST['conf'] = '0';
 
-              // Ces donnés devraient être soumis à un contrôle
-              // Afin de ne pas propager des erreurs
-              include 'Inscription.php';
-              exit;
-              }
-             */
+                // Ces donnés devraient être soumis à un contrôle
+                // Afin de ne pas propager des erreurs
+                //               print_r($_POST);
+                include 'Inscription.php';
+                exit;
+            }
         } else  // Sinon, on cherche dans la table COUREUR.DBF
         // Faire la requete sur la table COUREUR.DBF
         if (isset($_POST['search_lic'])) {
             $sql = "Select * from `COUREUR.DBF` where `NO_LIC`= ?";
-            $req = $bdd->prepare($sql);
+            $req = $bd->prepare($sql);
             $req->execute(array($_POST['search_lic']));
 
             //        $req->debugDumpParams();
@@ -190,9 +234,9 @@ function fill_form_from_db() {
             if ($req->rowCount() > 0) {
                 $row = $req->fetch();
                 foreach ($assoc_COUREUR_form as $field_bd => $field_form) {
-                    $data[$field_form] = strip_spaces($row[$field_bd]);
-                    list($year, $month, $day) = sscanf($data['naissance'], '%04d%02d%02d');
+                    $formData[$field_form] = strip_spaces($row[$field_bd]);
                 }
+                list($year, $month, $day) = sscanf($formData['naissance'], '%04d%02d%02d');
             }
         }
     } catch (Exception $e) {
@@ -200,30 +244,26 @@ function fill_form_from_db() {
         die('Erreur : ' . $e->getMessage());
     }
 
+    if (isset($_POST['search_lic'])) {
+        $formData['naissance'] = dateReformatDbfToJquery($formData['naissance']);
+    }
 
-    $data['naissance'] = "$day/$month/$year";
-
-    if(isset($_GET['CONF'])){
-            // Si nous arrivons pour confirmation
-        $data['conf'] = '1';
-        $data['ID_inscrit'] = $_GET['CONF'];
+    if ($confirmation) {
+        // Si nous arrivons pour confirmation
+        $formData['conf'] = '1';
+        $formData['ID_inscrit'] = $ID_inscrit;
     }
 
     // Set radio  buttons
-    $data[$data['sexe']] = 'checked';
-    $data[$data['serie']] = 'checked';
-    $data[$data['statut']] = 'checked';
-    // This is a hack
-    $data['ad_AFL_'.$data['adherant']] = 'checked';
-    
+    set_fromData_radio_buttons();
 }
 
 fill_form_from_scratch();
-//
-// Si on demande de pre-remplir le formulaire
-//
-
-if (isset($_POST['search_submit']))
-//if (isset($_GET['ID']))
+if ($comingfromsearch) {
     fill_form_from_db();
+} elseif ($confirmation) {
+    fill_form_from_db();
+}
+else
+    set_default_radio_buttons();
 ?>

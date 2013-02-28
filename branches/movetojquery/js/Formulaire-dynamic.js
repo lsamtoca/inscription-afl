@@ -1,5 +1,7 @@
 $(document).ready ( function () {
     
+    console.log('Ajout de la dymanique au formulaire');
+    
     $('#radio_ffv').click( function(){
         // Licence num isaf num 
         $('#l_lic').show();
@@ -53,5 +55,7 @@ $(document).ready ( function () {
     $('#radio_LA4').click();
     $('#radio_F').click();
     $('#radio_adherant_non').click();
+    
+    console.log('Dynamique ajoutée');
     
 });

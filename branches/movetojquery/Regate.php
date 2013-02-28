@@ -8,7 +8,7 @@
 	}
 
    require "partage.php";
-   require_once('mailer.php');
+   require_once('php/mailer.php');
     
    xhtml_pre1("Gestion de votre régate");
 ?>

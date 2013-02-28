@@ -1,5 +1,5 @@
 <?php
-require "partage.php";
+require_once "partage.php";
 
 include 'Inscription-logique.php';
 include 'Inscription-html.php';
