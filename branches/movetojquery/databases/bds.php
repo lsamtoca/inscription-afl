@@ -39,5 +39,3 @@ if (!function_exists('connect')) {
         return  $con;
     }
 }
-
-?>

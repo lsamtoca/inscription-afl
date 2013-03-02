@@ -36,14 +36,20 @@ var searchform_regexp_fields = {
 
 $(document).ready(function (){
     
-    console.log('Ajout des validations au formulaires');    
-    set_validations();    
-    console.log('Ajout des validation terminé');
+    // We do not need this
+    // set_validations is called when we set the i18n
+    //set_validations();   
 
-});
+    });
 
+var debug;
+//debug=false;
+debug=true;
 
 function set_validations (){
+
+    if(debug) 
+        console.log('>> Ajout des validations aux formulaires');    
     
     // Mainform
     $("#mainform").validate({
@@ -56,9 +62,9 @@ function set_validations (){
     add_crequired("mainform",mainform_crequired_fields);
     add_regexp("mainform",mainform_regexp_fields);
     //   console.log('Ajouté validations mainform');
- 
+
     // Searchform
-    if($('#searchform') != undefined){
+    if($('#searchform').val() != undefined){
         
         $('#searchform').validate({
             // Put the debug option for debugging
@@ -80,14 +86,17 @@ function set_validations (){
         });
 
         add_regexp('searchform',searchform_regexp_fields);
-                
-
-    //  console.log('Ajouté validations searchform');
-        
+                       
+    }
+    else {
+        if(debug)
+            console.log('Formulaire recherche n\'existe pas!');
     }
     
-    
-    
+
+    if(debug)
+        console.log('<< Ajout des validations terminé');
+
 };
 
 
@@ -103,10 +112,6 @@ function check_selector(str){
 };
 
 
-
-
-
- 
 function add_required(form_id,fields){
 
 
@@ -177,7 +182,6 @@ function add_crequired(form_id,fields){
 
     }
 
-    // console.log('Ajouté validation conditionally required');
 }
 
 // This does not wok anymore -- why ?
@@ -251,72 +255,3 @@ function add_regexp(form_id,fields){
     
     }   
 }
-
-
-
-/*
-$(document).ready(function() {
-
-
-    $('#searchform').validate({
-        rules : {
-            search_lic : {
-                //size : 8,
-                //maxlength : 8,
-                required : true,
-                licence : true             
-            }
-        },
-        messages : {
-            search_lic : {
-                required : "J'ai besoin de ce numero"
-            }
-        }
-    });
-    
-
-
-
-
-    $('#searchform_isaf').validate({
-        rules : {
-            search_isaf :{
-                //                size: 8,
-                //                maxlength:8,
-                required : true,
-                isafno : true
-            }
-        },
-        messages : {
-            search_isaf : {
-                required: "J'ai besoin de ce numero"
-            }
-        }
-    });
-
-
-    $('#mainform').validate({
-        rules : {
-            Nom : {
-                required : true
-            },
-            Prenom : {
-                required : true
-            },
-            mail : {
-                required : true,
-                email : true
-            },
-            naissance : {
-                required : true,
-		naissance : true
-            }
-        },
-        messages : {
-    }
-    });
-
-});
-
-
- */

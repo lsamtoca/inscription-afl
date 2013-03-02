@@ -35,43 +35,44 @@ var document_language='fr';
 
 $(document).ready(function() {
     
-    function loadBundles(lang) {
-        $.i18n.properties({
-            name:'Messages', 
-            path:'bundle/', 
-            mode:'both',
-            //            encoding: 'utf-8',
-            //            cache:true,
-            language: lang, 
-            callback: function() {
-                doUpdate();
-            }
-        });
-    }
-
-    function changerLangue () {
-
-        if (document_language == 'fr') 
-        {                
-            loadBundles('en');
-            document_language = 'en';
-        }
-        else    
-        {
-            loadBundles('fr');
-            document_language = 'fr';
-        }        
-    }
-
-  
+    if(debug) console.log('>> Ajout du i18n');
     loadBundles('fr');
     $('#lang').live('click',changerLangue);
-    console.log('Ajouté i18n');
+    if(debug) console.log('<< i18n ajouté');
   
 });
 
+function loadBundles(lang) {
+    $.i18n.properties({
+        name:'Messages', 
+        path:'bundle/', 
+        mode:'both',
+        //            encoding: 'utf-8',
+        //            cache:true,
+        language: lang, 
+        callback: function() {
+            doUpdate();
+        }
+    });
+}
+
+function changerLangue () {
+
+    if (document_language == 'fr') 
+    {                
+        loadBundles('en');
+        document_language = 'en';
+    }
+    else    
+    {
+        loadBundles('fr');
+        document_language = 'fr';
+    }        
+}
+
 function doUpdate() {
-        
+
+    
     updateFields();
             
     // Mise a jour du datepicker
@@ -80,11 +81,13 @@ function doUpdate() {
     else
         $.datepicker.setDefaults( $.datepicker.regional[''] );
 
+
     // A venir, mise a jour des messages d'erreur de la validation
     updateValidationMessages();
     $('form').validate();
             
 }
+
 
 function updateFields (){
 
@@ -94,11 +97,11 @@ function updateFields (){
         var msg = 'msg_'+ids[i];
         
         if($(selector).length == 0) {
-            console.error(selector+" n'est pas un id valide");
+            console.warn(selector+" n'est pas un id valide");
             continue;
         }
         if($.i18n.prop(msg) == '['+msg+']') {
-            console.error(msg +" pas defini ou vide");
+            console.warn(msg +" pas defini ou vide");
             continue;
         }
             
@@ -106,7 +109,9 @@ function updateFields (){
     };
     
     // Mise a jour des buttons valider 
-    $('#searchform input[type=submit]').attr('value',msg_chercher);   
+    if($('#searchform').length != 0)
+        $('#searchform input[type=submit]').attr('value',msg_chercher);
+    
     $('#mainform input[type=submit]').attr('value',msg_valider);   
     // mise a jour des deux points apres les etiquettes
     $("label.left").append(label_termination);
@@ -121,10 +126,8 @@ function updateFields (){
 
 
 function updateValidationMessages(){
-   
-    set_validations ();
-    $("form").validate().resetForm();
-//    $("form").validate().form();
-//    $("#searchform").validate().form();
+
+    set_validations();
+    $('form').validate().resetForm();
 
 }
