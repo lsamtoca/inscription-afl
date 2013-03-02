@@ -17,7 +17,9 @@ if ($_SERVER['HTTP_HOST'] == 'localhost') {
 
     $development = false;
 
-    $www_site = 'régateslaser.info/';
+    // The one below is dangerous as it contains the accent. 
+    //$www_site = 'régateslaser.info/';
+    $www_site = 'xn--rgateslaser-bbb.info/';
     $racine = basename(dirname(realpath(__FILE__))) . '/';
 }
 

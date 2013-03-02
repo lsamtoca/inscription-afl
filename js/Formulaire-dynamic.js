@@ -51,10 +51,19 @@ $(document).ready ( function () {
         $('#non_licencie').show();
     });
     
-    $('#radio_ffv').click();
-    $('#radio_LA4').click();
-    $('#radio_F').click();
-    $('#radio_adherant_non').click();
+    
+    //    $('#radio_ffv').click();
+    //    $('#radio_LA4').click();
+    //    $('#radio_F').click();
+    //    $('#radio_adherant_non').click();
+    console.log($('#mainform input[name=sexe]:checked').val());
+    console.log($('#mainform input[name=serie]:checked').val());
+    console.log($('#mainform input[name=statut]:checked').val());
+    console.log($('#mainform input[name=adherant]:checked').val());
+    $('#mainform input[name=sexe]:checked').click();
+    $('#mainform input[name=serie]:checked').click();
+    $('#mainform input[name=statut]:checked').click();
+    $('#mainform input[name=adherant]:checked').click();
     
     if(debug) console.log('<< Ajout de la dynamique terminé');
     

@@ -135,7 +135,7 @@ function fill_form_from_scratch() {
 
 function fill_form_from_db() {
 
-    global $assoc_INSCRIT_form, $formData;
+    global $assoc_INSCRIT_form, $assoc_COUREUR_form, $formData;
     global $pdo_path, $user, $pwd, $pdo_options;
     global $gotoinscription, $confirmation;
     global $ID_inscrit, $hash;
@@ -236,7 +236,6 @@ function fill_form_from_db() {
                 foreach ($assoc_COUREUR_form as $field_bd => $field_form) {
                     $formData[$field_form] = strip_spaces($row[$field_bd]);
                 }
-                list($year, $month, $day) = sscanf($formData['naissance'], '%04d%02d%02d');
             }
         }
     } catch (Exception $e) {

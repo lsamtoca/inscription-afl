@@ -1,6 +1,6 @@
 <?php
 
-require_once 'php/Regate.php';
+require_once './php/Regate.php';
 
 // Destruction de regate
 if (isset($_POST['IDR'])) {
