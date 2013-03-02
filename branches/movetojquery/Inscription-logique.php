@@ -31,45 +31,40 @@ function protect($protect, $string) {
     return $protect . $string . $protect;
 }
 
+function protect_column($value) {
+    return "`$value`";
+}
+
+function construct_var($value) {
+    $value = str_replace(' ', '_', $value);
+    return ":$value";
+}
+
 // $fields is a string separated by commas 
 function constructInsertQuery($fields) {
 
     $fields = explode(',', $fields);
-    $protect_column = function ($value) {
-                return "`$value`";
-            };
-    $fields_protected = array_map($protect_column, $fields);
+    $fields_protected = array_map('protect_column', $fields);
     $columns = implode(',', $fields_protected);
 
-    $make_var = function ($value) {
-                $value = str_replace(' ', '_', $value);
-                return ":$value";
-            };
 
-    $fields_content = array_map($make_var, $fields);
+    $fields_content = array_map('construct_var', $fields);
     $values = implode(',', $fields_content);
     $query = "INSERT INTO Inscrit ($columns) VALUES ($values)";
     return $query;
 }
+
+function callback($value) {
+            $content = construct_var($value);
+            return "`$value`=$content";
+        };
 
 // $fields is a string separated by commas 
 function constructUpdateQuery($fields) {
 
     $fields = explode(',', $fields);
 
-    function make_var($value) {
-        $value = str_replace(' ', '_', $value);
-        return ":$value";
-    }
-
-    ;
-
-    $callback = function ($value) {
-                $content = make_var($value);
-                return "`$value`=$content";
-            };
-
-    $fields = array_map($callback, $fields);
+    $fields = array_map('callback', $fields);
     $pairs = implode(',', $fields);
     $query = "UPDATE Inscrit SET $pairs WHERE ID_inscrit=:ID_inscrit";
     return $query;
@@ -86,7 +81,7 @@ function do_update() {
 
     global $pdo_path, $user, $pwd, $pdo_options;
     global $regate;
-    global $modeConfirm, $ID_inscrit;    
+    global $modeConfirm, $ID_inscrit;
     assert($modeConfirm);
 
     try {
@@ -289,7 +284,7 @@ function do_mail($ID_inscrit, $hash) {
     // $titre_regate,$courriel_cv
 }
 
-$ID_regate=$_POST['IDR'];
+$ID_regate = $_POST['IDR'];
 $regate = Regate_selectById($ID_regate);
 $URLPRE = format_url_preinscrits($ID_regate);
 
@@ -308,8 +303,8 @@ if ($modeInsert) {
 if ($modeConfirm) {
     // Si c'est la premiere fois qu'on met à jour
     do_update();
-    $inscrit=Inscrit_selectById($ID_inscrit);
-    
+    $inscrit = Inscrit_selectById($ID_inscrit);
+
     //  header("Location:" . format_confirmation_regate($_POST['ID_inscrit']));
 }
 ?>
