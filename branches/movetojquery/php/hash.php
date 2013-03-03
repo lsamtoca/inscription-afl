@@ -1,6 +1,7 @@
 <?php
 
-$hashGetString = 'hash';
+//$hashGetString = 'hash';
+$hashGetString = 'k';
 $lengthOfHash = 16;
 
 function decodeIdFromHashString($hashstring) {

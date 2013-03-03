@@ -112,10 +112,11 @@ function updateFields (){
     if($('#searchform').length != 0)
         $('#searchform input[type=submit]').attr('value',msg_chercher);
     
-    $('#mainform input[type=submit]').attr('value',msg_valider);   
-    // mise a jour des deux points apres les etiquettes
-    $("label.left").append(label_termination);
-
+    if($('#mainform').length != 0){
+        $('#mainform input[type=submit]').attr('value',msg_valider);   
+        // mise a jour des deux points apres les etiquettes
+        $("label.left").append(label_termination);
+    }
     // Mise à jour du field input_lang (hidden)
     if( langue == 'fr')
         $('#input_lang').attr('value','fr');
@@ -128,6 +129,8 @@ function updateFields (){
 function updateValidationMessages(){
 
     set_validations();
-    $('form').validate().resetForm();
+    if($('form').length != 0)
+        $('form').validate().resetForm();
+    
 
 }
