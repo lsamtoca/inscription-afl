@@ -56,10 +56,10 @@ $(document).ready ( function () {
     //    $('#radio_LA4').click();
     //    $('#radio_F').click();
     //    $('#radio_adherant_non').click();
-    console.log($('#mainform input[name=sexe]:checked').val());
-    console.log($('#mainform input[name=serie]:checked').val());
-    console.log($('#mainform input[name=statut]:checked').val());
-    console.log($('#mainform input[name=adherant]:checked').val());
+    //    console.log($('#mainform input[name=sexe]:checked').val());
+    //    console.log($('#mainform input[name=serie]:checked').val());
+    //    console.log($('#mainform input[name=statut]:checked').val());
+    //    console.log($('#mainform input[name=adherant]:checked').val());
     $('#mainform input[name=sexe]:checked').click();
     $('#mainform input[name=serie]:checked').click();
     $('#mainform input[name=statut]:checked').click();

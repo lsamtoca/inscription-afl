@@ -52,17 +52,22 @@ function set_validations (){
         console.log('>> Ajout des validations aux formulaires');    
     
     // Mainform
-    $("#mainform").validate({
-        // Put the debug option for debugging only
-        // -- the form won't be sent
-        //      debug:true
-        });
-    add_email("mainform",mainform_email_fields);     
-    add_required("mainform",mainform_required_fields);
-    add_crequired("mainform",mainform_crequired_fields);
-    add_regexp("mainform",mainform_regexp_fields);
+    if($('#mainform').val() != undefined){
+        $("#mainform").validate({
+            // Put the debug option for debugging only
+            // -- the form won't be sent
+            //      debug:true
+            });
+        add_email("mainform",mainform_email_fields);     
+        add_required("mainform",mainform_required_fields);
+        add_crequired("mainform",mainform_crequired_fields);
+        add_regexp("mainform",mainform_regexp_fields);
     //   console.log('Ajouté validations mainform');
-
+    }else{
+        if(debug)
+            console.log('Formulaire d\'inscription n\'existe pas!');
+    }   
+    
     // Searchform
     if($('#searchform').val() != undefined){
         

@@ -9,7 +9,7 @@
         display: inline;
         color:red;
     }
-    
+
 </style>
 
 
@@ -23,6 +23,13 @@
 <script src="js/Formulaire-validation.js" type="text/javascript"></script>
 <script src="js/Formulaire-dynamic.js" type="text/javascript"></script>
 
+<style>
+    #accordion>div{background:cadetblue}
+    #accordion>h3{width:400px}
+    .ui-accordion .ui-accordion-header a { display: block; font-size: 1em; padding: .5em .5em .5em .7em; }
+    .ui-accordion-icons .ui-accordion-header a { padding-left: 2.2em; }
+</style>
+
 <script type="text/javascript">
 
     $(document).ready( function () {
@@ -33,6 +40,27 @@
             changeYear : true,
             yearRange : "c-20:c+20"
         });
+        
+        ///
+        var hash = window.location.hash.substring(1);
+        // Big hack :-(
+        var active=($('#accordion').children("h3[id="+hash+"]").index())/2;        
+        if(active<0) 
+            active=true;
+           
+        $('#accordion').accordion({ 
+            collapsible:true,
+            active: active, 
+            //            header: "h3",
+            heightStyle: "content",
+            event: "click hoverintent"
+            //autoHeight: false,
+            //navigation: true, 
+            //            event: 'mouseover', 
+            //            fillSpace: true, 
+            //animated: 'easeslide' 
+        });
+
     
     });
 
@@ -44,218 +72,225 @@
     [<a id='lang'></a>]
 </div><!--choix langue-->
 
+<div id="accordion">
 
-<div id='infos_regate'>
+    <h3 id="infos"><?php echo $regate['titre']; ?>, infos</h3>
 
-    <!--Dates, titre, description-->
+    <div id='infos_regate' class="contenu">
 
-    <p>
-        <?php if ($regate['date_debut'] != "00-00-0000" and $regate['date_fin'] != "00-00-0000"): ?>
-        Du <?php echo Regate_formatDebut($regate); ?> au <?php echo Regate_formatFin($regate); ?> :
-        <?php endif; ?>
-        <b><?php echo $regate['titre']; ?></b>
-        <?php if ($regate['lieu'] != ""): ?>
-            à <?php echo $regate['lieu']; ?>
-        <?php endif; ?>.
-    </p>
-    <p><?php echo $regate['description'] ?></p>
+        <!--Dates, titre, description-->
 
-    <!--Lien sur la liste des préinscrits-->
-    <p>
-        <a href="<?php echo $URLPRE; ?>">
-            <span id='liste_preinscrits'></span>
-        </a>
-    </p>
-
-    <!--Date limite pré-inscription-->
-
-    <?php if ($regate['date_limite_preinscriptions'] != ''): ?>
         <p>
-            <span id="deadline"></span>
-            <?php echo Regate_formatDeadline($regate); ?>
+            <?php if ($regate['date_debut'] != "00-00-0000" and $regate['date_fin'] != "00-00-0000"): ?>
+                Du <?php echo Regate_formatDebut($regate); ?> au <?php echo Regate_formatFin($regate); ?> :
+            <?php endif; ?>
+            <b><?php echo $regate['titre']; ?></b>
+            <?php if ($regate['lieu'] != ""): ?>
+                à <?php echo $regate['lieu']; ?>
+            <?php endif; ?>.
+        </p>
+        <p><?php echo $regate['description'] ?></p>
+
+        <!--Lien sur la liste des préinscrits-->
+        <p>
+            <a href="<?php echo $URLPRE; ?>">
+                <span id='liste_preinscrits'></span>
+            </a>
         </p>
 
-        <?php if(! Regate_estOuverte($regate)): ?>
+        <!--Date limite pré-inscription-->
+
+        <?php if ($regate['date_limite_preinscriptions'] != ''): ?>
             <p>
-                La date limite pour se préinscrire à cette régate,
-                le <?php echo Regate_formatDeadline($regate); ?> est passée.
-                <br />
-                Il n'est plus possible se préinscrire à cette régate :-(
+                <span id="deadline"></span>
+                <?php echo Regate_formatDeadline($regate); ?>
             </p>
-            <?php xhtml_post();
-            die('');
-            ?>
+
+            <?php if (!Regate_estOuverte($regate)): ?>
+                <p>
+                    La date limite pour se préinscrire à cette régate,
+                    le <?php echo Regate_formatDeadline($regate); ?> est passée.
+                    <br />
+                    Il n'est plus possible se préinscrire à cette régate :-(
+                </p>
+                <?php
+                xhtml_post();
+                die('');
+                ?>
+            <?php endif; ?>
         <?php endif; ?>
-<?php endif; ?>
 
-</div> <!--infos_regate-->
+    </div> <!--infos_regate-->
 
-<?php 
-if(!$confirmation): 
-?> 
+    <h3 id="formulaires">Formulaire pré-inscription</h3>
+    <div id="forms" class="contenu">
+        <?php
+        if (!$confirmation):
+            ?> 
 
-<div id='search'>
+            <div id='search'>
 
-    <form name="searchform" id="searchform" action="" method="post">
-            
-        <fieldset>
-            <legend id='search_legend'></legend>
-            <label class="left" id='l_search_lic'></label>
-            <input name="search_lic" id="search_lic" type="text"/>
-  <!--          <input name="search_submit" type='submit' value="Chercher">
-      -->          
-                
-            <label class="left" id='l_search_isaf'></label>
-            <input name="search_isaf"
-                   id="search_isaf" type="text" />
-                       
-            <input name="search_submit" type='submit' value="Chercher">
-                
-                
-        </fieldset>
+                <form name="searchform" id="searchform" action="" method="post">
 
-    </form>
-                        
-</div><!-- recherche par licence ou numero ISAF -->
+                    <fieldset>
+                        <legend id='search_legend'></legend>
+                        <label class="left" id='l_search_lic'></label>
+                        <input name="search_lic" id="search_lic" type="text"/>
+              <!--          <input name="search_submit" type='submit' value="Chercher">
+                        -->          
 
-<br />
+                        <label class="left" id='l_search_isaf'></label>
+                        <input name="search_isaf"
+                               id="search_isaf" type="text" />
 
-<?php 
- endif ; 
-?> 
-
-<div id='formulaire'>
-
-    <form id="mainform" action="Inscription.php" method="post">
-        <fieldset>
-            <legend id='mainform_legend'></legend>
-
-            <input name="lang" type="hidden" id="input_lang" value="fr" />
-            <input name="IDR" type="hidden" id="IDR" value=<?php echo '"' . $_GET['regate'] . '"'; ?>/>
-            <input name="conf" type="hidden" id="conf" 
-                   value="<?php echo $formData['conf']; ?>" />
-            <input name="ID_inscrit" type="hidden" id="ID_inscrit"
-                   value="<?php echo $formData['ID_inscrit']; ?>" />
-
-            <!-- Donnés personnels : nom prenom, date naissance, sexe -->
-            <label class="left" for="Nom" id='l_Nom'></label>
-            <input name="Nom" type="text" id="Nom" value="<?php echo $formData['Nom']; ?>"/>
-
-            <label class="left" for="Prenom" id='l_Prenom'></label>
-            <input name="Prenom" type="text" id="Prenom" value="<?php echo $formData['Prenom']; ?>"/>
-            <br />
+                        <input name="search_submit" type='submit' value="Chercher">
 
 
-            <label class="left" id='l_naissance'></label>
-            <input name="naissance" type="text" id="naissance" value="<?php echo $formData['naissance']; ?>" />
-	    <br />
-            
-	    <input type="radio" name="sexe" id="radio_F" 
-                   value="F" <?php echo $formData['F']; ?> />
-            <label id='l_femme'></label>
+                    </fieldset>
 
-            <input type="radio" name="sexe" id="radio_H" class="required"
-                    value="M" <?php echo $formData['M']; ?> />
-            <label id='l_homme'></label>
+                </form>
 
-            <hr />
-
-            <!-- Contact -->
-
-            <label class="left" id='l_mail'></label>
-            <input type="text" name="mail" id="mail"  
-                    value="<?php echo $formData['mail']; ?>" />
-
-
-            <hr />
-
-            <!-- Club -->
-            <label class="left" id='l_nom_club'></label>
-            <input name="nom_club" id="nom_club" type="text" 
-                    value="<?php echo $formData['nom_club']; ?>"/>
-
-            <label class="left" id='l_num_club'></label>
-            <input name="num_club" id="num_club" type="text" size="5"
-                   value="<?php echo $formData['num_club']; ?>"
-                   />
-            <hr />
-
-            <!-- Serie -->
-
-            <input type="radio" name="serie" id="radio_LA4" value="LA4" 
-                    <?php echo $formData['LA4']; ?> />
-            <label for="radio_LA4">Laser 4.7</label>
-            
-            <input type="radio" name="serie" id="radio_LAR" value="LAR" 
-                    <?php echo $formData['LAR']; ?> />
-            <label for="radio_LAR">Laser Radial</label>
-
-            <input type="radio" name="serie" id="radio_LAS" class="required"
-                   value="LAS" <?php echo $formData['LAS']; ?>/>
-            <label for="radio_LAS">Laser Standard</label>
+            </div><!-- recherche par licence ou numero ISAF -->
 
             <br />
 
-            <label class="left" for="Cvoile" id='l_Nvoile'></label>
-            <input name="Cvoile" type="text" id="Cvoile" size="3" maxlength="3" value="<?php echo $formData['Cvoile']; ?>"/>
-            <input name="Nvoile" type="text" id="Nvoile" size="6" maxlength="6" value="<?php echo $formData['Nvoile']; ?>"/>
-            <hr />
+            <?php
+        endif;
+        ?> 
 
-            <!-- Statut : Licence et AFL -->
+        <div id='formulaire'>
 
-            <input type="radio" class="required" name="statut" id="radio_ffv" 
-                    value="Licencie" 
-                            <?php echo $formData['Licencie']; ?> />
-            <label id='l_ffv'></label>
+            <form id="mainform" action="Inscription.php" method="post">
+                <fieldset>
+                    <legend id='mainform_legend'></legend>
 
-            <input type="radio" name="statut" id="radio_etranger" 
-                    value="Etranger" 
-                            <?php echo $formData['Etranger']; ?> />
-            <label id='l_etranger'></label>
+                    <input name="lang" type="hidden" id="input_lang" value="fr" />
+                    <input name="IDR" type="hidden" id="IDR" value=<?php echo '"' . $_GET['regate'] . '"'; ?>/>
+                    <input name="conf" type="hidden" id="conf" 
+                           value="<?php echo $formData['conf']; ?>" />
+                    <input name="ID_inscrit" type="hidden" id="ID_inscrit"
+                           value="<?php echo $formData['ID_inscrit']; ?>" />
 
-            <input type="radio" name="statut" id="radio_autre" 
-                    value="Autre" 
-                    <?php echo $formData['Autre']; ?> />
-            <label id='l_autre'></label>
+                    <!-- Donnés personnels : nom prenom, date naissance, sexe -->
+                    <label class="left" for="Nom" id='l_Nom'></label>
+                    <input name="Nom" type="text" id="Nom" value="<?php echo $formData['Nom']; ?>"/>
 
-            <br />
+                    <label class="left" for="Prenom" id='l_Prenom'></label>
+                    <input name="Prenom" type="text" id="Prenom" value="<?php echo $formData['Prenom']; ?>"/>
+                    <br />
 
-            <label class="left" id='l_afl'></label>
-            <input type="radio" name="adherant" id="radio_adherant_oui" 
-                    value="1" <?php echo $formData['ad_AFL_1']; ?> />
 
-            <label id='l_oui'></label>
+                    <label class="left" id='l_naissance'></label>
+                    <input name="naissance" type="text" id="naissance" value="<?php echo $formData['naissance']; ?>" />
+                    <br />
 
-            <input type="radio" name="adherant" id="radio_adherant_non" 
-                   value="0" <?php echo $formData['ad_AFL_0']; ?>/>
-            <label id='l_non'></label>
+                    <input type="radio" name="sexe" id="radio_F" 
+                           value="F" <?php echo $formData['F']; ?> />
+                    <label id='l_femme'></label>
 
-            <br />
+                    <input type="radio" name="sexe" id="radio_H" class="required"
+                           value="M" <?php echo $formData['M']; ?> />
+                    <label id='l_homme'></label>
 
-            <label class="left" for="lic" id='l_lic'></label>
-            <input type="text" name="lic" id="lic" 
-                   size="8" value="<?php echo $formData['lic']; ?>"/>
+                    <hr />
 
-            <label class="left" for="isaf_no" id="l_isaf_no"></label>
-            <input type="text" name="isaf_no" id="isaf_no" 
-                   size="10" value="<?php echo $formData['isaf_no']; ?>"
-                   />
-            <br />
+                    <!-- Contact -->
 
-            <div id="licencie_ffv">
-            </div>
+                    <label class="left" id='l_mail'></label>
+                    <input type="text" name="mail" id="mail"  
+                           value="<?php echo $formData['mail']; ?>" />
 
-            <div id="non_licencie">
-            </div>
 
-            <div id="etranger">
-            </div>
+                    <hr />
 
-            <hr />
+                    <!-- Club -->
+                    <label class="left" id='l_nom_club'></label>
+                    <input name="nom_club" id="nom_club" type="text" 
+                           value="<?php echo $formData['nom_club']; ?>"/>
 
-            <input type="submit" name="maSoumission" id="soumission" value="Valider"/>
-        </fieldset>
-    </form>
-</div> <!-- formulaire -->
+                    <label class="left" id='l_num_club'></label>
+                    <input name="num_club" id="num_club" type="text" size="5"
+                           value="<?php echo $formData['num_club']; ?>"
+                           />
+                    <hr />
 
+                    <!-- Serie -->
+
+                    <input type="radio" name="serie" id="radio_LA4" value="LA4" 
+                           <?php echo $formData['LA4']; ?> />
+                    <label for="radio_LA4">Laser 4.7</label>
+
+                    <input type="radio" name="serie" id="radio_LAR" value="LAR" 
+                           <?php echo $formData['LAR']; ?> />
+                    <label for="radio_LAR">Laser Radial</label>
+
+                    <input type="radio" name="serie" id="radio_LAS" class="required"
+                           value="LAS" <?php echo $formData['LAS']; ?>/>
+                    <label for="radio_LAS">Laser Standard</label>
+
+                    <br />
+
+                    <label class="left" for="Cvoile" id='l_Nvoile'></label>
+                    <input name="Cvoile" type="text" id="Cvoile" size="3" maxlength="3" value="<?php echo $formData['Cvoile']; ?>"/>
+                    <input name="Nvoile" type="text" id="Nvoile" size="6" maxlength="6" value="<?php echo $formData['Nvoile']; ?>"/>
+                    <hr />
+
+                    <!-- Statut : Licence et AFL -->
+
+                    <input type="radio" class="required" name="statut" id="radio_ffv" 
+                           value="Licencie" 
+                           <?php echo $formData['Licencie']; ?> />
+                    <label id='l_ffv'></label>
+
+                    <input type="radio" name="statut" id="radio_etranger" 
+                           value="Etranger" 
+                           <?php echo $formData['Etranger']; ?> />
+                    <label id='l_etranger'></label>
+
+                    <input type="radio" name="statut" id="radio_autre" 
+                           value="Autre" 
+                           <?php echo $formData['Autre']; ?> />
+                    <label id='l_autre'></label>
+
+                    <br />
+
+                    <label class="left" id='l_afl'></label>
+                    <input type="radio" name="adherant" id="radio_adherant_oui" 
+                           value="1" <?php echo $formData['ad_AFL_1']; ?> />
+
+                    <label id='l_oui'></label>
+
+                    <input type="radio" name="adherant" id="radio_adherant_non" 
+                           value="0" <?php echo $formData['ad_AFL_0']; ?>/>
+                    <label id='l_non'></label>
+
+                    <br />
+
+                    <label class="left" for="lic" id='l_lic'></label>
+                    <input type="text" name="lic" id="lic" 
+                           size="8" value="<?php echo $formData['lic']; ?>"/>
+
+                    <label class="left" for="isaf_no" id="l_isaf_no"></label>
+                    <input type="text" name="isaf_no" id="isaf_no" 
+                           size="10" value="<?php echo $formData['isaf_no']; ?>"
+                           />
+                    <br />
+
+                    <div id="licencie_ffv">
+                    </div>
+
+                    <div id="non_licencie">
+                    </div>
+
+                    <div id="etranger">
+                    </div>
+
+                    <hr />
+
+                    <input type="submit" name="maSoumission" id="soumission" value="Valider"/>
+                </fieldset>
+            </form>
+        </div> <!-- formulaire -->
+    </div> <!-- forms -->
+</div> <!-- accordion -->
 <?php xhtml_post(); ?>
