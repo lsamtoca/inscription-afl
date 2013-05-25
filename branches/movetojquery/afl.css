@@ -181,3 +181,5 @@ couocu#choix_langue A:hover {
     bottom: 0em;
     z-index:2;
 }
+
+#accordion>div{background:cadetblue}

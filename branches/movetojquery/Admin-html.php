@@ -14,19 +14,20 @@ xhtml_pre1('Administration des régates (événements et clubs)');
 <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.js" type="text/javascript"></script>
 <script src="js/ui.datepicker-fr.js" type="text/javascript"></script>
 
-<style>
-    #accordion>div{background:cadetblue}
-</style>
+<script src="js/myaccordion.js" type="text/javascript"></script>
+
 
 <script type="text/javascript">
 
     $(document).ready( function () {
 
         $("#date_destru" ).datepicker({
+
             dateFormat : "dd/mm/yy",
             defaultDate : "<?php echo $in_one_year; ?>",
             changeYear : true,
             yearRange : "c-20:c+20"
+            
         });
     
         var req_msg="Champ obligatoire";
@@ -79,18 +80,8 @@ xhtml_pre1('Administration des régates (événements et clubs)');
          
         });
         
-        $('#accordion').accordion({ 
-            active: true, 
-            header: "h2",
-            collapsible:true,
-            heightStyle: "content",
-            event: "click hoverintent"
-            //autoHeight: false,
-            //navigation: true, 
-            //            event: 'mouseover', 
-            //            fillSpace: true, 
-            //animated: 'easeslide' 
-        });
+        myaccordion_set_accordion();
+        
     });
    
     function validate_date_destr(date_d){
@@ -124,7 +115,7 @@ xhtml_pre1('Administration des régates (événements et clubs)');
 <div id='accordion' class="contenu">
     <!--      <h1>Gestion des Événements (et des Clubs)</h1>-->
 
-    <h2>Nouvelle régate</h2>
+    <h3>Nouvelle régate</h3>
     <div class="contenu">
         <form action='' method='post' id="formnewrace">
 
@@ -158,7 +149,7 @@ xhtml_pre1('Administration des régates (événements et clubs)');
         </form>
     </div>
 
-    <h2>Liste des régates ouvertes</h2>
+    <h3>Liste des régates ouvertes</h3>
     <div class="contenu">
         <p>
         <table class="mytable">
@@ -201,7 +192,7 @@ xhtml_pre1('Administration des régates (événements et clubs)');
         </table>
         </p>
     </div>
-    <h2>Mettre à jour le fichier COUREUR.DBF</h2>
+    <h3>Mettre à jour le fichier COUREUR.DBF</h3>
     <div class="contenu">
         <p>
             <a href="coureur_dbf_update.php" onclick="alert('Cette operation peut prendre du temps');">Mettre à jour le fichier COUREUR.DBF</a>

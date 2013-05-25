@@ -23,12 +23,8 @@
 <script src="js/Formulaire-validation.js" type="text/javascript"></script>
 <script src="js/Formulaire-dynamic.js" type="text/javascript"></script>
 
-<style>
-    #accordion>div{background:cadetblue}
-    #accordion>h3{width:400px}
-    .ui-accordion .ui-accordion-header a { display: block; font-size: 1em; padding: .5em .5em .5em .7em; }
-    .ui-accordion-icons .ui-accordion-header a { padding-left: 2.2em; }
-</style>
+<script src="js/myaccordion.js" type="text/javascript"></script>
+
 
 <script type="text/javascript">
 
@@ -40,28 +36,8 @@
             changeYear : true,
             yearRange : "c-20:c+20"
         });
-        
-        ///
-        var hash = window.location.hash.substring(1);
-        // Big hack :-(
-        var active=($('#accordion').children("h3[id="+hash+"]").index())/2;        
-        if(active<0) 
-            active=true;
-           
-        $('#accordion').accordion({ 
-            collapsible:true,
-            active: active, 
-            //            header: "h3",
-            heightStyle: "content",
-            event: "click hoverintent"
-            //autoHeight: false,
-            //navigation: true, 
-            //            event: 'mouseover', 
-            //            fillSpace: true, 
-            //animated: 'easeslide' 
-        });
-
-    
+                  
+        myaccordion_set_accordion();
     });
 
 </script>
@@ -292,5 +268,10 @@
             </form>
         </div> <!-- formulaire -->
     </div> <!-- forms -->
+
+    <h3 id="preinscrits">Préinscrits</h3>
+    <div>
+        <?php include 'Preinscrits-html.php'; ?>
+    </div><!-- prinscrits -->
 </div> <!-- accordion -->
 <?php xhtml_post(); ?>
