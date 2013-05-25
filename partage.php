@@ -53,15 +53,27 @@ function my_assert_handler($file, $line, $code) {
 // Configuration de la méthode de callback
 assert_options(ASSERT_CALLBACK, 'my_assert_handler');
 
-function format_url_regate($id_regate) {
+function format_url_regate($id_regate, $gets = "") {
     global $path_to_site_inscription;
-    return sprintf("http://%sFormulaire.php?regate=%d", $path_to_site_inscription, $id_regate);
+    if ($gets != "")
+        $gets = "&gets";
+    return sprintf("http://%sFormulaire.php?regate=%d%s", $path_to_site_inscription, $id_regate, $gets);
 }
 
-function format_url_preinscrits($id_regate) {
-    global $path_to_site_inscription;
-    return sprintf("http://%sPreinscrits.php?regate=%d", $path_to_site_inscription, $id_regate);
+function format_url_forms($id_regate,$gets = ""){
+    $url=format_url_regate($id_regate, $gets);
+    return "$url#forms";
 }
+
+function format_url_preinscrits($id_regate,$gets = ""){
+    $url=format_url_regate($id_regate, $gets);
+    return "$url#preinscrits";
+}
+
+//function format_url_preinscrits($id_regate) {
+//    global $path_to_site_inscription;
+//    return sprintf("http://%sPreinscrits.php?regate=%d", $path_to_site_inscription, $id_regate);
+//}
 
 function format_confirmation_regate($id_coureur) {
     global $path_to_site_inscription;
@@ -87,13 +99,13 @@ function background() {
     // explicitely required 
     // or we are a Club or administrateur
             isset($_GET['nobackground'])
-            || isset($_SESSION['ID_regate'])
+    //        || isset($_SESSION['ID_regate'])
             || isset($_SESSION['ID_administrateur'])
     ) {
         echo "<div><img alt='' id='bg' style=\"background-color: cadetblue;\"/></div><!-- background -->" . "\n\n";
         return;
     }
-    
+
     ob_start();
     passthru('ls img/*.jpg', $ret_val);
     $listing = ob_get_contents();
@@ -224,8 +236,7 @@ function self() {
 }
 
 // Definition des constantes
-define('HIDEMAILSTRING', str_repeat('*', 8));
-
+//define('HIDEMAILSTRING', str_repeat('*', 8));
 // Errors
 
 function pageErreur($message) {
