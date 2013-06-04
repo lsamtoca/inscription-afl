@@ -1,4 +1,7 @@
-<?php xhtml_pre1('Pré-inscription à la régate'); ?>
+<?php 
+global $regate;
+$page_title='Pré-inscription à la régate <em>' . $regate['titre'].'</em>';
+xhtml_pre1($page_title); ?>
 
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css" />
 
@@ -42,7 +45,7 @@
 
 </script>
 
-<?php xhtml_pre2('Pré-inscription à la régate'); ?>
+<?php xhtml_pre2($page_title); ?>
 
 <div id='choix_langue' class="white_over_dark">
     [<a id='lang'></a>]
@@ -68,11 +71,13 @@
         <p><?php echo $regate['description'] ?></p>
 
         <!--Lien sur la liste des préinscrits-->
+        <!--
         <p>
             <a href="<?php echo $URLPRE; ?>">
                 <span id='liste_preinscrits'></span>
             </a>
         </p>
+        -->
 
         <!--Date limite pré-inscription-->
 
@@ -98,7 +103,7 @@
 
     </div> <!--infos_regate-->
 
-    <h3 id="formulaires">Formulaire pré-inscription</h3>
+    <h3 id="formulaires"><span id="preregistration_form"></span></h3>
     <div id="forms" class="contenu">
         <?php
         if (!$confirmation):
@@ -129,8 +134,13 @@
             </div><!-- recherche par licence ou numero ISAF -->
 
             <br />
-
             <?php
+        else:
+            ?> 
+            <p style="color:red">
+                <span id="message_confirmation"></span>
+            </p>
+        <?php
         endif;
         ?> 
 
@@ -269,8 +279,8 @@
         </div> <!-- formulaire -->
     </div> <!-- forms -->
 
-    <h3 id="preinscrits">Préinscrits</h3>
-    <div>
+    <h3 id="preinscrits"><span id="preregistered_sailors"></span></h3>
+    <div class="contenu">
         <?php include 'Preinscrits-html.php'; ?>
     </div><!-- prinscrits -->
 </div> <!-- accordion -->

@@ -35,7 +35,7 @@ function myaccordion_set_accordion(){
     $("#accordion>h3").each(function(){
         max_width = Math.max(max_width, $(this).textWidth());
     });
-    console.log(max_width );
+    //console.log(max_width );
     $("#accordion>h3").width(max_width + 50);
 
 }

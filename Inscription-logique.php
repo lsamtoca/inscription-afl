@@ -214,7 +214,7 @@ function compose_mail($ID_inscrit, $hash, $ID_regate, $titre_regate, $courriel_c
     $url_confirmation = format_url_regate($ID_regate);
 
     $hashString = encodeHashId($hash, $ID_inscrit);
-    $url_confirmation .="&$hashGetString=$hashString";
+    $url_confirmation .="&$hashGetString=$hashString"."#formulaires";
 
     if ($development) {
         $message = "Cliques ici : <a href=\"$url_confirmation\">$url_confirmation</a>";

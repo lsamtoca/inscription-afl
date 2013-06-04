@@ -28,7 +28,10 @@ var ids=[
 'l_nom_club',
 'licencie_ffv',
 'non_licencie',
-'etranger'
+'etranger',
+'message_confirmation',
+'preregistration_form',
+'preregistered_sailors'
 ];
 
 var document_language='fr';    
