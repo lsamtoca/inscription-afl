@@ -45,6 +45,20 @@ $(document).ready(function() {
   
 });
 
+
+function changerLangue () {
+
+    if (document_language == 'fr') 
+        document_language = 'en';
+    else
+        document_language = 'fr';
+
+    loadBundles(document_language);
+    
+//doUpdate();
+
+}
+
 function loadBundles(lang) {
     $.i18n.properties({
         name:'Messages', 
@@ -52,34 +66,23 @@ function loadBundles(lang) {
         mode:'both',
         //            encoding: 'utf-8',
         //            cache:true,
-        language: lang, 
+        language: lang , 
         callback: function() {
             doUpdate();
-        }
+        } 
     });
 }
 
-function changerLangue () {
 
-    if (document_language == 'fr') 
-    {                
-        loadBundles('en');
-        document_language = 'en';
-    }
-    else    
-    {
-        loadBundles('fr');
-        document_language = 'fr';
-    }        
-}
-
+// doUpdate is the main function we
+// execute when 'change_lang' is clocked
 function doUpdate() {
 
     
     updateFields();
             
     // Mise a jour du datepicker
-    if( langue == 'fr')
+    if( document_language == 'fr')
         $.datepicker.setDefaults( $.datepicker.regional['fr'] );
     else
         $.datepicker.setDefaults( $.datepicker.regional[''] );
@@ -88,6 +91,8 @@ function doUpdate() {
     // A venir, mise a jour des messages d'erreur de la validation
     updateValidationMessages();
     $('form').validate();
+    
+    set_input_lang();
             
 }
 
@@ -120,14 +125,33 @@ function updateFields (){
         // mise a jour des deux points apres les etiquettes
         $("label.left").append(label_termination);
     }
-    // Mise à jour du field input_lang (hidden)
-    if( langue == 'fr')
-        $('#input_lang').attr('value','fr');
-    else
-        $('#input_lang').attr('value','en');
+
+    
+
 
 }
 
+// Mise à jour du field input_lang (hidden)
+function set_input_lang(){
+    
+/*    if( document_language == 'fr')
+        $('#input_lang').attr('value','fr');
+    else
+        $('#input_lang').attr('value','en');
+ */    
+    /*if(debug)
+        console.log($('#input_lang').val());
+    */
+   
+    $('#input_lang').val(document_language);
+    $('#search_input_lang').val(document_language);
+    
+    if(debug){
+        console.log($('#input_lang').val());
+        console.log($('#search_input_lang').val());
+    }
+
+}
 
 function updateValidationMessages(){
 

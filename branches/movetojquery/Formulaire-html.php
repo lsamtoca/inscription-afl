@@ -1,7 +1,8 @@
-<?php 
+<?php
 global $regate;
-$page_title='Pré-inscription à la régate <em>' . $regate['titre'].'</em>';
-xhtml_pre1($page_title); ?>
+$page_title = 'Pré-inscription à la régate <em>' . $regate['titre'] . '</em>';
+xhtml_pre1($page_title);
+?>
 
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css" />
 
@@ -41,6 +42,11 @@ xhtml_pre1($page_title); ?>
         });
                   
         myaccordion_set_accordion();
+        
+        $('mainform').submit(function() {
+            alert($(this).serialize());
+            return false;
+        });
     });
 
 </script>
@@ -115,6 +121,7 @@ xhtml_pre1($page_title); ?>
 
                     <fieldset>
                         <legend id='search_legend'></legend>
+                        <input name="lang" type="hidden" id="search_input_lang" value="fr"/>
                         <label class="left" id='l_search_lic'></label>
                         <input name="search_lic" id="search_lic" type="text"/>
               <!--          <input name="search_submit" type='submit' value="Chercher">

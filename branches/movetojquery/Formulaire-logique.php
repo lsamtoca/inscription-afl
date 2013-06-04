@@ -30,6 +30,9 @@ if (isset($_POST['search_submit'])) {
     $gotoinscription = TRUE;
 }
 
+if($comingfromsearch)
+    $_POST['no_email']='';
+    
 // Radio buttons
 function set_zero_radio_buttons() {
     global $formData;
@@ -209,7 +212,8 @@ function fill_form_from_db() {
                 $_POST['ID_inscrit'] = '0';
                 $_POST['maSoumission'] = '';
                 $_POST['IDR'] = $_GET['regate'];
-                $_POST['lang'] = 'fr';
+                // We get now 'lang' from the
+                //$_POST['lang'] = 'fr';
                 $_POST['conf'] = '0';
 
                 // Ces donnés devraient être soumis à un contrôle
