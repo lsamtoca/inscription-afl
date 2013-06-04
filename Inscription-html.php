@@ -1,39 +1,62 @@
 <?php if ($modeInsert): ?>
 
+
+
     <?php xhtml_pre("Vous êtes (presque) préinscrit"); ?>
 
-    <?php if ($_POST['lang'] == 'en'): ?>
-
+    <?php
+    //echo $_POST['lang']; 
+    //var_dump($_POST);
+//    echo "<pre>";
+//    print_r($_POST);
+//    echo "</pre>";
+    ?>
+    <big>
+        <?php if ($_POST['lang'] == 'en'): ?>
+            Dear
+        <?php else: ?>
+            Cher(e)
+        <?php endif; ?>
         <?php echo $_POST['Prenom'] . ' ' . $_POST['Nom']; ?>,
-        we ask you to confirm your preregistration. 
-        <br /><br/>
-        You'll receive an email at your address <br />
-        <div style="margin-left:20mm;margin-top:5mm">
-            <address><?php echo $_POST['mail'] ?></address>
-        </div><br />
-        This email contains a link by which you'll be able to confirm your preregistration.
 
-    <?php else: ?>
-        <?php echo $_POST['Prenom'] . ' ' . $_POST['Nom']; ?>,
-        nous vous demandons de confirmer votre préinscription. 
-        <br /><br/>
+        <br /><br />
 
-        <?php if (isset($_POST['no_email'])): ?>
+        <?php if ($_POST['lang'] == 'en'): ?>
+            we ask you to confirm your pre-registration.
+            <br />
 
-            Vous allez recevoir un courriel 
-            à votre adresse.
-            Ce courriel contient un lien qui vous permettra de confirmer votre préinscription.
+            We have sent you a message
+            <?php if (isset($_POST['no_email'])): ?>
+                at your email address 
+                (the last address you used with this system).      
+            <?php else: ?>
+                at the email address 
+                <br />
+                <div style="margin-left:20mm;margin-top:5mm">
+                    <address><?php echo $_POST['mail'] ?></address>
+                </div>
+            <?php endif; ?>
+            <br />
+            The message contains
+            a link by which you will be able to confirm and/or modify your pre-registration.
 
         <?php else: ?>
-            Vous allez recevoir un courriel 
-            à l'adresse <br />
-            <div style="margin-left:20mm;margin-top:5mm">
-                <address><?php echo $_POST['mail'] ?></address>
-            </div><br />
-            Ce courriel contient un lien qui vous permettra de confirmer votre préinscription.
-        <?php endif; ?>
-    <?php endif; ?>
+            nous vous demandons de confirmer votre pré-inscription. 
+            <br /><br/>
 
+            Vous allez recevoir un courriel 
+            <?php if (isset($_POST['no_email'])): ?>
+                à votre adresse (le dernier que vous avez utilisé avec ce système).
+            <?php else: ?>
+                à l'adresse <br />
+                <div style="margin-left:20mm;margin-top:5mm">
+                    <address><?php echo $_POST['mail'] ?></address>
+                </div><br />
+            <?php endif; ?>
+            <br/>
+            Ce courriel contient un lien qui vous permettra de confirmer votre pré-inscription.
+        <?php endif; ?>
+    </big>
 
     <p>
         Retour au
