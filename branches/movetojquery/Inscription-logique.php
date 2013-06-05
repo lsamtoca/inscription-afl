@@ -55,9 +55,11 @@ function constructInsertQuery($fields) {
 }
 
 function callback($value) {
-            $content = construct_var($value);
-            return "`$value`=$content";
-        };
+    $content = construct_var($value);
+    return "`$value`=$content";
+}
+
+;
 
 // $fields is a string separated by commas 
 function constructUpdateQuery($fields) {
@@ -214,16 +216,16 @@ function compose_mail($ID_inscrit, $hash, $ID_regate, $titre_regate, $courriel_c
     $url_confirmation = format_url_regate($ID_regate);
 
     $hashString = encodeHashId($hash, $ID_inscrit);
-    $url_confirmation .="&$hashGetString=$hashString"."#formulaires";
+    $url_confirmation .="&$hashGetString=$hashString" . "#formulaires";
 
     /*
-    if ($development) {
-        $message = "Cliques ici : <a href=\"$url_confirmation\">$url_confirmation</a>";
-        pageErreur($message);
-        exit();
-    }
-*/
-    
+      if ($development) {
+      $message = "Cliques ici : <a href=\"$url_confirmation\">$url_confirmation</a>";
+      pageErreur($message);
+      exit();
+      }
+     */
+
     $message_email_fr = "Bonjour " . $_POST['Prenom'] . ",\n\n"
             . "veuillez confirmer votre inscription à la régate '$titre_regate' en cliquant le lien suivant:\n"
             . $url_confirmation . "\n\n"
@@ -299,7 +301,14 @@ if ($modeInsert) {
     $titre_regate = $regate['titre'];
     $courriel_cv = $regate['courriel'];
 
+//    $retval = 
     compose_mail($ID_inscrit, $hash, $ID_regate, $titre_regate, $courriel_cv);
+
+//    if (!$retval)
+//        pageErreur ('Erreur lors de l\'envoi du courriel');
+//    else
+//        pageErreur('OK')
+//        ;
 }
 
 if ($modeConfirm) {
