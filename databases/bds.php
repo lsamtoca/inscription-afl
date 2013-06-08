@@ -13,7 +13,9 @@ if ($_SERVER['HTTP_HOST'] == 'localhost') {
     // Le fichier suivant, à placer dans un endroit protegé, definit les variables
     // $host, $user, $pwd, $db
     // pout l'acces à la bd
-    $unix_base = '/homez.462/xnrgates/www/';
+    
+    preg_match('/^.*www\//',__FILE__,$matches);
+    $unix_base = $matches[0];
     require $unix_base . 'basedesnoms/.AFLdb.php';
 }
 

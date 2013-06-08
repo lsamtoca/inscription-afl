@@ -19,7 +19,10 @@ if ($_SERVER['HTTP_HOST'] == 'localhost') {
 
     // The one below is dangerous as it contains the accent. 
     //$www_site = 'régateslaser.info/';
-    $www_site = 'xn--rgateslaser-bbb.info/';
+    //echo $_SERVER['SERVER_NAME'];
+    //echo $_SERVER['HTTP_HOST'];
+    // the site begins with www. which we do not want (why) ?
+    $www_site = substr($_SERVER['HTTP_HOST'], 4) . '/';
     $racine = basename(dirname(realpath(__FILE__))) . '/';
 }
 
@@ -60,13 +63,13 @@ function format_url_regate($id_regate, $gets = "") {
     return sprintf("http://%sFormulaire.php?regate=%d%s", $path_to_site_inscription, $id_regate, $gets);
 }
 
-function format_url_forms($id_regate,$gets = ""){
-    $url=format_url_regate($id_regate, $gets);
+function format_url_forms($id_regate, $gets = "") {
+    $url = format_url_regate($id_regate, $gets);
     return "$url#forms";
 }
 
-function format_url_preinscrits($id_regate,$gets = ""){
-    $url=format_url_regate($id_regate, $gets);
+function format_url_preinscrits($id_regate, $gets = "") {
+    $url = format_url_regate($id_regate, $gets);
     return "$url#preinscrits";
 }
 
@@ -99,7 +102,7 @@ function background() {
     // explicitely required 
     // or we are a Club or administrateur
             isset($_GET['nobackground'])
-    //        || isset($_SESSION['ID_regate'])
+            //        || isset($_SESSION['ID_regate'])
             || isset($_SESSION['ID_administrateur'])
     ) {
         echo "<div><img alt='' id='bg' style=\"background-color: cadetblue;\"/></div><!-- background -->" . "\n\n";
