@@ -18,11 +18,11 @@ if ($_SERVER['HTTP_HOST'] == 'localhost') {
     $development = false;
 
     // The one below is dangerous as it contains the accent. 
-    //$www_site = 'régateslaser.info/';
-    //echo $_SERVER['SERVER_NAME'];
-    //echo $_SERVER['HTTP_HOST'];
-    // the site begins with www. which we do not want (why) ?
-    $www_site = substr($_SERVER['HTTP_HOST'], 4) . '/';
+    // $www_site = 'régateslaser.info/';
+    // echo $_SERVER['SERVER_NAME']; --- this with www.
+    // this other without www.
+    // echo $_SERVER['HTTP_HOST'];
+    $www_site = $_SERVER['HTTP_HOST'] . '/';
     $racine = basename(dirname(realpath(__FILE__))) . '/';
 }
 
