@@ -6,7 +6,7 @@ if(!isset($_SESSION["ID_regate"]))
 }
 
 require "partage.php";
-require "classes/PHPExcel.php";
+require "externals/PHPExcel/Classes/PHPExcel.php";
 
 //define("FILENAME",sprintf("%sinscrits.xlsx",$racine)); //constante: nom du fichier à generer
 
