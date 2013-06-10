@@ -23,9 +23,8 @@ if(
   die("Il faut spécifier une série");
 
 require "partage.php";
-$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 $bdd = new PDO($pdo_path, $user, $pwd, $pdo_options);
-require "classes/PHPExcel.php";
+require "externals/PHPExcel/Classes/PHPExcel.php";
 
 $spaces=str_repeat(' ',30);
 $faita="Fait à $spaces le $spaces ,"; 
