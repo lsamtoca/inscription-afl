@@ -275,12 +275,12 @@ function dateReformatJqueryToMysql($string) {
 
 function dateReformatMysqlToJquery($string) {
     list($year, $month, $day) = sscanf($string, '%04d-%02d-%02d');
-    return sprintf('%d/%d/%d', $day, $month, $year);
+    return sprintf('%02d/%02d/%04d', $day, $month, $year);
 }
 
 function dateReformatDbfToJquery($string) {
     list($year, $month, $day) = sscanf($string, '%04d%02d%02d');
-    return sprintf('%d/%d/%d', $day, $month, $year);
+    return sprintf('%02d/%02d/%04d', $day, $month, $year);
 }
 
 /* Tests 
