@@ -25,7 +25,8 @@ var mainform_regexp_fields = {
     'num_club':/^[0-9]{5}$/,
     'Cvoile':/^[a-z]{3}$/i,
     'Nvoile':/^[0-9]{1,6}$/,
-    'lic':/^[0-9]{7}[a-z]$/i,
+//    'lic':/^[0-9]{7}[a-z]$/i,
+    'lic':/^[0-9a-z]{8}$/i,
     'isaf_no':/^[a-z]{5}[0-9]+$/i
 };
 
