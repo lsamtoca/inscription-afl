@@ -93,7 +93,7 @@ try {
 
 $fileName = 'dbf/COUREUR.DBF';
 if (file_exists($fileName)) {
-    $cdbf_lastupdate = date("d F Y à H:i:s", filemtime($fileName));
+    $cdbf_lastupdate = date("d/m/Y à H:i:s", filemtime($fileName));
 } else {
     $cdbf_lastupdate = '**Ce fichier n\'existe encore pas**';
 }
