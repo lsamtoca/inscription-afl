@@ -103,7 +103,7 @@ function background() {
     // or we are a Club or administrateur
             isset($_GET['nobackground'])
             //        || isset($_SESSION['ID_regate'])
-            || isset($_SESSION['ID_administrateur'])
+            // || isset($_SESSION['ID_administrateur'])
     ) {
         echo "<div><img alt='' id='bg' style=\"background-color: cadetblue;\"/></div><!-- background -->" . "\n\n";
         return;
