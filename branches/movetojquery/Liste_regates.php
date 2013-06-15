@@ -46,8 +46,11 @@ try {
     $sql = 'SELECT `ID_regate`,`titre`,`lieu`,
      `date_debut` as `date`,
 	 DATE_FORMAT(`date_debut`, \'%d-%m-%Y\') as `date_debut`,
-	 DATE_FORMAT(`date_fin`, \'%d-%m-%Y\') as `date_fin` FROM `Regate` 
-	 WHERE `date_limite_preinscriptions` < DATE(NOW()) order by `date`  DESC';
+	 DATE_FORMAT(`date_fin`, \'%d-%m-%Y\') as `date_fin` FROM `Regate`'
+            . ' WHERE `date_limite_preinscriptions` < DATE(NOW()) AND'
+            . '`date_fin` > DATE(NOW() - INTERVAL 1 YEAR)'
+            . ' ORDER by `date`  DESC';
+
     $regs_passees = $bdd->query($sql);
 } catch (Exception $e) {
     // En cas d'erreur, on affiche un message et on arrête tout

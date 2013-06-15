@@ -88,4 +88,13 @@ try {
     // En cas d'erreur, on affiche un message et on arrête tout
     die('Erreur : ' . $e->getMessage());
 }
+
+// Get information about dbf/COUREUR.DBF
+
+$fileName = 'dbf/COUREUR.DBF';
+if (file_exists($fileName)) {
+    $cdbf_lastupdate = date("d F Y à H:i:s", filemtime($fileName));
+} else {
+    $cdbf_lastupdate = '**Ce fichier n\'existe encore pas**';
+}
 ?>
