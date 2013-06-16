@@ -52,7 +52,7 @@ try {
     // Ajouter le coureur parmi les inscrits
 //	$date=$_POST['anne_naissance']."-".$_POST['mois_naissance']."-".$_POST['jour_naissance'];
 
-    $sql = 'INSERT INTO Inscrit (nom, prenom,naissance,num_lic,isaf_no,num_club,nom_club,
+    $sql = 'INSERT INTO Inscrit (nom,prenom,naissance,num_lic,isaf_no,num_club,nom_club,
 	prefix_voile,num_voile,serie,adherant,sexe,conf,mail,statut,ID_regate,`date preinscription`)
 	VALUES(:nom,:prenom,:naissance,:num_lic,:isaf_no,:num_club,:nom_club,
 	:prefix_voile,:num_voile,:serie,:adherant,:sexe,:conf,:mail,:statut,:ID_regate,:date_preinscription)';
