@@ -1,0 +1,1 @@
+jquery-i18n-properties-read-only/jquery.i18n.properties.js

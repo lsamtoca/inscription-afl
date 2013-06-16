@@ -1,0 +1,4 @@
+* ecrire une version simple du formulaire
+* ajouter la validation sous jquery
+* ajouter le calendreir sous jquery
+* ajouter i18n sous jquery

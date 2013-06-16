@@ -1,0 +1,5 @@
+ALL=recrutement
+HOST=${ALL}
+USER=${ALL}
+PASSWORD=${ALL}
+DBNAME=${ALL}
