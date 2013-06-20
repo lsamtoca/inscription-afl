@@ -44,13 +44,12 @@ $(document).ready(function (){
     });
 
 var debug;
-//debug=false;
-debug=true;
+debug=false;
+//debug=true;
 
 function set_validations (){
 
-    if(debug) 
-        console.log('>> Ajout des validations aux formulaires');    
+    if(debug) console.log('>> Ajout des validations aux formulaires');    
     
     // Mainform
     if($('#mainform').val() != undefined){
@@ -63,10 +62,9 @@ function set_validations (){
         add_required("mainform",mainform_required_fields);
         add_crequired("mainform",mainform_crequired_fields);
         add_regexp("mainform",mainform_regexp_fields);
-    //   console.log('Ajouté validations mainform');
+    //   if(debug) console.log('Ajouté validations mainform');
     }else{
-        if(debug)
-            console.log('Formulaire d\'inscription n\'existe pas!');
+        if(debug) console.log('Formulaire d\'inscription n\'existe pas!');
     }   
     
     // Searchform
@@ -95,13 +93,11 @@ function set_validations (){
                        
     }
     else {
-        if(debug)
-            console.log('Formulaire recherche n\'existe pas!');
+        if(debug) console.log('Formulaire recherche n\'existe pas!');
     }
     
 
-    if(debug)
-        console.log('<< Ajout des validations terminé');
+    if(debug) console.log('<< Ajout des validations terminé');
 
 };
 
@@ -109,10 +105,10 @@ function set_validations (){
 function check_selector(str){
     
     if($(str) == undefined){
-        console.log('Selector '+str+' not found');
+        if(debug) console.log('Selector '+str+' not found');
     }
     else {
-        console.log('Selector '+str+' OK');        
+        if(debug) console.log('Selector '+str+' OK');        
     }
     
 };
@@ -130,7 +126,7 @@ function add_required(form_id,fields){
         ':input[name="'+field+'"]';
         
         if ($(selector).length == 0){
-            console.error(selector+' pas trouve');
+            if(debug) console.error(selector+' pas trouve');
             continue;
         }
         
@@ -157,12 +153,12 @@ function add_crequired(form_id,fields){
         var radio_selector ='#'+fields[field];        
 
         if ($(selector).length == 0){
-            console.error('Selector '+selector+' pas trouve');
+            if(debug) console.error('Selector '+selector+' pas trouve');
             continue;
         }
 
         if ($(radio_selector).length == 0){
-            console.error('Selector '+radio_selector+' pas trouve');
+            if(debug) console.error('Selector '+radio_selector+' pas trouve');
             continue;
         }
         
@@ -203,7 +199,7 @@ function add_email (form_id,fields){
         ':input[name="'+field+'"]';
         
         if ($(selector).length == 0){
-            console.error(selector+' pas trouve');
+            if(debug) console.error(selector+' pas trouve');
             continue;
         }
         
@@ -246,7 +242,7 @@ function add_regexp(form_id,fields){
         if($.i18n.prop(msg) != '['+msg+']')
             message=eval(msg);
         else {
-            console.warn('Could not find '+msg);
+            if(debug) console.warn('Could not find '+msg);
         }
                 
            

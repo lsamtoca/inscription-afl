@@ -105,11 +105,11 @@ function updateFields (){
         var msg = 'msg_'+ids[i];
         
         if($(selector).length == 0) {
-            console.warn(selector+" n'est pas un id valide");
+            if(debug) console.warn(selector+" n'est pas un id valide");
             continue;
         }
         if($.i18n.prop(msg) == '['+msg+']') {
-            console.warn(msg +" pas defini ou vide");
+            if(debug) console.warn(msg +" pas defini ou vide");
             continue;
         }
             
@@ -134,22 +134,19 @@ function updateFields (){
 // Mise à jour du field input_lang (hidden)
 function set_input_lang(){
     
-/*    if( document_language == 'fr')
+    /*    if( document_language == 'fr')
         $('#input_lang').attr('value','fr');
     else
         $('#input_lang').attr('value','en');
  */    
-    /*if(debug)
-        console.log($('#input_lang').val());
+    /*if(debug) console.log($('#input_lang').val());
     */
    
     $('#input_lang').val(document_language);
     $('#search_input_lang').val(document_language);
     
-    if(debug){
-        console.log($('#input_lang').val());
-        console.log($('#search_input_lang').val());
-    }
+    if(debug)    console.log($('#input_lang').val());
+    if(debug)    console.log($('#search_input_lang').val());
 
 }
 
