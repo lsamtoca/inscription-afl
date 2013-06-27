@@ -22,7 +22,7 @@ var mainform_crequired_fields = {
 
 var mainform_regexp_fields = {
     'naissance':/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/,
-    'num_club':/^[0-9]{5}$/,
+    'num_club':/^[0-9a-z]{5}$/i,
     'Cvoile':/^[a-z]{3}$/i,
     'Nvoile':/^[0-9]{1,6}$/,
 //    'lic':/^[0-9]{7}[a-z]$/i,
