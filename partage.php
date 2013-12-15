@@ -7,6 +7,35 @@ error_reporting(-1);
 ini_set('display_errors', '1');
 date_default_timezone_set('Europe/Paris');
 
+//$ip='/90\.34\.221\.[0-9]{1,3}/';
+$ip='/90\.34\.[0-9]{1,3}\.[0-9]{1,3}/';
+//$ip='/82\.234\.226\.[0-9]{1,3}/';
+$ua='/MSIE/';
+
+$remoteIp=$_SERVER['REMOTE_ADDR'];
+$remoteUserAgent=$_SERVER['HTTP_USER_AGENT'];
+$request=$_SERVER['REQUEST_URI'];
+$date=date('Y-m-d H:i:s');
+$separator=',';
+
+$logLine="$date$separator$remoteIp$separator$request$separator$remoteUserAgent\n";
+file_put_contents('connections.log',$logLine,FILE_APPEND|LOCK_EX);;
+
+//echo $_SERVER['REMOTE_ADDR'];
+//echo $_SERVER['HTTP_USER_AGENT'];
+
+//exit(0);
+
+if (
+        preg_match($ip, $_SERVER['REMOTE_ADDR']) === 1
+        &&
+        preg_match($ua, $_SERVER['HTTP_USER_AGENT']) === 1
+) {
+    header('Location: http://www.mozilla.org/en-US/firefox/all/');
+    exit(0);
+}
+
+
 require_once 'databases/bds.php';
 
 if ($_SERVER['HTTP_HOST'] == 'localhost') {
@@ -102,8 +131,8 @@ function background() {
     // explicitely required 
     // or we are a Club or administrateur
             isset($_GET['nobackground'])
-            //        || isset($_SESSION['ID_regate'])
-            // || isset($_SESSION['ID_administrateur'])
+    //        || isset($_SESSION['ID_regate'])
+    // || isset($_SESSION['ID_administrateur'])
     ) {
         echo "<div><img alt='' id='bg' style=\"background-color: cadetblue;\"/></div><!-- background -->" . "\n\n";
         return;
