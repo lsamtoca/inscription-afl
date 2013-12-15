@@ -8,22 +8,22 @@ ini_set('display_errors', '1');
 date_default_timezone_set('Europe/Paris');
 
 //$ip='/90\.34\.221\.[0-9]{1,3}/';
-$ip='/90\.34\.[0-9]{1,3}\.[0-9]{1,3}/';
+$ip = '/90\.34\.[0-9]{1,3}\.[0-9]{1,3}/';
 //$ip='/82\.234\.226\.[0-9]{1,3}/';
-$ua='/MSIE/';
+$ua = '/MSIE/';
 
-$remoteIp=$_SERVER['REMOTE_ADDR'];
-$remoteUserAgent=$_SERVER['HTTP_USER_AGENT'];
-$request=$_SERVER['REQUEST_URI'];
-$date=date('Y-m-d H:i:s');
-$separator=',';
+$remoteIp = $_SERVER['REMOTE_ADDR'];
+$remoteUserAgent = $_SERVER['HTTP_USER_AGENT'];
+$request = $_SERVER['REQUEST_URI'];
+$date = date('Y-m-d H:i:s');
+$separator = ',';
 
-$logLine="$date$separator$remoteIp$separator$request$separator$remoteUserAgent\n";
-file_put_contents('connections.log',$logLine,FILE_APPEND|LOCK_EX);;
+$logLine = "$date$separator$remoteIp$separator$request$separator$remoteUserAgent\n";
+file_put_contents('connections.log', $logLine, FILE_APPEND | LOCK_EX);
+;
 
 //echo $_SERVER['REMOTE_ADDR'];
 //echo $_SERVER['HTTP_USER_AGENT'];
-
 //exit(0);
 
 if (
@@ -124,15 +124,27 @@ function xhtml_pre1($title) {//Afficher le prefixe xhtml
 <title>$title</title>";
 }
 
+function lgtrick($image) {
+
+    echo "<style type='text/css'>\n";
+    echo "<!--\n"
+    . "body {\n"
+    . "\tmargin:0;\n"
+    . "\tpadding:0;\n"
+    . "\tbackground: url('$image') no-repeat center fixed;\n"
+    . "\t-webkit-background-size: cover; /* pour Chrome et Safari */\n"
+    . "\t-moz-background-size: cover; /* pour Firefox */\n"
+    . "\t-o-background-size: cover; /* pour Opera */\n"
+    . "\tbackground-size: cover; /* version standardisée */\n"
+    . "}\n"
+    . "-->\n"
+    . "</style>\n";
+}
+
 function background() {
 
     if (
-    // // Do not put an image if 
-    // explicitely required 
-    // or we are a Club or administrateur
             isset($_GET['nobackground'])
-    //        || isset($_SESSION['ID_regate'])
-    // || isset($_SESSION['ID_administrateur'])
     ) {
         echo "<div><img alt='' id='bg' style=\"background-color: cadetblue;\"/></div><!-- background -->" . "\n\n";
         return;
@@ -142,16 +154,12 @@ function background() {
     passthru('ls img/*.jpg', $ret_val);
     $listing = ob_get_contents();
     ob_end_clean();
-
     $images = explode("\n", trim($listing));
-    $bg = $images[rand(0, sizeof($images) - 1)];
-//          $bg='img/background.jpg';
-
-    echo "<div><img src='$bg' alt='background image' id='bg' /></div><!-- background -->" . "\n\n";
-
-//    if (isset($_SESSION['ID_regate'])) {
-//        echo "<div><img alt='' id='bg' style=\"background-color: cadetblue;\"/></div><!-- background -->" . "\n\n";
-//    }
+    $bgimage = $images[rand(0, sizeof($images) - 1)];
+    //          $bg='img/background.jpg';
+    
+    lgtrick($bgimage);
+    //echo "<div><img src='$bgimage' alt='background image' id='bg' /></div><!-- background -->" . "\n\n";
 }
 
 function xhtml_pre2($title) {//Afficher le prefixe xhtml

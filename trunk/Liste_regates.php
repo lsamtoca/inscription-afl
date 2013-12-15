@@ -29,26 +29,30 @@ function do_liste($req, $titre) {
 }
 
 try {
-    // On se connecte à MySQL
-    $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-    //$bdd = new PDO('mysql:host=localhost;dbname=LASER', 'root', 'root', $pdo_options);
+//    $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
     $bdd = new PDO($pdo_path, $user, $pwd, $pdo_options);
 
+    $condition = '`date_limite_preinscriptions` >= DATE(NOW())';
+    if (!$development and !$testing)
+        $condition .= ' AND `istest`=0';
 
-    $sql = 'SELECT `ID_regate`,`titre`,`lieu`, 
+    $sql = "SELECT `ID_regate`,`titre`,`lieu`, 
 	`date_debut` as `date`,
-	 DATE_FORMAT(`date_debut`, \'%d-%m-%Y\') as `date_debut`,
-	 DATE_FORMAT(`date_fin`, \'%d-%m-%Y\') as `date_fin` FROM `Regate` 
-	 WHERE `date_limite_preinscriptions` >= DATE(NOW()) order by `date`';
+	 DATE_FORMAT(`date_debut`, '%d-%m-%Y') as `date_debut`,
+	 DATE_FORMAT(`date_fin`, '%d-%m-%Y') as `date_fin` FROM `Regate` 
+	 WHERE $condition order by `date`";
     $regs_avenir = $bdd->query($sql);
 
+    $condition = '`date_limite_preinscriptions` < DATE(NOW()) AND '
+            . '`date_fin` > DATE(NOW() - INTERVAL 1 YEAR)';
+    if (!$development and !$testing)
+        $condition .= ' AND `istest`=0';
 
     $sql = 'SELECT `ID_regate`,`titre`,`lieu`,
      `date_debut` as `date`,
 	 DATE_FORMAT(`date_debut`, \'%d-%m-%Y\') as `date_debut`,
 	 DATE_FORMAT(`date_fin`, \'%d-%m-%Y\') as `date_fin` FROM `Regate`'
-            . ' WHERE `date_limite_preinscriptions` < DATE(NOW()) AND'
-            . '`date_fin` > DATE(NOW() - INTERVAL 1 YEAR)'
+            . " WHERE $condition "
             . ' ORDER by `date`  DESC';
 
     $regs_passees = $bdd->query($sql);

@@ -7,6 +7,9 @@ if (!isset($_GET['regate'])) {
 assert('isset($_GET[\'regate\'])');
 $ID_regate = $_GET['regate'];
 
+// Where $mainform_elements is defined
+include 'mainform-elements.php';
+
 $premiere_inscription = TRUE;
 $confirmation = FALSE;
 $comingfromsearch = FALSE;
@@ -30,48 +33,9 @@ if (isset($_POST['search_submit'])) {
     $gotoinscription = TRUE;
 }
 
-if($comingfromsearch)
-    $_POST['no_email']='';
-    
-// Radio buttons
-function set_zero_radio_buttons() {
-    global $formData;
+if ($comingfromsearch)
+    $_POST['no_email'] = '';
 
-    $formData['F'] = '';
-    $formData['M'] = '';
-    $formData['LA4'] = '';
-    $formData['LAR'] = '';
-    $formData['LAS'] = '';
-    $formData['Licencie'] = '';
-    $formData['Etranger'] = '';
-    $formData['Autre'] = '';
-    $formData['ad_AFL_0'] = '';
-    $formData['ad_AFL_1'] = '';
-}
-
-function set_default_radio_buttons() {
-    global $formData;
-
-    set_zero_radio_buttons();
-
-    $formData['F'] = 'checked';
-    $formData['LA4'] = 'checked';
-    $formData['Autre'] = 'checked';
-    $formData['ad_AFL_0'] = 'checked';
-}
-
-function set_fromData_radio_buttons() {
-    global $formData;
-
-    set_zero_radio_buttons();
-
-    // Set radio  buttons
-    $formData[$formData['sexe']] = 'checked';
-    $formData[$formData['serie']] = 'checked';
-    $formData[$formData['statut']] = 'checked';
-    // This is a real hack
-    $formData['ad_AFL_' . $formData['adherant']] = 'checked';
-}
 
 require_once 'php/Regate.php';
 
@@ -100,7 +64,8 @@ $assoc_INSCRIT_form = array(
     'sexe' => 'sexe',
     'mail' => 'mail',
     'statut' => 'statut',
-    'conf' => 'conf',
+    'taille_polo' => 'taillepolo'
+        //    'conf' => 'conf',
         //'ID_regate' => 'IDR',
         //'date_preinscription' =>  date('Y-m-d G:i:s')
 );
@@ -115,21 +80,15 @@ $assoc_COUREUR_form = array(
 );
 
 function fill_form_from_scratch() {
-    global $assoc_INSCRIT_form, $formData;
+    global $formData, $mainform_elements, $ID_regate;
+    global $confirmation, $ID_inscrit;
 
-
-    // On preremplit tout en blanc
-    foreach ($assoc_INSCRIT_form as $field_bd => $field_form)
-        $formData[$field_form] = '';
-
-    // On preremplit avec des données pour tester
-    $formData['naissance'] = '01/01/1994';
-    $formData['conf'] = '0';
-    $formData['ID_inscrit'] = '0';
-
-    // Aucun des radio-buttons est coché
-    // Sexe
-    set_default_radio_buttons();
+    $mainform_elements['IDR']['default'] = $ID_regate;
+    if ($confirmation) {
+        // Si nous arrivons pour confirmation
+        $mainform_elements['conf']['default'] = '1';
+        $mainform_elements['ID_inscrit']['default'] = $ID_inscrit;
+    }
 
     // Pour quelle raison cela ?
     $formData['search_lic'] = '';
@@ -138,7 +97,7 @@ function fill_form_from_scratch() {
 
 function fill_form_from_db() {
 
-    global $assoc_INSCRIT_form, $assoc_COUREUR_form, $formData;
+    global $assoc_INSCRIT_form, $assoc_COUREUR_form, $formData, $mainform_elements;
     global $pdo_path, $user, $pwd, $pdo_options;
     global $gotoinscription, $confirmation;
     global $ID_inscrit, $hash;
@@ -151,7 +110,7 @@ function fill_form_from_db() {
         $field_key = 'num_lic';
         $field_value = $_POST['search_lic'];
         // $formData['search_lic'] = $_POST['search_lic'];
-  //      echo 'OK';
+        //      echo 'OK';
     }
     if ($field_value == '' and isset($_POST['search_isaf'])) {
         $field_key = 'isaf_no';
@@ -162,16 +121,15 @@ function fill_form_from_db() {
     if ($confirmation) {
         $field_key = 'ID_inscrit';
         $field_value = $ID_inscrit;
-        // We need here to refill the form
-        $formData['conf'] = '1';
-        $formData['ID_inscrit'] = $ID_inscrit;
- //       echo 'OK';
+        //       echo 'OK';
     }
 
     try {
         $bd = new PDO($pdo_path, $user, $pwd, $pdo_options);
 
         if (!$confirmation) {
+            // Si on est pas en train de confirmer
+            // Chercher par no licence on no isaf
             $sql = "Select * from `Inscrit` "
                     . "where $field_key=:field_value "
                     . "order by `date preinscription` desc";
@@ -179,6 +137,10 @@ function fill_form_from_db() {
             $req->execute(array(
                 'field_value' => $field_value));
         } else {
+            // Sinon, on est en train de confirmer
+            // Chercher par aussi via le hash
+            // le hash est ajouté pour garantir
+            // un certain anonymat de l'inscription
             $sql = "SELECT * FROM `Inscrit` "
                     . "WHERE $field_key=:field_value AND hash=:hash "
                     . "ORDER BY `date preinscription` DESC";
@@ -195,24 +157,25 @@ function fill_form_from_db() {
         //      pageErreur("'".$field_value."' --".$sql);
         //   echo $req->rowCount();
         //   exit;
-        // Si on a trouvé qqchose on s'inscrit
 
         if ($req->rowCount() > 0) {
+            // Si on a trouvé qqchose on pre-complete le formulaire
+            // via le champ 'defaut' des elements
 
             $row = $req->fetch();
 
             foreach ($assoc_INSCRIT_form as $field_bd => $field_form) {
-                $formData[$field_form] = $_POST[$field_form] = $row[$field_bd];
+                $mainform_elements[$field_form]['default'] = $_POST[$field_form] = $row[$field_bd];
             }
-            $formData['naissance'] = $_POST['naissance'] =
-                    dateReformatMysqlToJquery($formData['naissance']);
+            $mainform_elements['naissance']['default'] = $_POST['naissance'] =
+                    dateReformatMysqlToJquery($mainform_elements['naissance']['default']);
 
             if ($gotoinscription) {
 
                 $_POST['ID_inscrit'] = '0';
                 $_POST['maSoumission'] = '';
                 $_POST['IDR'] = $_GET['regate'];
-                // We get now 'lang' from the
+                // We get now 'lang' from the ?
                 //$_POST['lang'] = 'fr';
                 $_POST['conf'] = '0';
 
@@ -222,7 +185,9 @@ function fill_form_from_db() {
                 include 'Inscription.php';
                 exit;
             }
-        } else  // Sinon, on cherche dans la table COUREUR.DBF
+        } else
+        // On a rien trouvé  dans la table INSCRIT
+        // On cherche alors dans la table COUREUR.DBF
         // Faire la requete sur la table COUREUR.DBF
         if (isset($_POST['search_lic'])) {
             $sql = "Select * from `COUREUR.DBF` where `NO_LIC`= ?";
@@ -238,35 +203,26 @@ function fill_form_from_db() {
             if ($req->rowCount() > 0) {
                 $row = $req->fetch();
                 foreach ($assoc_COUREUR_form as $field_bd => $field_form) {
-                    $formData[$field_form] = strip_spaces($row[$field_bd]);
+                    $mainform_elements[$field_form]['default'] = strip_spaces($row[$field_bd]);
                 }
+                // On doit aussi re-ajouster la date de naissance
+                // qui est stockée dans COUREUR.DBF sous le format AAAAMMDD
+                $mainform_elements['naissance']['default'] =
+                        dateReformatDbfToJquery($mainform_elements['naissance']['default']);
             }
+            else
+                pageErreur('On vous a pas troué');
         }
     } catch (Exception $e) {
         // En cas d'erreur, on affiche un message et on arrête tout de suite
         die('Erreur : ' . $e->getMessage());
     }
-
-    if (isset($_POST['search_lic'])) {
-        $formData['naissance'] = dateReformatDbfToJquery($formData['naissance']);
-    }
-
-    if ($confirmation) {
-        // Si nous arrivons pour confirmation
-        $formData['conf'] = '1';
-        $formData['ID_inscrit'] = $ID_inscrit;
-    }
-
-    // Set radio  buttons
-    set_fromData_radio_buttons();
 }
 
 fill_form_from_scratch();
-if ($comingfromsearch) {
-    fill_form_from_db();
-} elseif ($confirmation) {
+if ($comingfromsearch or $confirmation) {
     fill_form_from_db();
 }
-else
-    set_default_radio_buttons();
+if ($regate['polo'] == 1)
+    $mainform_elements['taillepolo']['rendering'] = 'radio';
 ?>

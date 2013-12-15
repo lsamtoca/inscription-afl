@@ -10,6 +10,7 @@ assert('isset($_POST[\'maSoumission\'])');
 if (!isset($_POST['maSoumission'])) {
     pageErreur('Hacker !!!');
 }
+
 // Determiner le mode de fonctionnement du script :
 // - insert ou confirm
 global $modeInsert, $modeConfirm;
@@ -105,7 +106,7 @@ function do_update() {
 
         $fields = "nom,prenom,naissance,num_lic,isaf_no,num_club,nom_club,"
                 . "prefix_voile,num_voile,serie,adherant,sexe,"
-                . "conf,mail,statut,ID_regate"
+                . "conf,mail,statut,ID_regate,taille_polo"
         //.,date preinscription"
         ;
         $assoc = array(
@@ -124,6 +125,7 @@ function do_update() {
             ':conf' => '1',
             ':mail' => $_POST['mail'],
             ':statut' => $_POST['statut'],
+            ':taille_polo' => $_POST['taillepolo'],
             ':ID_regate' => $_POST['IDR'],
             ':ID_inscrit' => $_POST['ID_inscrit'],
         );

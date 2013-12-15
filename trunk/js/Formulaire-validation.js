@@ -15,9 +15,9 @@ var mainform_email_fields = [
 ];
 
 var mainform_crequired_fields = {
-    'lic':'radio_ffv',
-    'num_club':'radio_ffv',
-    'isaf_no':'etranger'
+    'lic':'radio_statutLicencie',
+    'num_club':'radio_statutLicencie',
+    'isaf_no':'radio_statutEtranger'
 };
 
 var mainform_regexp_fields = {
