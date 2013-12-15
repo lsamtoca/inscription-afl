@@ -1,9 +1,14 @@
+// TODO :
+// If there is a label in the page,
+// then its id should be automatically added to the form
+
 var ids=[
 'lang',
          
 'liste_preinscrits',
 'deadline',
-        
+
+'searchform_help',
 'search_legend',
 'l_search_lic',
 'l_search_isaf',
@@ -12,20 +17,21 @@ var ids=[
 'l_Nom',
 'l_Prenom',
 'l_naissance',
-'l_homme',
-'l_femme',
+'l_sexeM',
+'l_sexeF',
 'l_mail',
 'l_lic',
 'l_isaf_no',
-'l_afl',
-'l_ffv',
-'l_autre',
-'l_etranger',
-'l_oui',
-'l_non',
+'l_statutLicencie',
+'l_statutEtranger',
+'l_statutAutre',
+'l_adherant',
+'l_adherant1',
+'l_adherant0',
 'l_Nvoile',
 'l_num_club',
 'l_nom_club',
+'l_taillepolo',
 'licencie_ffv',
 'non_licencie',
 'etranger',

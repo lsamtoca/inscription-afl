@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.1.66, for apple-darwin11.4.2 (i386)
+-- MySQL dump 10.13  Distrib 5.1.72, for apple-darwin11.4.2 (i386)
 --
 -- Host: localhost    Database: inscriptions-afl
 -- ------------------------------------------------------
--- Server version	5.1.66
+-- Server version	5.1.72
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -76,6 +76,7 @@ CREATE TABLE `Inscrit` (
   `serie` enum('LA4','LAR','LAS') DEFAULT NULL,
   `adherant` tinyint(1) DEFAULT NULL,
   `sexe` enum('F','M') DEFAULT NULL,
+  `taille_polo` enum('XS','S','M','L','XL','XXL') NOT NULL DEFAULT 'M',
   `conf` tinyint(1) DEFAULT NULL,
   `date preinscription` datetime NOT NULL,
   `date confirmation` datetime DEFAULT NULL,
@@ -85,7 +86,7 @@ CREATE TABLE `Inscrit` (
   PRIMARY KEY (`ID_inscrit`),
   KEY `FK_Inscrit_ID_regate` (`ID_regate`),
   CONSTRAINT `FK_Inscrit_ID_regate` FOREIGN KEY (`ID_regate`) REFERENCES `regate` (`ID_regate`)
-) ENGINE=InnoDB AUTO_INCREMENT=1903 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1910 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -99,6 +100,7 @@ CREATE TABLE `Regate` (
   `ID_regate` int(11) NOT NULL AUTO_INCREMENT,
   `org_login` varchar(10) DEFAULT NULL,
   `org_passe` varchar(10) DEFAULT NULL,
+  `istest` tinyint(4) NOT NULL DEFAULT '0',
   `titre` text NOT NULL,
   `description` varchar(500) DEFAULT NULL,
   `cv_organisateur` text NOT NULL,
@@ -107,6 +109,7 @@ CREATE TABLE `Regate` (
   `date_debut` date NOT NULL,
   `date_fin` date NOT NULL,
   `date_limite_preinscriptions` date NOT NULL,
+  `polo` tinyint(4) NOT NULL DEFAULT '0',
   `droits` int(11) NOT NULL,
   `destruction` date DEFAULT NULL,
   `ID_administrateur` int(11) NOT NULL,
@@ -125,4 +128,4 @@ CREATE TABLE `Regate` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-06-15 10:00:42
+-- Dump completed on 2013-12-15 22:13:04

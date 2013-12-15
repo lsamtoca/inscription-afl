@@ -1,6 +1,8 @@
 <?php
-global $regate;
-$page_title1 = 'Pré-inscription à la régate ' . $regate['titre'] ;
+global $regate, $confirmation;
+
+
+$page_title1 = 'Pré-inscription à la régate ' . $regate['titre'];
 $page_title2 = 'Pré-inscription à la régate <em>' . $regate['titre'] . '</em>';
 xhtml_pre1($page_title1);
 ?>
@@ -80,7 +82,7 @@ xhtml_pre1($page_title1);
         <!--Lien sur la liste des préinscrits-->
         <!--
         <p>
-            <a href="<?php echo $URLPRE; ?>">
+            <a href="<\\?php echo $URLPRE; ?>">
                 <span id='liste_preinscrits'></span>
             </a>
         </p>
@@ -119,6 +121,8 @@ xhtml_pre1($page_title1);
 
                         <fieldset>
                             <legend id='search_legend'></legend>
+                            <div id="searchform_help"></div>
+
                             <input name="lang" type="hidden" id="search_input_lang" value="fr"/>
                             <label class="left" id='l_search_lic'></label>
                             <input name="search_lic" id="search_lic" type="text"/>
@@ -155,116 +159,76 @@ xhtml_pre1($page_title1);
                     <fieldset>
                         <legend id='mainform_legend'></legend>
 
-                        <input name="lang" type="hidden" id="input_lang" value="fr" />
-                        <input name="IDR" type="hidden" id="IDR" value=<?php echo '"' . $_GET['regate'] . '"'; ?>/>
-                        <input name="conf" type="hidden" id="conf" 
-                               value="<?php echo $formData['conf']; ?>" />
-                        <input name="ID_inscrit" type="hidden" id="ID_inscrit"
-                               value="<?php echo $formData['ID_inscrit']; ?>" />
+                        <!-- Hidden inputs to handle control -->
+                        <?php put_element('lang'); ?> 
+                        <?php put_element('IDR'); ?> 
+                        <?php put_element('conf'); ?> 
+                        <?php put_element('ID_inscrit'); ?> 
 
                         <!-- Donnés personnels : nom prenom, date naissance, sexe -->
-                        <label class="left" for="Nom" id='l_Nom'></label>
-                        <input name="Nom" type="text" id="Nom" value="<?php echo $formData['Nom']; ?>"/>
 
-                        <label class="left" for="Prenom" id='l_Prenom'></label>
-                        <input name="Prenom" type="text" id="Prenom" value="<?php echo $formData['Prenom']; ?>"/>
+                        <?php put_element('Nom'); ?> 
+                        <?php put_element('Prenom'); ?> 
+
                         <br />
 
+                        <?php put_element('naissance'); ?> 
 
-                        <label class="left" id='l_naissance'></label>
-                        <input name="naissance" type="text" id="naissance" value="<?php echo $formData['naissance']; ?>" />
+
                         <br />
 
-                        <input type="radio" name="sexe" id="radio_F" 
-                               value="F" <?php echo $formData['F']; ?> />
-                        <label id='l_femme'></label>
-
-                        <input type="radio" name="sexe" id="radio_H" class="required"
-                               value="M" <?php echo $formData['M']; ?> />
-                        <label id='l_homme'></label>
+                        <?php put_element('sexe'); ?> 
 
                         <hr />
 
+                        <!-- Taille Polo -->
+
+
+                        <?php
+                        put_element('taillepolo');
+                        if ($regate['polo'] == '1')
+                            echo "<hr />";
+                        ?> 
+
                         <!-- Contact -->
-
-                        <label class="left" id='l_mail'></label>
-                        <input type="text" name="mail" id="mail"  
-                               value="<?php echo $formData['mail']; ?>" />
-
+                        <?php put_element('mail'); ?>
 
                         <hr />
 
                         <!-- Club -->
-                        <label class="left" id='l_nom_club'></label>
-                        <input name="nom_club" id="nom_club" type="text" 
-                               value="<?php echo $formData['nom_club']; ?>"/>
+                        <?php put_element('nom_club'); ?>
 
-                        <label class="left" id='l_num_club'></label>
-                        <input name="num_club" id="num_club" type="text" size="5"
-                               value="<?php echo $formData['num_club']; ?>"
-                               />
+                        <?php put_element('num_club'); ?>
+
                         <hr />
 
-                        <!-- Serie -->
 
-                        <input type="radio" name="serie" id="radio_LA4" value="LA4" 
-                               <?php echo $formData['LA4']; ?> />
-                        <label for="radio_LA4">Laser 4.7</label>
 
-                        <input type="radio" name="serie" id="radio_LAR" value="LAR" 
-                               <?php echo $formData['LAR']; ?> />
-                        <label for="radio_LAR">Laser Radial</label>
-
-                        <input type="radio" name="serie" id="radio_LAS" class="required"
-                               value="LAS" <?php echo $formData['LAS']; ?>/>
-                        <label for="radio_LAS">Laser Standard</label>
-
+                        <!-- No-voile -->
+                        <label class='left' id='l_Nvoile'></label>
+                        <?php put_element('Cvoile'); ?>
+                        <?php put_element('Nvoile'); ?>
                         <br />
 
-                        <label class="left" for="Cvoile" id='l_Nvoile'></label>
-                        <input name="Cvoile" type="text" id="Cvoile" size="3" maxlength="3" value="<?php echo $formData['Cvoile']; ?>"/>
-                        <input name="Nvoile" type="text" id="Nvoile" size="6" maxlength="6" value="<?php echo $formData['Nvoile']; ?>"/>
+                        <!-- Serie -->
+                        <?php put_element('serie'); ?>
                         <hr />
 
                         <!-- Statut : Licence et AFL -->
 
-                        <input type="radio" class="required" name="statut" id="radio_ffv" 
-                               value="Licencie" 
-                               <?php echo $formData['Licencie']; ?> />
-                        <label id='l_ffv'></label>
-
-                        <input type="radio" name="statut" id="radio_etranger" 
-                               value="Etranger" 
-                               <?php echo $formData['Etranger']; ?> />
-                        <label id='l_etranger'></label>
-
-                        <input type="radio" name="statut" id="radio_autre" 
-                               value="Autre" 
-                               <?php echo $formData['Autre']; ?> />
-                        <label id='l_autre'></label>
+                        <?php put_element('statut'); ?>
 
                         <br />
 
-                        <label class="left" id='l_afl'></label>
-                        <input type="radio" name="adherant" id="radio_adherant_oui" 
-                               value="1" <?php echo $formData['ad_AFL_1']; ?> />
+                        <?php put_element('adherant'); ?>
 
-                        <label id='l_oui'></label>
-
-                        <input type="radio" name="adherant" id="radio_adherant_non" 
-                               value="0" <?php echo $formData['ad_AFL_0']; ?>/>
-                        <label id='l_non'></label>
 
                         <br />
 
-                        <label class="left" for="lic" id='l_lic'></label>
-                        <input type="text" name="lic" id="lic" 
-                               size="8" value="<?php echo $formData['lic']; ?>"/>
+                        <?php put_element('lic'); ?>
 
-                        <label class="left" for="isaf_no" id="l_isaf_no"></label>
-                        <input type="text" name="isaf_no" id="isaf_no" 
-                               size="10" value="<?php echo $formData['isaf_no']; ?>"
-                               />
+                        <?php put_element('isaf_no'); ?>
+
                         <br />
 
                         <div id="licencie_ffv">
@@ -284,7 +248,7 @@ xhtml_pre1($page_title1);
             </div> <!-- formulaire -->
         </div> <!-- forms -->
     <?php endif; ?>
-        
+
     <h3 id="preinscrits"><span id="preregistered_sailors"></span></h3>
     <div class="contenu">
         <?php include 'Preinscrits-html.php'; ?>

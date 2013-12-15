@@ -2,7 +2,7 @@ $(document).ready ( function () {
     
     if(debug) console.log('>> Ajout de la dymanique au formulaire');
     
-    $('#radio_ffv').click( function(){
+    $('#radio_statutLicencie').click( function(){
         // Licence num isaf num 
         $('#l_lic').show();
         $('#lic').show();
@@ -15,7 +15,7 @@ $(document).ready ( function () {
         $('#non_licencie').hide();
     });
 
-    $('#radio_etranger').click( function(){
+    $('#radio_statutEtranger').click( function(){
         // Hide Licence num, show isaf num
 
         $('#l_lic').show();
@@ -34,7 +34,7 @@ $(document).ready ( function () {
         $('#non_licencie').hide();
     });
 
-    $('#radio_autre').click( function(){
+    $('#radio_statutAutre').click( function(){
         $('#l_lic').hide();
         $('#lic').val("");
         $("#mainform").validate().element("#lic");
