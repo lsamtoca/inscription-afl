@@ -1,7 +1,8 @@
 <?php
 global $regate;
-$page_title = 'Pré-inscription à la régate <em>' . $regate['titre'] . '</em>';
-xhtml_pre1($page_title);
+$page_title1 = 'Pré-inscription à la régate ' . $regate['titre'] ;
+$page_title2 = 'Pré-inscription à la régate <em>' . $regate['titre'] . '</em>';
+xhtml_pre1($page_title1);
 ?>
 
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css" />
@@ -51,7 +52,7 @@ xhtml_pre1($page_title);
 
 </script>
 
-<?php xhtml_pre2($page_title); ?>
+<?php xhtml_pre2($page_title2); ?>
 
 <div id='choix_langue' class="white_over_dark">
     [<a id='lang'></a>]
