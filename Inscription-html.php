@@ -64,7 +64,7 @@
 
 <?php
 if ($modeConfirm):
-    if ($_POST['lang'] == en) {
+    if ($_POST['lang'] == 'en') {
         $hello = 'Hello';
         $regok = 'your pre-registration is now completed.';
         $verifier = 'You can verify it on the';
