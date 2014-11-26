@@ -216,6 +216,7 @@ global $mails_all, $mails_confirme, $mails_pas_confirme;
                 <th scope="col">Prénom</th>
                 <th  class="mytable" scope="col">Nom</th>
                 <th  class="mytable" scope="col">Sexe</th>
+                <th  class="mytable" scope="col">Taille polo</th>
                 <th  class="mytable" scope="col">Numéros de voile</th>
                 <th  class="mytable" scope="col">Série</th>
                 <th  class="mytable" scope="col">Licence</th>
@@ -261,6 +262,7 @@ global $mails_all, $mails_confirme, $mails_pas_confirme;
                     <td class="mytable" scope="col"><?php echo $donnees['prenom']; ?></td>
                     <td class="mytable" scope="col"><?php echo $donnees['nom']; ?></td>
                     <td class="mytable" scope="col"><?php echo $sexe; ?></td>
+                    <td class="mytable" scope="col"><?php echo $donnees['taille_polo']; ?></td>
                     <td class="mytable" scope="col"><?php echo $donnees['prefix_voile'] . $donnees['num_voile']; ?> </td>                
                     <td class="mytable" scope="col"><?php echo $serie; ?></td>
                     <td class="mytable" scope="col"><?php echo $statut; ?></td>
@@ -304,6 +306,16 @@ global $mails_all, $mails_confirme, $mails_pas_confirme;
             </li>
         </ul>
         Pour importer le fichier ins_dbf.dbf vers votre régate dans FREG, vous devez disposer du module FF_PRE_INS.EXE, à demander par courriel au support de FREG.
+    
+       <ul>
+            <li>
+                Télécharger la liste des <strong>tous les inscrits</strong> au <a href="Liste_inscrits_csv.php">format csv</a> (pour FREG, Excel, OpenOffice,...).
+            </li>
+            <li>
+                Télécharger la liste des <strong>inscrits ayant confirmé</strong> au <a href="Liste_inscrits_csv.php?confirme=1">format csv</a> (pour FREG, Excel, OpenOffice, ...).
+            </li>
+        </ul>
+     
     </div>
 
     <h3 id="courriel">Envoyer un courriel aux coureurs</h3>
