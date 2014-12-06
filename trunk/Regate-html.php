@@ -13,7 +13,6 @@ global $TITRE_REGATE, $DESC_REGATE,
 global $pdo_path, $user, $pwd, $pdo_options;
 
 global $mails_all, $mails_confirme, $mails_pas_confirme;
-
 ?>
 
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css" />
@@ -189,7 +188,7 @@ global $mails_all, $mails_confirme, $mails_pas_confirme;
 
 
         URL d'inscription : <br />
-        <a href='<?php echo $URL . "#formulaires"; ?>'><?php echo $URL  . "#formulaires"; ?></a>
+        <a href='<?php echo $URL . "#formulaires"; ?>'><?php echo $URL . "#formulaires"; ?></a>
 
         <br />
 
@@ -289,33 +288,46 @@ global $mails_all, $mails_confirme, $mails_pas_confirme;
 
         <ul>
             <li>
-                Télécharger la liste des <strong>tous les inscrits</strong> au <a href="Liste_inscrits_xls.php">format xls</a>  (pour Excel, OpenOffice).
+                Télécharger la liste des <strong>inscrits ayant confirmé</strong> au <a href="Liste_inscrits_xls.php?confirme=1">format xls</a> (pour Excel, OpenOffice).
             </li>
             <li>
-                Télécharger la liste des <strong>inscrits ayant confirmé</strong> au <a href="Liste_inscrits_xls.php?confirme=1">format xls</a> (pour Excel, OpenOffice).
+                Télécharger la liste des <strong>tous les inscrits</strong> au <a href="Liste_inscrits_xls.php">format xls</a>  (pour Excel, OpenOffice).
             </li>
         </ul>
 
         <h3>Intégration avec le logiciel FREG</h3>
+
+        <h5>Nouvelle méthode d'importation dans FREG (depuis 2014) :</h5>
         <ul>
             <li>
-                Télécharger la liste des <strong>tous les inscrits</strong> au <a href="Liste_inscrits_dbf.php">format dbf</a> (pour FREG, XBase, Excel, OpenOffice,...).
+                Télécharger la liste des <strong>inscrits ayant confirmé</strong> au <a href="Liste_inscrits_csv.php?confirme=1">format csv</a> ;
             </li>
             <li>
-                Télécharger la liste des <strong>inscrits ayant confirmé</strong> au <a href="Liste_inscrits_dbf.php?confirme=1">format dbf</a> (pour FREG, XBase, Excel, OpenOffice, ...).
+                Télécharger la liste des <strong>tous les inscrits</strong> au <a href="Liste_inscrits_csv.php">format csv</a>.
+            </li>
+        </ul>
+        Importez ce fichiers dans FREG via <br/>
+        Inscrits->Fiches d'inscription à la régate->31. Solitaires->Importer Format CSV 2014
+        
+        <br />
+        <br />
+        On peut lire ces fichiers aussi avec Excel, OpenOffice, ou un editeur de texte.
+
+        <h5>Ancienne méthode d'importation :</h5>
+        <ul>
+            <li>
+                Télécharger la liste des <strong>inscrits ayant confirmé</strong> au <a href="Liste_inscrits_dbf.php?confirme=1">format dbf</a> ;
+            </li>
+            <li>
+                Télécharger la liste des <strong>tous les inscrits</strong> au <a href="Liste_inscrits_dbf.php">format dbf</a>.
             </li>
         </ul>
         Pour importer le fichier ins_dbf.dbf vers votre régate dans FREG, vous devez disposer du module FF_PRE_INS.EXE, à demander par courriel au support de FREG.
-    
-       <ul>
-            <li>
-                Télécharger la liste des <strong>tous les inscrits</strong> au <a href="Liste_inscrits_csv.php">format csv</a> (pour FREG, Excel, OpenOffice,...).
-            </li>
-            <li>
-                Télécharger la liste des <strong>inscrits ayant confirmé</strong> au <a href="Liste_inscrits_csv.php?confirme=1">format csv</a> (pour FREG, Excel, OpenOffice, ...).
-            </li>
-        </ul>
-     
+
+        <br/>
+        On peut lire ces fichiers aussi avec Excel, OpenOffice, XBase.
+
+
     </div>
 
     <h3 id="courriel">Envoyer un courriel aux coureurs</h3>
