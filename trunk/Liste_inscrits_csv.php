@@ -8,7 +8,8 @@ if (!isset($_SESSION["ID_regate"])) {
 require "partage.php";
 
 $csv_sep = ";";
-$csv_newline = "\r\n"; // we use DOS-WINDOWS
+//$csv_newline = "\r\n"; // we use DOS-WINDOWS
+define('CSV_NEWLINE',"\r\n");
 
 function add_csv_field($line, $str) {
     global $csv_sep;
@@ -19,6 +20,18 @@ function add_csv_newline($cvs) {
     global $csv_newline;
     return $cvs . $csv_newline;
 }
+
+// Compute the year of the race
+$condition = sprintf("WHERE  `ID_regate` = '%s'", $_SESSION['ID_regate']);
+$query = "SELECT *, DATE_FORMAT(`date_debut`,'%Y') as `raceYear` FROM `Regate` " 
+    . $condition;
+$conn = connect();
+$res = mysql_query($query, $conn) or die('Problème lors de la réception des enregistrements' . $query . mysql_error()); //Exécution de la requête
+$row = mysql_fetch_assoc($res);
+$raceYear = $row['raceYear'];
+
+//echo $raceYear ."\n";
+
 
 $bat_fields = array(
     3 => array('VOILE', 'C', '9'),
@@ -44,8 +57,8 @@ $correspondence = array(
     'INS_EN' => array('', 'VL'),
     'BAT_TYPE' => array('serie', ''),
     'NB_EQUIP' => array('', '1'),
-    'GROUPE' => array('serie', 'LASER'),
-    'CLAS_CAT' => array('serie', ''),
+    'GROUPE' => array('serie', ''),
+    'CLASSE_CAT' => array('CLASSE_CAT', ''),
     'E1_NOM' => array('nom', ''),
     'E1_PRE' => array('prenom', ''),
     'E1_SEXE' => array('sexe', ''),
@@ -58,6 +71,36 @@ $correspondence = array(
     'E1_EMAIL' => array('mail', '')
 );
 
+$categories = array(
+    array(12, 14, 'MIN'),
+    array(15, 16, 'CAD'),
+    array(17, 18, 'JUN'),
+    array(19, 34, 'SEN'),
+    array(35, 44, 'AMA'),
+    array(45, 54, 'MAS'),
+    array(55, 64, 'GMA'),
+    array(65, 110, 'GGM')
+);
+
+function compute_age_cat($bornYear) {
+
+    global $raceYear, $categories;
+
+//    echo $bornYear;
+//    echo $raceYear."\n";
+
+    $age = $raceYear - $bornYear;
+    $category = '???';
+
+    foreach ($categories as $cat) {
+        if ($age >= $cat[0] and $age <= $cat[1]) {
+            $category = $cat[2];
+            break;
+        }
+    }
+
+    return $category;
+}
 
 function compute_csv_value($field, $row) {
 
@@ -73,7 +116,20 @@ function compute_csv_value($field, $row) {
             // If this is not defined in the 
             // $correspondence array
             // look for it in the db
-            $ascii_str = $row[$value[0]];
+
+            if ($value[0] == 'CLASSE_CAT') {
+                //                  $sexe = $row['sexe'];
+//                echo $row['E1_NAIS'] . "\n";
+//                list($an, $mois, $jour) = sscanf($row['naissance'], '%4d-%2d-%4d');
+                //               echo $an;
+                $agecat = compute_age_cat($row['E1_NAIS']);
+                $ascii_str = $row['sexe'] . $agecat;
+            }
+            // Il faudra voir si ca vaut la peine creer les
+            // deux classes LASM et LASF
+            else
+                $ascii_str = $row[$value[0]];
+
             if ($value[0] == 'num_voile')
                 $ascii_str = $row['prefix_voile'] . $ascii_str;
 
@@ -162,27 +218,27 @@ function generate_csv() {
     $query = "SELECT *, DATE_FORMAT(`naissance`,'%Y') as `E1_NAIS` FROM `Inscrit` " . $condition;
     $conn = connect();
     $res = mysql_query($query, $conn) or die('Problème lors de la réception des enregistrements' . $query . mysql_error()); //Exécution de la requête
- 
+
 
     $csv = do_entete();
-    $csv = add_csv_newline($csv);
+    $csv .= CSV_NEWLINE;
 
     $csv .= do_aut();
-    $csv = add_csv_newline($csv);
-
+    $csv .= CSV_NEWLINE;
+    
     $cle = 1;
     while ($row = mysql_fetch_assoc($res)) {
         //Parcours du résultat de la requête
 
         $csv.=do_bat($row, $cle);
-        $csv = add_csv_newline($csv);
+        $csv.= CSV_NEWLINE;
         $csv.=do_equip($row, $cle);
-        $csv = add_csv_newline($csv);
+        $csv.= CSV_NEWLINE; 
         $cle++;
     }
 
     mysql_close($conn);
- 
+
     return $csv;
 }
 
