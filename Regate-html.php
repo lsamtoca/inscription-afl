@@ -313,6 +313,7 @@ global $mails_all, $mails_confirme, $mails_pas_confirme;
         <br />
         On peut lire ces fichiers aussi avec Excel, OpenOffice, ou un editeur de texte.
 
+        <!--
         <h5>Ancienne méthode d'importation :</h5>
         <ul>
             <li>
@@ -326,7 +327,7 @@ global $mails_all, $mails_confirme, $mails_pas_confirme;
 
         <br/>
         On peut lire ces fichiers aussi avec Excel, OpenOffice, XBase.
-
+        -->
 
     </div>
 
