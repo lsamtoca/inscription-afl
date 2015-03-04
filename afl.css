@@ -185,3 +185,16 @@ couocu#choix_langue A:hover {
 }
 
 #accordion>div{background:cadetblue}
+
+div.explication>h4 {
+    color:red;
+}
+div.explication>div{background:cadetblue}
+
+span.menu {
+    text-align: center;
+    display:block;
+    /*font-family: tt;*/
+    color:black;
+    
+}

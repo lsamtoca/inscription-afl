@@ -5,8 +5,15 @@ if (!isset($_SESSION["ID_regate"])) {
     header("Location: LoginClub.php");
 }
 
+
+
 require "partage.php";
 require "externals/PHPExcel/Classes/PHPExcel.php";
+
+//require_once "php/Regate.php";
+//$ID_regate = $_GET['regate'];
+//$regate = Regate_selectById($ID_regate);
+
 
 //define("FILENAME",sprintf("%sinscrits.xlsx",$racine)); //constante: nom du fichier à generer
 
@@ -35,6 +42,10 @@ $fields = array(
     'date confirmation' => 'Date confirmation',
 );
 
+//if($regate['taille_polo'] == '1'){
+//    
+//}
+    
 function generate_excel() {
 
     global $fields;

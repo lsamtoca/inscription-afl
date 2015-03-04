@@ -106,6 +106,15 @@ global $mails_all, $mails_confirme, $mails_pas_confirme;
         });
        
         myaccordion_set_accordion();
+        
+        $('div.explication').accordion({ 
+            collapsible:true,
+            active: true, 
+            heightStyle: "content",
+            event: "click hoverintent",
+            header: "h4"
+        });
+
       
          
     });
@@ -121,12 +130,12 @@ global $mails_all, $mails_confirme, $mails_pas_confirme;
 
 <div id='accordion'>
 
-
-    <h3>Notice d'utilisation du logiciel</h3>
-    <div class="contenu">
-        Téléchargez la <a href="docs/Notice_07-03-12.pdf">notice</a> d'utilisation (mise à jour le 7/03/12). 
-    </div>
-
+    <!--
+        <h3>Notice d'utilisation du logiciel</h3>
+        <div class="contenu">
+            Téléchargez la <a href="docs/Notice_07-03-12.pdf">notice</a> d'utilisation (mise à jour le 7/03/12). 
+        </div>
+    -->
     <h3 id="renseignements">Formulaire renseignements sur la régate</h3>
     <div class="contenu">
 
@@ -306,14 +315,34 @@ global $mails_all, $mails_confirme, $mails_pas_confirme;
                 Télécharger la liste des <strong>tous les inscrits</strong> au <a href="Liste_inscrits_csv.php">format csv</a>.
             </li>
         </ul>
-        Importez ce fichiers dans FREG via <br/>
-        Inscrits->Fiches d'inscription à la régate->31. Solitaires->Importer Format CSV 2014
-        
-        <br />
+        <div class="explication">
+            <h4>Comment intégrer le fichier csv sous FREG ?</h4>
+            <div class="contenu">
+                <p>
+                    Importez ce fichier dans FREG via le menu<br/>
+                    <span  class="menu">Inscrits->Fiches d'inscription à la régate->31. Solitaires->Importer Format CSV 2014
+                    </span>
+                </p>
+
+                <p>
+                    Importez par le même menu les Groupes/Série qui figurent maintenant dans le fichier CSV.
+                    Ces groupes sont LA4,RAD,STD, et les séries M(F)MIN a M(F)GGM définis selon l'âge des concurrents.        
+                </p>
+
+                <p>
+                    Notez que ce menu <span class="menu">Inscrits->Fiches d'inscription à la régate->31. Solitaires->Importer Format CSV 2014</span>
+                        n'est accessible que si vous avez déjà créé au moins un Groupe/Série dans votre régate.
+                </p>
+
+                <p>
+                    Pour vous simplifier, vous pouvez restaurer puis utiliser le fichier <a href="docs/Regate_Laser_type_pour_import_csv.WDZ">Regate_Laser_type_pour_import_csv.WDZ"</a>
+                </p>
+            </div>
+        </div>
+
         <br />
         On peut lire ces fichiers aussi avec Excel, OpenOffice, ou un editeur de texte.
 
-        <!--
         <h5>Ancienne méthode d'importation :</h5>
         <ul>
             <li>
@@ -327,7 +356,6 @@ global $mails_all, $mails_confirme, $mails_pas_confirme;
 
         <br/>
         On peut lire ces fichiers aussi avec Excel, OpenOffice, XBase.
-        -->
 
     </div>
 
