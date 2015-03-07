@@ -319,6 +319,28 @@ global $mails_all, $mails_confirme, $mails_pas_confirme;
             <h4>Comment intégrer le fichier csv sous FREG ?</h4>
             <div class="contenu">
                 <p>
+                    Sous FREG, après avoir créé la régate et au moins un Groupe/Série, importez le <a href="Liste_inscrits_csv.php?confirme=1">fichier csv</a> via le menu<br/>
+                    <span  class="menu">Inscrits->Fiches d'inscription à la régate->31. Solitaires->Importer Format CSV 2014
+                    </span>
+                </p>
+
+                <p>
+                    Par le même menu, importez les Groupes/Série qui figurent maintenant dans le fichier CSV.
+                    Ces groupes sont LA4,RAD,STD, et les séries M(F)MIN a M(F)GGM définis selon l'âge des concurrents.        
+                </p>
+
+                <p>
+                    Notez bien que le menu <span class="menu">Inscrits->Fiches d'inscription à la régate->31. Solitaires->Importer Format CSV 2014</span>
+                    n'est accessible que si vous avez déjà créé au moins un Groupe/Série dans votre régate.
+                </p>
+
+                <p>Pour vous simplifier, vous pouvez télécharger puis restaurer dans FREG cette régate :  
+                    <a href="docs/Regate_Laser_type_pour_import_csv.WDZ">Regate_Laser_type_pour_import_csv.WDZ</a>.
+                    Tous les Groupes/séries y sont déjà créés.
+                </p>
+                
+                <!--
+                <p>
                     Importez ce fichier dans FREG via le menu<br/>
                     <span  class="menu">Inscrits->Fiches d'inscription à la régate->31. Solitaires->Importer Format CSV 2014
                     </span>
@@ -331,12 +353,19 @@ global $mails_all, $mails_confirme, $mails_pas_confirme;
 
                 <p>
                     Notez que ce menu <span class="menu">Inscrits->Fiches d'inscription à la régate->31. Solitaires->Importer Format CSV 2014</span>
-                        n'est accessible que si vous avez déjà créé au moins un Groupe/Série dans votre régate.
+                    n'est accessible que si vous avez déjà créé au moins un Groupe/Série dans votre régate.
                 </p>
 
+                <p>Vous pouvez télécharger puis restaurer dans FREG cette régate :  
+                    <a href="docs/Regate_Laser_type_pour_import_csv.WDZ">Regate_Laser_type_pour_import_csv.WDZ"</a>.
+                    Tous les Groupes/séries y sont déjà créés.
+                </p>-->
+                <!--
                 <p>
-                    Pour vous simplifier, vous pouvez restaurer puis utiliser le fichier <a href="docs/Regate_Laser_type_pour_import_csv.WDZ">Regate_Laser_type_pour_import_csv.WDZ"</a>
+                    Pour vous simplifier, vous pouvez restaurer puis utiliser le fichier 
+                    <a href="docs/Regate_Laser_type_pour_import_csv.WDZ">Regate_Laser_type_pour_import_csv.WDZ"</a>
                 </p>
+                -->
             </div>
         </div>
 
