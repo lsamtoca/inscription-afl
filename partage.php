@@ -279,12 +279,14 @@ function self() {
 //define('HIDEMAILSTRING', str_repeat('*', 8));
 // Errors
 
-function pageErreur($message) {
+function pageErreur($message,$goback=NULL) {
+    
     xhtml_pre('Erreur');
-
-    echo '<h3>';
-    echo $message;
-    echo '</h3>';
+    echo "<p><span class=\"error_strings\">$message</span></p>";
+    
+    if($goback != NULL){
+        echo "Retourner à la page <a href=\"$goback\">$goback</a><h3>";
+    }
 
     xhtml_post();
 

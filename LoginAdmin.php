@@ -1,68 +1,76 @@
 <?php
-	session_start();
-	require 'partage.php';
-	
-	if(isset($_SESSION['ID_administrateur']))
-	{
-		header('Location: Admin.php');
-	}
-	if(isset($_POST['submit']))
-	{
-		/* Un des champs est manquant */
-		if(!isset($_POST['login']) || !isset($_POST['pass']))
-			$error_login="<span style='color:red'><br /><br />Un ou plusieurs champs sont manquants.</span>";
 
-		else if($_POST["pass"]=="" || $_POST["login"]=="")
-			$error_login="<span style='color:red'><br /><br />Un ou plusieurs champs sont manquants.</span>";
+// This, to be sure, should go under ssh
 
-		else
-		{
-			try
-			{
+session_start();
+require 'partage.php';
 
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-				//
-				$bdd = new PDO($pdo_path, $user, $pwd, $pdo_options);
-				$login=$bdd->quote(htmlentities($_POST["login"]));
-				$pass=$bdd->quote(htmlentities($_POST["pass"]));
-				
-				$requete=$bdd->query("select ID_administrateur from Administrateur where admin_login=$login and admin_passe=$pass ;");
-				$nbligne=$requete->rowCount();
-				if($nbligne==1)
-				{
-					$reponse=$requete->fetch(PDO::FETCH_ASSOC);
-					$_SESSION["ID_administrateur"]=$reponse["ID_administrateur"];
-					$requete->closeCursor();
-					$bdd=null;
-					header("Location: Admin.php");
-				}
-				else
-				{
-					$error_login="<span style='color:red'><br /><br />Pseudo ou mot de passe incorrect.</span>";
-				}
-				$requete->closeCursor();
-			}
-			catch(Exception $e)
-			{
-				die('Erreur : '.$e->getMessage());
-			}
-		}
-	}
+function doLogin($login, $codedPass) {
+    global $pdo_path, $user, $pwd, $pdo_options;
+    
+    try {
+//            $login = $bdd->quote(htmlentities($_POST["login"]));
+//            $pass = $bdd->quote(htmlentities($_POST["pass"]));
+
+        $bd = new PDO($pdo_path, $user, $pwd, $pdo_options);
+        $sql = "select ID_administrateur from Administrateur where "
+                . "admin_login= :LOGIN and coded_admin_passe= :PASS ;";
+        $req = $bd->prepare($sql);
+        $req->execute(array('LOGIN' => $login, 'PASS' => $codedPass));
+
+        $nbligne = $req->rowCount();
+        if ($nbligne == 1) {
+            $reponse = $req->fetch();
+            $_SESSION["ID_administrateur"] = $reponse["ID_administrateur"];
+            header("Location: Admin.php");
+        } else {
+            $message = "Le login ou le mot de passe n'est pas correcte";
+            pageErreur($message,"LoginAdmin.php");
+            exit(1);
+        }
+    } catch (Exception $e) {
+        die('Erreur : ' . $e->getMessage());
+    }
+}
+
+if (isset($_SESSION['ID_administrateur'])) {
+    header('Location: Admin.php');
+    exit();
+}
+
+if (isset($_POST['submit'])) {
+    /* Un des champs est manquant */
+    if ((!isset($_POST['login']) || !isset($_POST['pass'])) ||
+            ($_POST["pass"] == "" || $_POST["login"] == "")
+    ) {
+        $message("Un ou plusieurs champs sont manquants.");
+        pageErreur($message,"LoginAdmin.php");
+        exit(1);
+    }
+
+
+    $login = filter_input(INPUT_POST, 'login', FILTER_SANITIZE_STRING);
+    $pass = filter_input(INPUT_POST, 'pass', FILTER_SANITIZE_STRING);
+    $codedPass = md5($pass);
+    
+    doLogin($login,$codedPass);
+    
+    }   
 
 xhtml_pre('Login Administrateur');
 ?>
 
 <form action="" method="post">
-	<fieldset>
-	<legend>Gérer Les Club</legend>
-	<label for="login">Login :</label>
-	<input name="login" type="text" id="login"/>
-    <br />
-	<label for="pass">Mot de passe :</label>
-	<input name="pass" type="password" id="pass"/>
+    <fieldset>
+        <legend>Gérez les régates : </legend>
+        <label for="login">Login :</label>
+        <input name="login" type="text" id="login"/>
+        <br />
+        <label for="pass">Mot de passe :</label>
+        <input name="pass" type="password" id="pass"/>
 
-    <input type="submit" name="submit" id="submit" value="Valider"/>
-</fieldset>
+        <input type="submit" name="submit" id="submit" value="Valider"/>
+    </fieldset>
 
 </form>
 
