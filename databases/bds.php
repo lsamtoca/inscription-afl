@@ -44,12 +44,23 @@ if (!function_exists('connect')) {
 
 }
 
+function newBd() {
+    global $pdo_path, $user, $pwd, $pdo_options;
+
+    try {
+        return new PDO($pdo_path, $user, $pwd, $pdo_options);
+    } catch (Exception $e) {
+        // En cas d'erreur, on affiche un message et on arrête tout
+        die('Erreur : ' . $e->getMessage());
+    }
+}
+
 function executePreparedQuery($sql, $assoc, $bd = NULL, $debug = FALSE) {
     global $pdo_path, $user, $pwd, $pdo_options;
 
     try {
         if ($bd == NULL) {
-            $bd = new PDO($pdo_path, $user, $pwd, $pdo_options);
+            $bd = newbd();
         }
 
         $req = $bd->prepare($sql);

@@ -2,28 +2,20 @@
 
 $Regate_htmlDateFormat = 'd/m/Y';
 
-function Regate_selectById($ID_regate) {
-    global $pdo_path, $user, $pwd, $pdo_options;
-
-    try {
-
-        $bd = new PDO($pdo_path, $user, $pwd, $pdo_options);
-        $sql = 'SELECT * FROM Regate '
-                . 'WHERE ID_regate = ?';
-        $req = $bd->prepare($sql);
-        $req->execute(array($ID_regate));
-        if ($req->RowCount() == 0) {
-            pageErreur('La régate demandée n\'existe pas.');
-            exit;
-        }
-        // Tout ce qu'on veut savoir sur la regate
-        $regate = $req->fetch();
-
-        return Regate_setLimite($regate);
-    } catch (Exception $e) {
-        pageServerMisconfiguration('Erreur : ' . $e->getMessage());
-        exit;
+function Regate_selectById($ID_regate,$bd=NULL) {
+    
+    $sql = 'SELECT * FROM Regate '
+            . 'WHERE ID_regate = ?';
+    $assoc = array($ID_regate);
+    $req = executePreparedQuery($sql,$assoc,$bd);
+    if ($req->RowCount() == 0) {
+        pageErreur('La régate demandée n\'existe pas.');
+        exit(0);
     }
+    // Tout ce qu'on veut savoir sur la regate
+    $regate = $req->fetch();
+
+    return Regate_setLimite($regate);
 }
 
 function Regate_setLimite($regate) {
@@ -52,7 +44,7 @@ function Regate_estDestructible($regate) {
 
     date_default_timezone_set('Europe/Paris');
     $now = new DateTime;
-    $destruction=new DateTime($regate['destruction']);
+    $destruction = new DateTime($regate['destruction']);
 //    echo $destruction->format('d/m/Y');
 //    echo $now->format('d/m/Y');
 //    exit;

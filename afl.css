@@ -189,12 +189,62 @@ couocu#choix_langue A:hover {
 div.explication>h4 {
     color:red;
 }
-div.explication>div{background:cadetblue}
+div.explication>div{
+    background:cadetblue;
+    overflow: visible;
+}
 
 span.menu {
     text-align: center;
     display:block;
     /*font-family: tt;*/
     color:black;
-    
+
 }
+
+.help {
+    display:inline;
+    vertical-align: top;
+    position: relative;
+    width:0px;
+}
+
+.help:before{
+    content:"? ";
+    color:red;
+    vertical-align: top;
+}
+
+
+.help>span{
+    display:none;
+    color:red;
+    background:yellow;
+    margin-bottom: 10pt;
+    padding: 10px;
+    vertical-align: top;
+    position: absolute;
+    top: 0px;
+    left: 15px;
+    width: 0px;
+}
+
+.help:hover span  {
+    display:block;
+    width: 290px; 
+    vertical-align: top;
+    z-index:2;
+    overflow: visible;
+}
+
+.facultatif:after{
+    content:" Vous pouvez ne rien ajouter."
+}
+
+img.displayed {
+    display: block;
+    margin-left: auto;
+    margin-right: auto }
+
+
+

@@ -27,8 +27,7 @@ file_put_contents('connections.log', $logLine, FILE_APPEND | LOCK_EX);
 //exit(0);
 
 if (
-        preg_match($ip, $_SERVER['REMOTE_ADDR']) === 1
-        &&
+        preg_match($ip, $_SERVER['REMOTE_ADDR']) === 1 &&
         preg_match($ua, $_SERVER['HTTP_USER_AGENT']) === 1
 ) {
     header('Location: http://www.mozilla.org/en-US/firefox/all/');
@@ -157,7 +156,7 @@ function background() {
     $images = explode("\n", trim($listing));
     $bgimage = $images[rand(0, sizeof($images) - 1)];
     //          $bg='img/background.jpg';
-    
+
     lgtrick($bgimage);
     //echo "<div><img src='$bgimage' alt='background image' id='bg' /></div><!-- background -->" . "\n\n";
 }
@@ -279,18 +278,37 @@ function self() {
 //define('HIDEMAILSTRING', str_repeat('*', 8));
 // Errors
 
-function pageErreur($message,$goback=NULL) {
-    
+function pageErreur($message, $goback = NULL) {
+
     xhtml_pre('Erreur');
-    echo "<p><span class=\"error_strings\">$message</span></p>";
-    
-    if($goback != NULL){
+    $messageHtml = str_replace("\n", "<br />\n", $message);
+
+    echo "<p><span class=\"error_strings\">$messageHtml</span></p>";
+
+    if ($goback != NULL) {
         echo "Retourner à la page <a href=\"$goback\">$goback</a><h3>";
+    } else {
+        echo "<A HREF=\"javascript:javascript:history.go(-1)\">Retourner à la page precedente</A>";
     }
 
     xhtml_post();
 
     exit(1);
+}
+
+function pageAnswer($message) {
+
+    xhtml_pre('Mission accomplie');
+
+    $messageHtml = str_replace("\n", "<br />\n", $message);
+
+    echo "<p><span class=\"error_strings\">$messageHtml</span></p>";
+
+    echo "<A HREF=\"javascript:javascript:history.go(-1)\">Retourner à la page precedente</A>";
+
+    xhtml_post();
+
+    exit(0);
 }
 
 function pageServerMisconfiguration($message) {

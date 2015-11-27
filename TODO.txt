@@ -2,7 +2,7 @@
 * pwds (OK)
 * on ne peut pas ajouter à une regate qqun qui y est déjà inscrit (OK???)
 * que se passe t'il si on se preinscrit vite, mais on a changé de courriel ?
+* understand why export with 4.7 does not work (OK)
 * payement
-* understand why export with 4.7 does not work
 * add come online help and a way of sending bugs report
 * controller---mais cela breakkara tutti i possibili links?
