@@ -1,0 +1,9 @@
+1. Formulaire :
+1.1. Coureur s'inscrit en complétant la mainform
+1.1.1. français 
+1.1.2. étranger
+1.2. Coureur s'inscrit en complétant le formulaire de recherche 
+1.2.1 en utilisant la recherche par licence
+1.2.2 en utilisant la recherche par No ISAF
+1.2.2.1 français
+1.2.2.1 étranger
