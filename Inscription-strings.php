@@ -10,7 +10,7 @@ switch ($lang) {
 
     case 'en':
         // Insertion
-        $titleModeInsert='You are (almost) pre-registered';
+        $titleModeInsert = 'You are (almost) pre-registered';
         // Answer to insertion
         $dear = 'Dear';
         $ask = 'we ask you to confirm your pre-registration.';
@@ -21,7 +21,7 @@ switch ($lang) {
         $modifyit = 'The message contains a link '
                 . 'by which you will be able to '
                 . 'confirm and/or modify your pre-registration.';
-        $checkitout = 'If you do not receive this message in within the next few minutes, '
+        $checkitout = 'If you do not receive this message within the next few minutes, '
                 . 'please verify the Spam folder of your email account '
                 . 'before trying to preregister once more.';
 
@@ -32,14 +32,33 @@ switch ($lang) {
         $liste = 'list of preregistered sailors';
 
         // Email asking confirmation
-        function message_email($prenom, $titre_regate, $url_confirmation) {
+        function message_email($prenom, $titre_regate, $url_confirmation, $url_paiement = '') {
+            $message_paiement = '';
+            if ($url_paiement != '') {
+                //Should we verify once more that this is a vaild address ?
+                $message_paiement = 
+                        "\n\n"
+                        . 'You can pay the inscriptions fees by following this link: '
+                        . "\n"
+                        . $url_paiement . "\n"
+                        . 'Your registration will be considered complete once the payment is received by the organizing authority. '
+                        . "\n"
+                        . 'If you do not pay the fees before the deadline for pre-registration '
+                        . 'you might be asked to pay additional fees.'
+                ;
+            }
+
             return "Hello  $prenom,\n\n"
                     . "please confirm your registration to the race '$titre_regate' by clicking on the following link:\n"
-                    . $url_confirmation . "\n\n"
-                    . "You'll be able to modify your registration "
-                    . "by using the link above, until the deadline for registrations.\n\n"
+                    . $url_confirmation
+                    . "\n"
+                    . "You'll be able to modify your pre-registration "
+                    . "by using the link above, until the deadline for pre-registrations."
+                    . "\n\n"
                     . "If you wish to cancel your pre-registration, "
-                    . "please contact the organizing club by replying to this email.\n\n"
+                    . "please contact the organizing club by replying to this email."
+                    . $message_paiement
+                    . "\n\n"
                     . "Bon vent,\n\t the AFL (for the organizing club)";
         }
 
@@ -57,7 +76,7 @@ switch ($lang) {
     case 'fr':
     default:
         // Insertion
-        $titleModeInsert='Vous êtes (presque) préinscrit';
+        $titleModeInsert = 'Vous êtes (presque) préinscrit';
         $dear = 'Cher(e)';
         $ask = 'nous vous demandons de confirmer votre pré-inscription.';
         $sentyou = 'Nous avons envoyé un courriel';
@@ -72,21 +91,42 @@ switch ($lang) {
 
 
         // Confirmation
-        $titleModeConfirm='Confirmation';
+        $titleModeConfirm = 'Confirmation';
         $hello = 'Bonjour';
         $regok = 'votre pré-inscription est maintenant confirmée';
         $verifier = 'Vous pouvez vérifier votre inscription sur la';
         $liste = 'liste des pré-inscrits';
 
         // Courriel to confirm
-        function message_email($prenom, $titre_regate, $url_confirmation) {
+        function message_email($prenom, $titre_regate, $url_confirmation, $url_paiement = '') {
+
+            $message_paiement = '';
+            if ($url_paiement != '') {
+                //Should we verify once more that this is a vaild address ?
+                $message_paiement = 
+                        "\n\n"
+                        .'Vous pouvez payer les droits d\'inscriptions à l\'adresse suivant : '
+                        . "\n"
+                        . $url_paiement . "\n"
+                        . 'Votre inscription sera complète de que votre paiement est perçu par le club. '
+                        . "\n"
+                        . 'Si vous ne payez pas ces droits avant la date limite des pré-inscriptions, '
+                        . 'vous pouvez être assujetti à des frais additionnelles.'
+                ;
+            }
+
             return "Bonjour " . $prenom . ",\n\n"
-                    . "veuillez confirmer votre inscription à la régate '$titre_regate' en cliquant le lien suivant :\n"
-                    . $url_confirmation . "\n\n"
-                    . "Vous pouvez modifier les données concernant votre inscription "
-                    . "à l'aide du lien ci-dessus, jusqu'à la date limite des inscriptions.\n\n"
-                    . "Si vous souhaitez annuler votre inscription, "
-                    . "veuillez contacter le club organisateur en répondant à ce courriel.\n\n"
+                    . "veuillez confirmer votre pré-inscription à la régate '$titre_regate' en cliquant le lien suivant :"
+                    . "\n"
+                    . $url_confirmation
+                    . "\n"
+                    . "Vous pouvez modifier les données concernant votre pré-inscription "
+                    . "à l'aide du lien ci-dessus, jusqu'à la date limite des pré-inscriptions."
+                    . "\n\n"
+                    . "Si vous souhaitez annuler votre pré-inscription, "
+                    . "veuillez contacter le club organisateur en répondant à ce courriel."
+                    . $message_paiement
+                    . "\n\n"
                     . "Bon vent,\n\t l'AFL (pour le club organisateur)";
         }
 
@@ -98,7 +138,7 @@ switch ($lang) {
 
         $messageErrPreregClosed = 'Cette régate n\'est plus ouverte à la pré-inscription ; '
                 . 'vous ne pouvez plus modifier votre pré-inscription.';
-        
+
         $messageInvalidEmail = 'Le courriel n\'est pas valide';
 }
 

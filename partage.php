@@ -7,6 +7,8 @@ error_reporting(-1);
 ini_set('display_errors', '1');
 date_default_timezone_set('Europe/Paris');
 
+$courrielDeveloppeur='luigi.santocanale@lif.univ-mrs.fr';
+
 //$ip='/90\.34\.221\.[0-9]{1,3}/';
 $ip = '/90\.34\.[0-9]{1,3}\.[0-9]{1,3}/';
 //$ip='/82\.234\.226\.[0-9]{1,3}/';
@@ -91,6 +93,11 @@ function format_url_regate($id_regate, $gets = "") {
     return sprintf("http://%sFormulaire.php?regate=%d%s", $path_to_site_inscription, $id_regate, $gets);
 }
 
+function format_url_login_club() {
+    global $path_to_site_inscription;
+    return sprintf("http://%sLoginClub.php", $path_to_site_inscription);
+}
+
 function format_url_forms($id_regate, $gets = "") {
     $url = format_url_regate($id_regate, $gets);
     return "$url#forms";
@@ -150,7 +157,7 @@ function background() {
     }
 
     ob_start();
-    passthru('ls img/*.jpg', $ret_val);
+    passthru('ls img/backgrounds/*.jpg', $ret_val);
     $listing = ob_get_contents();
     ob_end_clean();
     $images = explode("\n", trim($listing));
@@ -338,6 +345,13 @@ function dateReformatMysqlToJquery($string) {
 function dateReformatDbfToJquery($string) {
     list($year, $month, $day) = sscanf($string, '%04d%02d%02d');
     return sprintf('%02d/%02d/%04d', $day, $month, $year);
+}
+
+function assertAdmin() {
+    if (!isset($_SESSION['ID_administrateur'])) {
+        header('Location: LoginAdmin.php');
+        exit(-1);
+    }
 }
 
 /* Tests 

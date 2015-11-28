@@ -247,4 +247,22 @@ img.displayed {
     margin-right: auto }
 
 
+tr.odd{
+    background-color: blue;
+    border:1px;
+    padding:1px;
+}
 
+tr.even{
+    background-color: blueviolet;
+    border:1px;
+    padding:1px;
+}
+
+tr.even td {padding:5px;}
+tr.odd td {padding:5px;}
+
+tr.divisor{
+    border:0; 
+    height:60px;
+}

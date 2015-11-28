@@ -1,5 +1,7 @@
 <?php
 
+require_once 'partage.php';
+
 // Remplace quoted_printable_encode, 
 // disponible pour php > = 5.3 seulement
 // Ce code telechargé de
@@ -121,12 +123,22 @@ function subject_encode_from_utf8($subject) {
 
 function send_mail_text($sender, $to, $subject, $message, $cc = '', $bcc = '') {
 
+    global $development, $courrielDeveloppeur;
+    $postMsg = '';
+    if ($development) {
+        $postMsg = "\nMessage original : to -> $to, cc -> $cc, bcc -> $bcc";
+        $to = $courrielDeveloppeur;
+        $cc = '';
+        $bcc = '';
+    }
+
+
     $ME = "inscriptions-afl@regateslaser.info";
 
     // Composer les arguments de la fonction mail the 
     $TO = $to;
     $SUBJECT = subject_encode_from_utf8($subject);
-    $MESSAGE = $message;
+    $MESSAGE = $message.$postMsg;
 
     $headers = "From: $sender\r\n";
     $headers .= "Reply-To: $sender\r\n";
@@ -149,6 +161,15 @@ function send_mail_text($sender, $to, $subject, $message, $cc = '', $bcc = '') {
 }
 
 function send_mail_text_attachement($sender, $to, $subject, $mesg, $cc = '', $bcc = '') {
+
+    global $development, $courrielDeveloppeur;
+    $postMsg = '';
+    if ($development) {
+        $postMsg = "\nMessage original : to -> $to, cc -> $cc, bcc -> $bcc";
+        $to = $courrielDeveloppeur;
+        $cc = '';
+        $bcc = '';
+    }
 
     $ME = "inscriptions-afl@regateslaser.info";
 //	$CC="inscriptions-afl@regateslaser.info";
@@ -206,5 +227,3 @@ function send_mail_text_attachement($sender, $to, $subject, $mesg, $cc = '', $bc
 
     return mail($to, $SUBJECT, $message, $headers);
 }
-
-?>

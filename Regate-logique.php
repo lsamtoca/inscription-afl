@@ -65,7 +65,7 @@ function validate_post_and_update() {
         'titre', 'description',
         'cv_organisateur', 'lieu',
         'date_debut', 'date_fin', 'date_limite_preinscriptions',
-        'droits', 'courriel', 'payement_en_ligne', 'informations');
+        'droits', 'courriel', 'paiement_en_ligne', 'informations');
 
     // VALIDATE $post
     foreach ($fields as $field) {
@@ -87,7 +87,7 @@ function validate_post_and_update() {
                     $post[$field] = $cleaned;
                     break;
 
-                case 'payement_en_ligne':
+                case 'paiement_en_ligne':
                     $cleaned = filter_var($post[$field], FILTER_VALIDATE_URL);
                     if (!$cleaned && $post[$field] != '') {
                         $old_value = get_field_value($field);
@@ -133,7 +133,7 @@ $DATE_LIMITE_PREINSCRIPTIONS = dateReformatMysqlToJquery($regate['date_limite_pr
 
 // Ajouts de 26/11/2015
 $DROITS_INSCRIPTION = $regate['droits'];
-$PAYEMENT_EN_LIGNE = $regate['payement_en_ligne'];
+$paiement_EN_LIGNE = $regate['paiement_en_ligne'];
 $INFORMATIONS = $regate['informations'];
 
 $URL = format_url_regate($ID_regate);

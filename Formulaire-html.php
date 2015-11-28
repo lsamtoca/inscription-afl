@@ -35,18 +35,18 @@ xhtml_pre1($page_title1);
 
 <script type="text/javascript">
 
-    $(document).ready( function () {
+    $(document).ready(function () {
 
-        $("#naissance" ).datepicker({
-            dateFormat : "dd/mm/yy",
-            defaultDate : "01/01/94",
-            changeYear : true,
-            yearRange : "c-20:c+20"
+        $("#naissance").datepicker({
+            dateFormat: "dd/mm/yy",
+            defaultDate: "01/01/94",
+            changeYear: true,
+            yearRange: "c-20:c+20"
         });
-                  
+
         myaccordion_set_accordion();
-        
-        $('mainform').submit(function() {
+
+        $('mainform').submit(function () {
             alert($(this).serialize());
             return false;
         });
@@ -98,14 +98,23 @@ xhtml_pre1($page_title1);
 
             <?php if (!Regate_estOuverte($regate)): ?>
                 <p>
-                    La date limite pour se préinscrire à cette régate,
+                    La date limite pour se pré-inscrire à cette régate,
                     le <?php echo Regate_formatDeadline($regate); ?> est passée.
                     <br />
-                    Il n'est plus possible se préinscrire à cette régate :-(
+                    Il n'est plus possible se pré-inscrire à cette régate :-(
                 </p>
             <?php endif; ?>
         <?php endif; ?>
 
+        <?php if ($regate['droits'] != '0'): ?>
+            <p>Droits d'inscription : <?php echo $regate['droits']; ?>
+                &#8364;</p>
+        <?php endif; ?>
+        <?php if ($regate['informations'] != ''): ?>
+            <p>
+                Autres informations : <?php echo $regate['informations']; ?>
+            </p>
+        <?php endif; ?>
     </div> <!--infos_regate-->
 
     <?php if (Regate_estOuverte($regate)): ?>

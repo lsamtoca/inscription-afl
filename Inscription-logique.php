@@ -241,8 +241,10 @@ function do_insert($hash) {
 // Compose the mail...
 function compose_mail($ID_inscrit, $ID_regate, $titre_regate, $courriel_cv) {
 
-    global $post, $lang, $message_email;
-    global $message_email_fr, $message_email_fr;
+//    global $post,$lang;
+//    global $message_email;
+//    global $message_email_fr, $message_email_fr;
+    global $regate;
     global $development;
     global $hashGetString;
 
@@ -274,7 +276,8 @@ function compose_mail($ID_inscrit, $ID_regate, $titre_regate, $courriel_cv) {
 //    $message_fun = $message_email[$lang];
     //   var_dump(phpversion());
     //   exit(0);
-    $message = message_email($prenom, $titre_regate, $url_confirmation);
+    $url_paiement = $regate['paiement_en_ligne'];
+    $message = message_email($prenom, $titre_regate, $url_confirmation, $url_paiement);
 
     if ($development) {
         $sender = $to = 'luigi.santocanale@lif.univ-mrs.fr';
@@ -332,5 +335,3 @@ if ($modeConfirm) {
     do_update();
     $inscrit = Inscrit_selectById($ID_inscrit);
 }
-
-//?>

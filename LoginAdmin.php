@@ -5,6 +5,7 @@
 session_start();
 require 'partage.php';
 
+
 function doLogin($login, $codedPass) {
     global $pdo_path, $user, $pwd, $pdo_options;
     

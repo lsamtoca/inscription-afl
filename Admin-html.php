@@ -19,92 +19,88 @@ xhtml_pre1('Administration des régates (événements et clubs)');
 
 <script type="text/javascript">
 
-    $(document).ready( function () {
+    $(document).ready(function () {
 
-        $("#date_destru" ).datepicker({
+        $("#date_destru").datepicker({
+            dateFormat: "dd/mm/yy",
+            defaultDate: "<?php echo $in_one_year; ?>",
+            changeYear: true,
+            yearRange: "c-20:c+20"
 
-            dateFormat : "dd/mm/yy",
-            defaultDate : "<?php echo $in_one_year; ?>",
-            changeYear : true,
-            yearRange : "c-20:c+20"
-            
         });
-    
-        var req_msg="Champ obligatoire";
-        var ml_msg="Au moins 8 caractères";
-        var Ml_msg="Au plus 10 caractères";
-        var em_msg="SVP, un adresse courriel valide";
-        
+
+        var req_msg = "Champ obligatoire";
+        var ml_msg = "Au moins 8 caractères";
+        var Ml_msg = "Au plus 10 caractères";
+        var em_msg = "SVP, un adresse courriel valide";
+
         $("#formnewrace").validate({
-         
-            rules : {
-                org_login:{
-                    required:true,
-                    minlength:8,
-                    maxlength:10
+            rules: {
+                org_login: {
+                    required: true,
+                    minlength: 8,
+                    maxlength: 10
                 },
-                org_passe:{
-                    required:true,
-                    minlength:8,
-                    maxlength:10
+                org_passe: {
+                    required: true,
+                    minlength: 8,
+                    maxlength: 10
                 },
                 org_courriel: {
-                    required:true,
-                    email:true
+                    required: true,
+                    email: true
                 },
-                date_destru:{
-                    required:true
+                date_destru: {
+                    required: true
                 }
             },
-         
-            messages : {
-                
-                org_login:{
-                    required:req_msg,
-                    minlength:ml_msg,
-                    maxlength:Ml_msg
+            messages: {
+                org_login: {
+                    required: req_msg,
+                    minlength: ml_msg,
+                    maxlength: Ml_msg
                 },
-                org_passe:{
-                    required:req_msg,
-                    minlength:ml_msg,
-                    maxlength:Ml_msg
+                org_passe: {
+                    required: req_msg,
+                    minlength: ml_msg,
+                    maxlength: Ml_msg
                 },
                 org_courriel: {
-                    required:req_msg,
-                    email:em_msg
+                    required: req_msg,
+                    email: em_msg
                 },
-                date_destru:{
-                    required:req_msg
+                date_destru: {
+                    required: req_msg
                 }
             }
-         
+
         });
-        
+
         myaccordion_set_accordion();
-        
+
     });
-   
-    function validate_date_destr(date_d){
-            
-        var ar=date_d.split('/');
-        var day=ar[0];
-        var month=ar[1];
-        var year=ar[2];        
+
+    function validate_date_destr(date_d) {
+
+        var ar = date_d.split('/');
+        var day = ar[0];
+        var month = ar[1];
+        var year = ar[2];
         var date_destr = new Date();
-        date_destr.setFullYear(year,month,day);
+        date_destr.setFullYear(year, month, day);
         var now = new Date();
         //       console.log(now.toString());
         //       console.log(date_destr.toString());
-        
-        if(now < date_destr){
+
+        if (now < date_destr) {
             return confirm("La date de destruction de cette regate, le "
-                + date_d
-                + ", n'est pas passée. Etes vous surs ?");
+                    + date_d
+                    + ", n'est pas passée. Etes vous surs ?");
         }
         return true;
-            
+
     }
-   
+
 </script>
 
 <?php xhtml_pre2('Administration des régates (événements et clubs)'); ?>
@@ -156,8 +152,8 @@ xhtml_pre1('Administration des régates (événements et clubs)');
             <tr>
                 <th scope="col">Numéro</th>
                 <th scope="col">Titre événement</th>
-                <th scope="col">Login organisateur</th>
-                <th scope="col">Mot de passe organisateur</th>
+                <!--<th scope="col">Login organisateur</th> -->
+                 <!-- <th scope="col">Mot de passe organisateur</th>-->
                 <th scope="col">Courriel organisateur</th>
                 <th scope="col">Date destruction</th>
                 <th scope="col">Créateur</th>
@@ -176,8 +172,8 @@ xhtml_pre1('Administration des régates (événements et clubs)');
                         <a href="<?php echo $url_preinscriptions; ?>">
                             <?php echo $regate['ID_regate'] ?></a></td>
                     <td scope="col"><?php echo $regate['titre'] ?></td>
-                    <td scope="col"><?php echo $regate['org_login'] ?></td>
-                    <td scope="col"><?php echo $regate['org_passe'] ?></td>
+                    <!--<td scope="col"><?php echo $regate['org_login'] ?></td>-->
+                    <!--<td scope="col"><?php echo $regate['org_passe'] ?></td>-->
                     <td scope="col"><?php echo $regate['courriel'] ?></td>
                     <td scope="col"><?php echo $destruction ?></td>
                     <td scope="col"><?php echo $createur; ?></td>

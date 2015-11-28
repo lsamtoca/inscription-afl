@@ -22,25 +22,20 @@ function construct_html_serie($id_regate, $titre_serie, $serie) {
     $orderby = ' ORDER BY `num_voile` ';
     $sql.= $condition . $orderby;
 
-    try {
-        $bd = new PDO($pdo_path, $user, $pwd, $pdo_options);
-        $req = $bd->prepare($sql);
-        $req->execute(array(
-            ':id_regate' => $id_regate,
-            ':serie' => $serie
-        ));
-    } catch (Exception $e) {
-        pageServerMisconfiguration('Erreur : ' . $e->getMessage());
-        exit;
-    }
+    $assoc = array(
+        ':id_regate' => $id_regate,
+        ':serie' => $serie
+    );
+    $req = executePreparedQuery($sql, $assoc);
 
     $ret = "";
-    if ($req->columnCount()> 0) {
-        $ret.="<div id=\"$serie\" style=\"margin-left:auto;margin-right:auto;width:200;margin-top:10mm;margin-bottom:10mm\">" . "\n";
+    if ($req->columnCount() > 0) {
+  
+        //$ret.="<div id=\"$serie\" style=\"margin-left:auto;margin-right:auto;width:200;margin-top:10mm;margin-bottom:10mm\">" . "\n";
 
-        $ret.='<table border="1" align="center">' . "\n";
-        $ret.='<tr><th colspan="5">' . $titre_serie . '</th></tr>';
-        $ret.='<tr>';
+//        $ret.='<table border="1" align="center">' . "\n";
+        $ret.='<tr class=\'even\'><th colspan="5">' . $titre_serie . '</th></tr>';
+        $ret.='<tr class=\'even\'>';
         $ret.=cell('');
         $ret.=cell('Pays');
         $ret.=cell('No. Voile');
@@ -50,17 +45,23 @@ function construct_html_serie($id_regate, $titre_serie, $serie) {
 
 //        $row=$req->fe
         $i = 1;
+        $class = 'odd';
         while ($row = $req->fetch()) {
-            $ret.='<tr>';
+            $ret.="<tr class=\"$class\">";
             $ret.=rcell($i++);
-            $ret.=rcell($row['prefix_voile']);
+            $ret.=rcell(strtoupper($row['prefix_voile']));
             $ret.=rcell($row['num_voile']);
             $ret.=cell(nom_normaliser($row['nom']));
             $ret.=cell(nom_normaliser($row['prenom']));
             $ret.='</tr>' . "\n";
+            if ($class == 'odd') {
+                $class = 'even';
+            } else {
+                $class = 'odd';
+            }
         }
-        $ret.="</table>\n";
-        $ret.="</div><!-- $serie -->\n\n";
+//        $ret.="</table>\n";
+//        $ret.="</div><!-- $serie -->\n\n";
     }
     return $ret;
 }

@@ -29,6 +29,15 @@
             var em_msg = "Entrez un adresse courriel valide";
             var url_msg = "Entrez un url valide";
             var nombre_msg = "Rentrez un nombre";
+            $.validator.addMethod(
+                    "pattern",
+                    function (value, element, regexp) {
+                        var re = new RegExp(regexp);
+                        return this.optional(element) || re.test(value);
+                    },
+                    "Please check your input."
+                    );
+            
             $("#form_info_regate").validate({
                 rules: {
                     titre: {
@@ -51,9 +60,9 @@
                         required: true
                     },
                     droits: {
-                        pattern: /^(\d+|\d+,\d{1,2})$/
+                        pattern: /^\d+|\d+,\d{1,2}$/
                     },
-                    payement_en_ligne: {
+                    paiement_en_ligne: {
                         url: true
                     }
                 },
@@ -77,7 +86,7 @@
                     date_limite_preinscriptions: {
                         required: req_msg
                     },
-                    payement_en_ligne: {
+                    paiement_en_ligne: {
                         url: url_msg
                     },
                     droits: {
@@ -137,18 +146,20 @@
             <input name="droits" type="text" id="droits_inscription" 
                    value="<?php echo $DROITS_INSCRIPTION; ?>" />
             <span class="help">
-                <span class="facultatif">Combien coute s'inscrire à la régate ?</span>
+                <span >Combien coute s'inscrire à la régate ? 
+                        Si la valeur est 0, rien ne sera affiché 
+                        sur la page d'informations sur la régate du logiciel.</span>
             </span>
 
             <br />
-            <label>Lien pour le payement en ligne :</label>
+            <label>Lien pour le paiement en ligne :</label>
             <!--
-            <input name="payement_en_ligne" type="text" id="payment_en_ligne" 
-                   value="<?php echo $PAYEMENT_EN_LIGNE; ?>" />
+            <input name="paiement_en_ligne" type="text" id="payment_en_ligne" 
+                   value="<?php echo $paiement_EN_LIGNE; ?>" />
             -->
-            <textarea id='payement_en_ligne' name='payement_en_ligne' cols='40' rows='1'><?php echo $PAYEMENT_EN_LIGNE ?></textarea>
+            <textarea id='paiement_en_ligne' name='paiement_en_ligne' cols='40' rows='1'><?php echo $paiement_EN_LIGNE ?></textarea>
             <span class="help">
-                <span class="facultatif">Lien vers le site de payement en ligne. 
+                <span class="facultatif">Lien vers le site de paiement en ligne. 
                     Ce lien apparaitra seulement sur le courriel 
                     demandant au coureur de confirmer son pré-inscription 
                     et de payer via le lien donné.</span>

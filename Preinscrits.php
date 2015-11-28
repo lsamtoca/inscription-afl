@@ -3,7 +3,7 @@
 require_once 'partage.php';
 if (!isset($_GET['regate'])) {
     pageErreur('Il faut choisir une regate');
-    exit;
+    exit(0);
 }
 
 global $regate;

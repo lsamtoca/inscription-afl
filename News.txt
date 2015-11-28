@@ -1,0 +1,16 @@
+Admin :
+* on peut maintenant effacer les régates anciennes
+* les pwds sont maintenant sous MD5
+
+Formulaire :
+* on ne peut pas se pré-inscrire à une régate si on y est déjà.
+-- problème : que se passe t'il si on se pré-inscrit trop vite, 
+    mais on a changé de courriel ?
+* layout des pre-inscrits amélioré
+
+Regate :
+* correction à la création des fiches d'accueil des participants
+* ajouté quelques doc sous forme de balloon
+* ajouté possibilité de contacter l'aide
+* les pwds sont maintenant sous MD5 
+* possibilité d'ajouter un lien vers les paiement en ligne
