@@ -63,26 +63,6 @@ function creerRegate($login, $passe, $courriel, $dateDestruction) {
     executePreparedQuery($sql, $assoc);
 }
 
-// Destruction de regate
-if (isset($_POST['IDR'])) {
-    $idregate = filter_input(INPUT_POST, 'IDR', FILTER_VALIDATE_INT);
-    $regate = Regate_selectById($idregate);
-
-    // Ce test a déjà lieu dans JavaScript
-    // Donc on a un doublon, et on ne peux pas en fait detruire 
-    // une regate si elle n'est pas destructible
-    if (Regate_estDestructible($regate) || numberOfSailors($idregate) == 0
-    ) {
-        detruireRegate($idregate);
-    } else {
-        $message = "Pour l'instant, il n'est pas possible detruire cette regate, "
-                . "car \n  (1) ou bien la date de destruction de cette regate n'est pas passée,"
-                . "\n (2) ou bien la regate a déjà un inscrit";
-        pageErreur($message);
-        exit(0);
-    }
-}
-
 function envoyerMail($destinataire, $login, $mdp) {
 
     $sql = 'SELECT * FROM `Administrateur` WHERE `ID_administrateur`=:ID';
@@ -110,6 +90,41 @@ function envoyerMail($destinataire, $login, $mdp) {
 
     return send_mail_text($sender, $to, $subject, $message, $cc);
 }
+
+// Destruction de regate
+if (isset($_POST['detruire']) && isset($_POST['IDR'])) {
+    $idregate = filter_input(INPUT_POST, 'IDR', FILTER_VALIDATE_INT);
+    $regate = Regate_selectById($idregate);
+
+    // Ce test a déjà lieu dans JavaScript
+    // Donc on a un doublon, et on ne peux pas en fait detruire 
+    // une regate si elle n'est pas destructible
+    if (Regate_estDestructible($regate) || numberOfSailors($idregate) == 0
+    ) {
+        detruireRegate($idregate);
+    } else {
+        $message = "Pour l'instant, il n'est pas possible detruire cette regate, "
+                . "car \n  (1) ou bien la date de destruction de cette regate n'est pas passée,"
+                . "\n (2) ou bien la regate a déjà un inscrit";
+        pageErreur($message);
+        exit(0);
+    }
+}
+
+// Destruction de regate
+if (isset($_POST['loginAsClub']) && isset($_POST['IDR'])) {
+    $idregate = filter_input(INPUT_POST, 'IDR', FILTER_VALIDATE_INT);
+    $regate = Regate_selectById($idregate);
+
+    $ID_regate = $regate['ID_regate'];
+    $titre_regate = $regate['titre'];
+    $date_debut = $regate['date_debut'];
+    $courriel = $regate['courriel'];
+    $thisLogin = new Login;
+    $thisLogin->loginAsClub($ID_regate, $titre, $date_debut, $courriel);
+    exit(0);
+}
+
 
 // Création nouvelle régate
 if (isset($_POST['org_login'])) {
@@ -145,4 +160,3 @@ if (file_exists($fileName)) {
 } else {
     $cdbf_lastupdate = '**Ce fichier n\'existe encore pas**';
 }
-?>

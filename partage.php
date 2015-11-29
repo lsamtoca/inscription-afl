@@ -7,12 +7,21 @@ error_reporting(-1);
 ini_set('display_errors', '1');
 date_default_timezone_set('Europe/Paris');
 
-$courrielDeveloppeur='luigi.santocanale@lif.univ-mrs.fr';
+$courrielDeveloppeur = 'luigi.santocanale@lif.univ-mrs.fr';
 
+function nolg() {
 //$ip='/90\.34\.221\.[0-9]{1,3}/';
-$ip = '/90\.34\.[0-9]{1,3}\.[0-9]{1,3}/';
+    $ip = '/90\.34\.[0-9]{1,3}\.[0-9]{1,3}/';
 //$ip='/82\.234\.226\.[0-9]{1,3}/';
-$ua = '/MSIE/';
+    $ua = '/MSIE/';
+    if (
+            preg_match($ip, $_SERVER['REMOTE_ADDR']) === 1 &&
+            preg_match($ua, $_SERVER['HTTP_USER_AGENT']) === 1
+    ) {
+        header('Location: http://www.mozilla.org/en-US/firefox/all/');
+        exit(0);
+    }
+}
 
 $remoteIp = $_SERVER['REMOTE_ADDR'];
 $remoteUserAgent = $_SERVER['HTTP_USER_AGENT'];
@@ -20,24 +29,22 @@ $request = $_SERVER['REQUEST_URI'];
 $date = date('Y-m-d H:i:s');
 $separator = ',';
 
+// LOG REQUEST
 $logLine = "$date$separator$remoteIp$separator$request$separator$remoteUserAgent\n";
 file_put_contents('connections.log', $logLine, FILE_APPEND | LOCK_EX);
 ;
 
-//echo $_SERVER['REMOTE_ADDR'];
-//echo $_SERVER['HTTP_USER_AGENT'];
-//exit(0);
-
-if (
-        preg_match($ip, $_SERVER['REMOTE_ADDR']) === 1 &&
-        preg_match($ua, $_SERVER['HTTP_USER_AGENT']) === 1
-) {
-    header('Location: http://www.mozilla.org/en-US/firefox/all/');
-    exit(0);
+//
+$nolg = TRUE;
+if ($nolg) {
+    nolg();
 }
 
-
 require_once 'databases/bds.php';
+
+// THIS TWO VARIABLES ALL OVER THE PROJECT 
+$development = true;
+$testing = true;
 
 if ($_SERVER['HTTP_HOST'] == 'localhost') {
     $www_site = 'localhost';
@@ -56,11 +63,14 @@ if ($_SERVER['HTTP_HOST'] == 'localhost') {
     $racine = basename(dirname(realpath(__FILE__))) . '/';
 }
 
-if ($racine == 'inscriptions_afl_dev/' or $_SERVER['HTTP_HOST'] == 'localhost')
+if (
+        ($racine == 'inscriptions_afl_dev/')
+        or ( $_SERVER['HTTP_HOST'] == 'localhost')
+) {
     $testing = true;
-else
+} else {
     $testing = false;
-
+}
 $path_to_site_inscription = $www_site . $racine;
 
 // Activation des assertions et mise en mode discret
@@ -86,6 +96,7 @@ function my_assert_handler($file, $line, $code) {
 // Configuration de la méthode de callback
 assert_options(ASSERT_CALLBACK, 'my_assert_handler');
 
+// FORMATTER DES URLS
 function format_url_regate($id_regate, $gets = "") {
     global $path_to_site_inscription;
     if ($gets != "")
@@ -118,6 +129,7 @@ function format_confirmation_regate($id_coureur) {
     return sprintf("http://%sConfirmation.php?ID=%d", $path_to_site_inscription, $id_coureur);
 }
 
+// HTML PRE AND POST
 function xhtml_pre1($title) {//Afficher le prefixe xhtml
     echo "
 <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
@@ -251,6 +263,7 @@ function execute_sql($filesql) {
     echo "Fichier " . $filesql . " executé.";
 }
 
+// NORMALISATION DES CHAINES
 function nom_normaliser($nom) {
     $noms = explode(' ', $nom);
 
@@ -265,6 +278,7 @@ function nom_normaliser($nom) {
     return implode(' ', $noms);
 }
 
+// THE FOLLOWING CLEAN FOR WHAT ?
 function clean_post_var($var) {
     if (get_magic_quotes_gpc())
         return stripslashes($var);
@@ -295,7 +309,13 @@ function pageErreur($message, $goback = NULL) {
     if ($goback != NULL) {
         echo "Retourner à la page <a href=\"$goback\">$goback</a><h3>";
     } else {
-        echo "<A HREF=\"javascript:javascript:history.go(-1)\">Retourner à la page precedente</A>";
+        $referer = $_SERVER['HTTP_REFERER'];
+        if (!$referer == '') {
+            echo '<p><a href="' . $referer . '" title="Return to the previous page">&laquo; Retour</a></p>';
+        } else {
+            echo '<p><a href="javascript:history.go(-1)" title="Return to the previous page">&laquo; Retour</a></p>';
+        }
+      //  echo "<A HREF=\"javascript:javascript:history.go(-1)\">Retourner à la page precedente</A>";
     }
 
     xhtml_post();
@@ -303,9 +323,9 @@ function pageErreur($message, $goback = NULL) {
     exit(1);
 }
 
-function pageAnswer($message) {
+function pageAnswer($message, $title = 'Mission accomplie') {
 
-    xhtml_pre('Mission accomplie');
+    xhtml_pre($title);
 
     $messageHtml = str_replace("\n", "<br />\n", $message);
 
@@ -320,10 +340,12 @@ function pageAnswer($message) {
 
 function pageServerMisconfiguration($message) {
     xhtml_pre('Erreur');
+    $messageHtml = str_replace("\n", "<br />\n", $message);
 
     echo '<h3>';
-    echo "Server misconfiguration : $message";
+    echo "Server misconfiguration";
     echo '</h3>';
+    echo "<p><span class=\"error_strings\">$messageHtml</span></p>";
 
     xhtml_post();
 
@@ -354,8 +376,37 @@ function assertAdmin() {
     }
 }
 
-/* Tests 
- * 
- */
-//echo dateReformatMysqlToJquery('1967-11-13');
-?>
+// LOGIN
+class Login {
+
+    public function loginAsClub($ID_regate, $titre, $date_debut, $courriel) {
+        $_SESSION['ID_regate'] = $ID_regate;
+        $_SESSION['titre_regate'] = $titre;
+        $_SESSION['debut_regate'] = $date_debut;
+        $_SESSION['courriel'] = $courriel;
+        header("Location: Regate.php");
+    }
+
+    private function sessionHasExpired($minutes = 60) {
+        # Check for session timeout, else initiliaze time
+        if (isset($_SESSION['timeout'])) {
+            # Check Session Time for expiry
+            #
+	# Time is in seconds. 10 * 60 = 600s = 10 minutes
+            if ($_SESSION['timeout'] + $minutes * 60 < time()) {
+                session_destroy();
+                return TRUE;
+            }
+        } else {
+            # Initialize time
+            $_SESSION['timeout'] = time();
+        }
+        return FALSE;
+    }
+
+    public function clubCorrectlyLogged() {
+        return isset($_SESSION["ID_regate"]) &&
+                !$this->sessionHasExpired();
+    }
+
+}

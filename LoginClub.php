@@ -1,9 +1,11 @@
 <?php
+require_once "partage.php";
 session_start();
-if (isset($_SESSION['ID_regate'])) {
+
+$thisLogin = new Login;
+if ($thisLogin->clubCorrectlyLogged()) {
     header("Location: Regate.php");
 }
-require "partage.php";
 
 
 if (isset($_POST["submit"])) {
@@ -29,11 +31,12 @@ if (isset($_POST["submit"])) {
         if ($nbligne == 1) {
             $reponse = $req->fetch();
             $req->closeCursor();
-            $_SESSION['ID_regate'] = $reponse['ID_regate'];
-            $_SESSION['titre_regate'] = $reponse['titre'];
-            $_SESSION['debut_regate'] = $reponse['date_debut'];
-            $_SESSION['courriel'] = $reponse['courriel'];
-            header("Location: Regate.php");
+            $ID_regate = $reponse['ID_regate'];
+            $titre_regate = $reponse['titre'];
+            $date_debut = $reponse['date_debut'];
+            $courriel = $reponse['courriel'];
+            $thisLogin->loginAsClub($ID_regate, $titre, $date_debut, $courriel);
+            exit(0);
         } else {
             $req->closeCursor();
             $message = 'Login ou mot de passe incorrect';
