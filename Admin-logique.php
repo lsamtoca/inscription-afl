@@ -111,7 +111,7 @@ if (isset($_POST['detruire']) && isset($_POST['IDR'])) {
     }
 }
 
-// Destruction de regate
+// Login as Club
 if (isset($_POST['loginAsClub']) && isset($_POST['IDR'])) {
     $idregate = filter_input(INPUT_POST, 'IDR', FILTER_VALIDATE_INT);
     $regate = Regate_selectById($idregate);
@@ -121,7 +121,7 @@ if (isset($_POST['loginAsClub']) && isset($_POST['IDR'])) {
     $date_debut = $regate['date_debut'];
     $courriel = $regate['courriel'];
     $thisLogin = new Login;
-    $thisLogin->loginAsClub($ID_regate, $titre, $date_debut, $courriel);
+    $thisLogin->loginAsClub($ID_regate, $titre_regate, $date_debut, $courriel);
     exit(0);
 }
 

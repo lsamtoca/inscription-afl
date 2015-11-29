@@ -35,7 +35,7 @@ if (isset($_POST["submit"])) {
             $titre_regate = $reponse['titre'];
             $date_debut = $reponse['date_debut'];
             $courriel = $reponse['courriel'];
-            $thisLogin->loginAsClub($ID_regate, $titre, $date_debut, $courriel);
+            $thisLogin->loginAsClub($ID_regate, $titre_regate, $date_debut, $courriel);
             exit(0);
         } else {
             $req->closeCursor();
