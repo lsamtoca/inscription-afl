@@ -11,11 +11,14 @@
             
             Soyez, dans votre message, le plus précis possible !!!
             <br />
-
+            
+            <br />
+            <hr />
             <label>Objet : </label>
             <br />
             <input type='text' name='objet' style='width:100%;' /> 
-            <hr />
+            <br />
+            <br />
 
             <label>Votre message : </label>
             <br />

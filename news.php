@@ -15,6 +15,8 @@
             (de façon que l'on ne soit pas tenté de hacker le site 
             pour changer les liens de paiement en ligne).
         </li>
+        <li>La connexion au serveur dure au plus 2 heures. 
+                Après ce temps, il vous faudra vous identifier à nouveau.</li>
     </ul>
 
     <h5>Page pré-inscription à la régate</h5>
@@ -27,7 +29,7 @@
             Pour l'instant, on a ajouté un NB pour décourager 
             à se pré-inscrire par FFV ou ISAF si on vient de changer courriel.
         </li>
-        <li>Affichage de la liste des coureurs pré-inscrit amélioré.</li>
+        <li>Affichage  amélioré de la liste des coureurs pré-inscrits.</li>
     </ul>
 
     <?php if(isset($administrateur)): ?>

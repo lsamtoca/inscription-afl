@@ -199,6 +199,7 @@ span.menu {
     display:block;
     /*font-family: tt;*/
     color:black;
+    margin:10x;
 
 }
 
@@ -244,7 +245,10 @@ span.menu {
 img.displayed {
     display: block;
     margin-left: auto;
-    margin-right: auto }
+    margin-right: auto;
+    margin-top:20px;
+    margin-bottom:20px;
+}
 
 
 tr.odd{
