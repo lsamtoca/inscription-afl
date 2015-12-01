@@ -1,4 +1,20 @@
 <div class="contenu">
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $('div.explication').accordion({
+                collapsible: true,
+                active: 0,
+                heightStyle: "content",
+                event: "click hoverintent",
+//                event: "mouseover",
+                header: "h4"
+            });
+        });
+
+    </script>
+
     <h3>Exportation des données</h3>
 
     <ul>

@@ -41,13 +41,13 @@ global $mails_all, $mails_confirme, $mails_pas_confirme;
 
         myaccordion_set_accordion();
 
-        $('div.explication').accordion({
-            collapsible: true,
-            active: true,
-            heightStyle: "content",
-            event: "click hoverintent",
-            header: "h4"
-        });
+//        $('div.explication').accordion({
+//            collapsible: true,
+//            active: true,
+//            heightStyle: "content",
+//            event: "click hoverintent",
+//            header: "h4"
+//        });
     });
 
 </script>

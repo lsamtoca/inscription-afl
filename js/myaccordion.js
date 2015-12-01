@@ -19,6 +19,7 @@ function myaccordion_set_accordion() {
         active: myaccordion_get_active(),
         heightStyle: "content",
         event: "click hoverintent"
+//        event: "mouseover"
     });
 
 
