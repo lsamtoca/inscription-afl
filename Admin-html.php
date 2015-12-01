@@ -28,14 +28,17 @@ xhtml_pre1('Administration des régates (événements et clubs)');
 
     <h3>Nouvelle régate</h3>
     <?php include 'Admin-html-nouvelle-regate.php'; ?>
-    
+
     <h3 id='regatesouvertes'>Liste des régates ouvertes</h3>
     <?php include 'Admin-html-regates-ouvertes.php'; ?>
 
     <h3>Mettre à jour le fichier COUREUR.DBF</h3>
     <?php include 'Admin-html-update-COUREUR-DBF.php'; ?>
-    
- </div><!-- accordion -->
+
+    <h3 id="celogiciel">A propos de ce logiciel</h3>
+    <?php $administrateur=TRUE; include('news.php'); ?>
+
+</div><!-- accordion -->
 
 <?php
 $req->closeCursor();

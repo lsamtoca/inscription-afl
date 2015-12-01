@@ -129,8 +129,14 @@ xhtml_pre1($page_title1);
                     <form name="searchform" id="searchform" action="" method="post">
 
                         <fieldset>
-                            <legend id='search_legend'></legend>
-                            <div id="searchform_help"></div>
+                            <legend >
+                                <span id='search_legend'></span>
+                                <span class='help'>
+                                    <span id="searchform_help"></span>
+                                </span>
+                            </legend>
+
+
 
                             <input name="lang" type="hidden" id="search_input_lang" value="fr"/>
                             <label class="left" id='l_search_lic'></label>
@@ -138,11 +144,15 @@ xhtml_pre1($page_title1);
                   <!--          <input name="search_submit" type='submit' value="Chercher">
                             -->          
 
+
                             <label class="left" id='l_search_isaf'></label>
                             <input name="search_isaf"
                                    id="search_isaf" type="text" />
 
                             <input name="search_submit" type='submit' value="Chercher">
+
+
+                            <div id="searchform_caveat" style="padding:5px" class="caveat"></div>
 
 
                         </fieldset>

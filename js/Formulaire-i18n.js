@@ -9,6 +9,7 @@ var ids=[
 'deadline',
 
 'searchform_help',
+'searchform_caveat',
 'search_legend',
 'l_search_lic',
 'l_search_isaf',

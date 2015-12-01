@@ -84,8 +84,11 @@ global $mails_all, $mails_confirme, $mails_pas_confirme;
     <h3 id="courriel">Envoyer un courriel aux coureurs</h3>
     <?php include('Regate-html-courriel-coureurs.php'); ?>
 
-    <h3 id="courriel">Assistance</h3>
+    <h3 id="assistance">Assistance</h3>
     <?php include('Regate-html-helpdesk.php'); ?>
+
+    <h3 id="celogiciel">A propos de ce logiciel</h3>
+    <?php include('news.php'); ?>
 
 </div>
 
