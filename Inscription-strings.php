@@ -32,20 +32,29 @@ switch ($lang) {
         $liste = 'list of preregistered sailors';
 
         // Email asking confirmation
-        function message_email($prenom, $titre_regate, $url_confirmation, $url_paiement = '') {
+        function message_email($prenom, $titre_regate, $url_confirmation, $url_paiement = '', $est_mineur = FALSE) {
             $message_paiement = '';
             if ($url_paiement != '') {
                 //Should we verify once more that this is a vaild address ?
-                $message_paiement = 
-                        "\n\n"
-                        . 'You can pay the inscriptions fees by following this link: '
+                $message_paiement = "\n\n"
+                        . '*You can pay the inscriptions fees by following this link*: '
                         . "\n"
-                        . $url_paiement . "\n"
-                        . 'Your registration will be considered complete once the payment is received by the organizing authority. '
+                        . '' . $url_paiement . "\n"
+                        . '*Your registration will be completed once the payment is received by the organizing club*. '
                         . "\n"
                         . 'If you do not pay the fees before the deadline for pre-registration '
                         . 'you might be asked to pay additional fees.'
                 ;
+            }
+
+            $message_mineur = '';
+            if ($est_mineur) {
+                $message_mineur = 'You will be minor at the date of the race. '
+                        . "You can ask your parents to complete now the authorisation form \n"
+                        . "that you can find a this address: \n"
+                        . format_url_aut_parentale()
+                        . "\n"
+                        . "Bring the completed and signed form the first day of the race at the registration desk.";
             }
 
             return "Hello  $prenom,\n\n"
@@ -58,6 +67,8 @@ switch ($lang) {
                     . "If you wish to cancel your pre-registration, "
                     . "please contact the organizing club by replying to this email."
                     . $message_paiement
+                    . "\n\n"
+                    . $message_mineur
                     . "\n\n"
                     . "Bon vent,\n\t the AFL (for the organizing club)";
         }
@@ -98,21 +109,29 @@ switch ($lang) {
         $liste = 'liste des pré-inscrits';
 
         // Courriel to confirm
-        function message_email($prenom, $titre_regate, $url_confirmation, $url_paiement = '') {
+        function message_email($prenom, $titre_regate, $url_confirmation, $url_paiement = '', $est_mineur = FALSE) {
 
             $message_paiement = '';
             if ($url_paiement != '') {
                 //Should we verify once more that this is a vaild address ?
-                $message_paiement = 
-                        "\n\n"
-                        .'Vous pouvez payer les droits d\'inscriptions à l\'adresse suivant : '
+                $message_paiement = "\n\n"
+                        . '*Vous pouvez régler les droits d\'inscriptions à l\'adresse suivant* : '
                         . "\n"
-                        . $url_paiement . "\n"
-                        . 'Votre inscription sera complète de que votre paiement est perçu par le club. '
+                        . '' . $url_paiement . "\n"
+                        . '*Votre inscription sera complète lorsque votre paiement sera perçu par le club*. '
                         . "\n"
                         . 'Si vous ne payez pas ces droits avant la date limite des pré-inscriptions, '
                         . 'vous pouvez être assujetti à des frais additionnelles.'
                 ;
+            }
+            $message_mineur = '';
+            if ($est_mineur) {
+                $message_mineur = 'Vous serez mineur le jour de la régate. '
+                        . "Vous pouvez demander à vos parents de compléter de maintenant le formulaire d'autorisation parentale "
+                        . "que vous pouvez trouver en suivant ce lien : \n"
+                        . format_url_aut_parentale()
+                        . "\n"
+                        . "Apportez ce formulaire, complété et signé, le jour de la compétition à la confirmation des inscriptions.";
             }
 
             return "Bonjour " . $prenom . ",\n\n"
@@ -127,10 +146,12 @@ switch ($lang) {
                     . "veuillez contacter le club organisateur en répondant à ce courriel."
                     . $message_paiement
                     . "\n\n"
+                    . $message_mineur
+                    . "\n\n"
                     . "Bon vent,\n\t l'AFL (pour le club organisateur)";
         }
 
-        // Err messages
+// Err messages
         $messageErrAlreadyThere = "Un coureur est déjà pré-inscrit à cette régate,"
                 . " avec le même numéro de licence ou le même numéro ISAF, mais avec un
  courriel différent."

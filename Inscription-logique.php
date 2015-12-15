@@ -241,26 +241,23 @@ function do_insert($hash) {
 // Compose the mail...
 function compose_mail($ID_inscrit, $ID_regate, $titre_regate, $courriel_cv) {
 
-//    global $post,$lang;
-//    global $message_email;
-//    global $message_email_fr, $message_email_fr;
-    global $regate;
     global $development;
     global $hashGetString;
 
+    global $regate;
     $inscrit = Inscrit_selectById($ID_inscrit);
     $hash = $inscrit['hash'];
+    
     //$nom = $inscrit['nom'];
     $prenom = $inscrit['prenom'];
     $courriel_inscrit = $inscrit['mail'];
 
-// Format the body of answer
+    // Format the body of answer
     $url_confirmation = format_url_regate($ID_regate);
     $hashString = encodeHashId($hash, $ID_inscrit);
     $url_confirmation .="&$hashGetString=$hashString" . "#formulaires";
 
-
-// Format fields of answer
+    // Format fields of answer
     $ME = "inscriptions-afl@regateslaser.info";
     $subject = "Inscription à la régate, confirmation";
     if (filter_var($courriel_cv, FILTER_VALIDATE_EMAIL)) {
@@ -273,16 +270,9 @@ function compose_mail($ID_inscrit, $ID_regate, $titre_regate, $courriel_cv) {
     $to = $courriel_inscrit;
     $bcc = '';
 
-//    $message_fun = $message_email[$lang];
-    //   var_dump(phpversion());
-    //   exit(0);
     $url_paiement = $regate['paiement_en_ligne'];
-    $message = message_email($prenom, $titre_regate, $url_confirmation, $url_paiement);
-
-    if ($development) {
-        $sender = $to = 'luigi.santocanale@lif.univ-mrs.fr';
-        $cc = $sender;
-    }
+    $est_mineur = est_mineur($inscrit, $regate);
+    $message = message_email($prenom, $titre_regate, $url_confirmation, $url_paiement, $est_mineur);
 
     return send_mail_text($sender, $to, $subject, $message, $cc, $bcc);
 }

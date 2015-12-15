@@ -121,12 +121,17 @@ function subject_encode_from_utf8($subject) {
     return '=?UTF-8?B?' . base64_encode($subject) . '?=';
 }
 
+function formatPostMsg($to, $cc, $bcc) {
+    return "\n\nOriginal message:\n\tto -> $to, \n"
+        . "\tcc -> $cc, \n\tbcc -> $bcc";
+}
+
 function send_mail_text($sender, $to, $subject, $message, $cc = '', $bcc = '') {
 
     global $development, $courrielDeveloppeur;
     $postMsg = '';
     if ($development) {
-        $postMsg = "\nMessage original : to -> $to, cc -> $cc, bcc -> $bcc";
+        $postMsg = formatPostMsg($to, $cc, $bcc);
         $to = $courrielDeveloppeur;
         $cc = '';
         $bcc = '';
@@ -138,7 +143,7 @@ function send_mail_text($sender, $to, $subject, $message, $cc = '', $bcc = '') {
     // Composer les arguments de la fonction mail the 
     $TO = $to;
     $SUBJECT = subject_encode_from_utf8($subject);
-    $MESSAGE = $message.$postMsg;
+    $MESSAGE = $message . $postMsg;
 
     $headers = "From: $sender\r\n";
     $headers .= "Reply-To: $sender\r\n";
@@ -165,7 +170,7 @@ function send_mail_text_attachement($sender, $to, $subject, $mesg, $cc = '', $bc
     global $development, $courrielDeveloppeur;
     $postMsg = '';
     if ($development) {
-        $postMsg = "\nMessage original : to -> $to, cc -> $cc, bcc -> $bcc";
+        $postMsg = formatPostMsg($to, $cc, $bcc);
         $to = $courrielDeveloppeur;
         $cc = '';
         $bcc = '';
@@ -201,7 +206,7 @@ function send_mail_text_attachement($sender, $to, $subject, $mesg, $cc = '', $bc
     $message = '--' . $php_mixed . "\r\n";
     $message.='Content-Type: text/plain; charset="UTF-8"' . "\r\n";
     $message.='Content-Transfer-Encoding: 8bit' . "\r\n\r\n";
-    $message.= $mesg . "\r\n" . "\r\n"; // Transforms \' to '
+    $message.= $mesg . $postMsg . "\r\n" . "\r\n"; // Transforms \' to '
 
     if ($_FILES['attachment']['error'] == 0) {
         //echo 'piece jointe trouvée';

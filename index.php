@@ -1,30 +1,55 @@
 <?php
-require "partage.php";
-xhtml_pre("Inscription aux régates de l'AFL");
+require_once('partage.php');
+$title = "Inscription aux régates de l'AFL";
+xhtml_pre1($title);
 ?>
 
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css" />
 
-Vous êtes 
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js" type="text/javascript"></script>
+<script src="//code.jquery.com/ui/1.9.0/jquery-ui.js" type="text/javascript"></script>
+<script src="js/myaccordion.js" type="text/javascript"></script>
+<script type="text/javascript">
 
-<h3>Coureur :</h3>
-<ul>
-   <li> Consultez la <A href="Liste_regates.php">liste des régates</A>  ouvertes à l'inscription. 
-    </li>
-</ul>
+    $(document).ready(function () {
+        myaccordion_set_accordion();
+        $('#accordion').accordion({
+            active: 0
+        });
+    });
 
-<h3>Un club organisateur d'une régate :</h3>
-<ul>
-   <li> Gérez <A href="Regate.php">votre régate</A>. </li>
-</ul>
+</script>
 
-<!--
-<h3>Administrateur AFL :</h3>
+<?php xhtml_pre2($title); ?>
 
-<ul>
-   <li> Gérez  <A href="Admin.php">les événements et les clubs</A>. </li>
-</ul>
--->
+<!-- Vous etes -->
 
+<div id="accordion">
+
+    <h3>Coureur</h3>
+    <div class="contenu">
+        <ul>
+            <li>Consultez la <A href="Liste_regates.php">liste des régates</A>  ouvertes à l'inscription. 
+            </li>
+        </ul>
+    </div>
+
+    <h3>Club de voile</h3>
+    <div class="contenu">
+        <ul>
+            <li>Gérez <A href="Regate.php">votre régate</A>. </li>
+        </ul>
+
+    </div>
+    <!--
+    <h3>Administrateur AFL :</h3>
+    
+    <ul>
+       <li> Gérez  <A href="Admin.php">les événements et les clubs</A>. </li>
+    </ul>
+    -->
+
+</div>
 
 <?php
 xhtml_post();

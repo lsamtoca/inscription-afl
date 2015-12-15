@@ -119,6 +119,11 @@ function format_url_preinscrits($id_regate, $gets = "") {
     return "$url#preinscrits";
 }
 
+function format_url_aut_parentale() {
+    global $path_to_site_inscription;
+    return sprintf("http://%sdocs/AUTORISATION-PARENTALE.pdf", $path_to_site_inscription);
+}
+
 //function format_url_preinscrits($id_regate) {
 //    global $path_to_site_inscription;
 //    return sprintf("http://%sPreinscrits.php?regate=%d", $path_to_site_inscription, $id_regate);
@@ -315,7 +320,7 @@ function pageErreur($message, $goback = NULL) {
         } else {
             echo '<p><a href="javascript:history.go(-1)" title="Return to the previous page">&laquo; Retour</a></p>';
         }
-      //  echo "<A HREF=\"javascript:javascript:history.go(-1)\">Retourner à la page precedente</A>";
+        //  echo "<A HREF=\"javascript:javascript:history.go(-1)\">Retourner à la page precedente</A>";
     }
 
     xhtml_post();

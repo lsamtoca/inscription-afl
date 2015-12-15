@@ -34,7 +34,8 @@ $engagement = 'Je m\'engage à me soumettre aux Règles de Course à la Voile et
         . $faita . "\n\n"
         . 'Signature :' . "\n\n";
 
-$decl_parentale = 'Je soussigné, M. ' . $spaces
+$decl_parentale = "Déclaration parentale.\n\n"
+        . 'Je soussigné, M. ' . $spaces
         . ', autorise mon enfant %s '
         . 'à participer à la régate `' . $_SESSION['titre_regate']
         . '\' et dégage la responsabilité des organisateurs quant aux risques inhérents à cette participation.' . "\n\n"
@@ -47,22 +48,8 @@ function est_enfant($string_naissance, $string_regate) {
     $date_regate = new DateTime($string_regate);
     $date_naissance->modify('+18 years');
     return ($date_naissance > $date_regate);
-//    if ($date_naissance > $date_regate) {
-//        return true;
-//    } else {
-//        return false;
-//    }
 }
 
-// Php >=5.3
-// function est_enfant($string_naissance,$string_regate){
-//       $date_naissance = new DateTime($string_naissance);
-//       $date_regate = new DateTime($string_regate);
-//       $age = $date_regate->diff($date_naissance);      
-//       if($age->y < 18)
-//         return true;
-//       return false;
-// }
 // Excel stuff
 function set($value) {//
     global $excel, $column_no, $line_no;
@@ -190,7 +177,7 @@ function do_form($participant) {
         throw new Exception($e . "\nProblem with title $sheetTitle");
     }
 
- //   $column_no = 65; //A
+    //   $column_no = 65; //A
     $line_no = 1; //1
 // PAGE options
     $sheet->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
@@ -214,8 +201,7 @@ function do_form($participant) {
 
 // Title
     $titre = $nom . " " . $prenom;
-    if ($participant['conf'] == 0)
-    {
+    if ($participant['conf'] == 0) {
         $titre.=" (pas confirmé)";
     }
     set($titre);
@@ -269,16 +255,24 @@ function do_form($participant) {
     $sheet->getStyle('B' . $line_no)->getAlignment()->setWrapText(true);
     $sheet->getRowDimension($line_no)->setRowHeight(120);
 
+    // Gestion des enfants ...
     if (est_enfant($participant['naissance'], $_SESSION['debut_regate'])) {
         new_line();
-        set("Déclaration   \nparentale : ");
+        set("Déclaration\nparentale OK ?\n(Sinon, faire compléter\nla déclaration à droite)");
+
         set(sprintf($decl_parentale, $participant['nom'] . " " . $participant['prenom']));
-        $sheet->mergeCells('B' . $line_no . ':G' . $line_no);
+        $sheet->mergeCells('B' . $line_no . ':G' . sprintf("%s", $line_no + 1));
         $sheet->getStyle('B' . $line_no)->getAlignment()->setWrapText(true);
-        $sheet->getRowDimension($line_no)->setRowHeight(120);
+        $sheet->getRowDimension($line_no)->setRowHeight(55);
+        new_line();
+        set('');
+        $sheet->getRowDimension($line_no)->setRowHeight(75);
+
     }
 
-    $sheet->getStyle('A' . $first_line . ':G' . $line_no)->applyFromArray($style_Justify);
+    $sheet->getStyle('A' . $first_line . ':A' . $line_no)->applyFromArray($style_Center);
+
+    $sheet->getStyle('B' . $first_line . ':G' . $line_no)->applyFromArray($style_Justify);
 //      $sheet->getStyle('A'.$first_line.':A'.$line_no)->applyFromArray($style_Form_Left);
 // SIZE OF COLUMNS
     $sheet->getColumnDimension('A')->setAutoSize(true);

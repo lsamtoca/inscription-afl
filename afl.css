@@ -278,3 +278,10 @@ tr.divisor{
 .caveat::before{
     content: "NB : ";
 }
+
+form br {
+    display: block;
+    margin: 10px 0;
+/*    line-height:100px;*/
+    content: " ";
+}

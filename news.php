@@ -16,7 +16,7 @@
             pour changer les liens de paiement en ligne).
         </li>
         <li>La connexion au serveur dure au plus 2 heures. 
-                Après ce temps, il vous faudra vous identifier à nouveau.</li>
+            Après ce temps, il vous faudra vous identifier à nouveau.</li>
     </ul>
 
     <h5>Page pré-inscription à la régate</h5>
@@ -32,16 +32,23 @@
         <li>Affichage  amélioré de la liste des coureurs pré-inscrits.</li>
     </ul>
 
-    <?php if(isset($administrateur)): ?>
-    <h5>Page administrateur</h5>
-    <ul>
-        <li>Les mots de passe ne sont plus stockés en clair dans la base de données.</li>
-        <li>Les identifiants sont envoyés automatiquement par courriel
-            au club et à l'administrateur-créateur lors de la création de la régate.</li>
-        <li>Destructions des régates anciennes implémentée.</li>
-        <li>Un administrateur peut maintenant se logguer en tant que 
-            Club pour gérer une régate.</li>
-    </ul>
+    <?php if (isset($administrateur)): ?>
+        <h5>Page administrateur</h5>
+        <ul>
+            <li>Les mots de passe ne sont plus stockés en clair dans la base de données.</li>
+            <li>Les identifiants sont envoyés automatiquement par courriel
+                au club et à l'administrateur-créateur lors de la création de la régate.</li>
+            <li>Destructions des régates anciennes implémentée.</li>
+            <li>Un administrateur peut maintenant se logguer en tant que 
+                Club pour gérer une régate.</li>
+        </ul>
     <?php endif; ?>
+
+    <h5>Concepteurs :
+        Luigi Santocanale, Pierre Roche. </h5>
+
+    <h5>Anciens concepteurs : David Kossovski.</h5>
     
+
+
 </div>

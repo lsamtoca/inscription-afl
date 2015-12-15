@@ -1,4 +1,4 @@
-<div class="contenu">
+<div class="contenu" class="form">
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -37,7 +37,7 @@
                     },
                     "Please check your input."
                     );
-            
+
             $("#form_info_regate").validate({
                 rules: {
                     titre: {
@@ -64,6 +64,9 @@
                     },
                     paiement_en_ligne: {
                         url: true
+                    },
+                    resultats: {
+                        url: true
                     }
                 },
                 messages: {
@@ -87,6 +90,9 @@
                         required: req_msg
                     },
                     paiement_en_ligne: {
+                        url: url_msg
+                    },
+                    resultats: {
                         url: url_msg
                     },
                     droits: {
@@ -125,16 +131,17 @@
 
             <hr /><!-- Dates -->
             <label>Date début :</label>
-            <input name="date_debut" type="text" id="date_debut" 
+            <input name="date_debut" type="text" id="date_debut" size="10"
                    value="<?php echo $DATE_DEBUT_REGATE; ?>" class="required"/>
 
             <label>Date fin :</label>
-            <input name="date_fin" type="text" id="date_fin" 
+            <input name="date_fin" type="text" id="date_fin"  size="10"
                    value="<?php echo $DATE_FIN_REGATE; ?>" class="required"/>
 
             <br />
             <label>Date limite pour se pré-inscrire sur le web :</label>
             <input name="date_limite_preinscriptions" type="text" id="date_limite_preinscriptions" 
+                   size="10"
                    value="<?php echo $DATE_LIMITE_PREINSCRIPTIONS; ?>" class="required"/>
 
             <span class="help">
@@ -147,8 +154,8 @@
                    value="<?php echo $DROITS_INSCRIPTION; ?>" />
             <span class="help">
                 <span >Combien coute s'inscrire à la régate ? 
-                        Si la valeur est 0, rien ne sera affiché 
-                        sur la page d'informations sur la régate du logiciel.</span>
+                    Si la valeur est 0, rien ne sera affiché 
+                    sur la page d'informations sur la régate du logiciel.</span>
             </span>
 
             <br />
@@ -157,7 +164,7 @@
             <input name="paiement_en_ligne" type="text" id="payment_en_ligne" 
                    value="<?php echo $paiement_EN_LIGNE; ?>" />
             -->
-            <textarea id='paiement_en_ligne' name='paiement_en_ligne' cols='40' rows='1'><?php echo $paiement_EN_LIGNE ?></textarea>
+            <textarea id='paiement_en_ligne' name='paiement_en_ligne' cols='41' rows='1'><?php echo $paiement_EN_LIGNE ?></textarea>
             <span class="help">
                 <span class="facultatif">Lien vers le site de paiement en ligne. 
                     Ce lien apparaitra seulement sur le courriel 
@@ -165,6 +172,15 @@
                     et de payer via le lien donné.</span>
             </span>
 
+            <hr />
+            <label>Lien vers les résultats :</label>
+            <textarea id='resultats' name='resultats' cols='48' rows='1'><?php echo $regate['resultats'] ?></textarea>
+            <span class="help">
+                <span class="facultatif">
+                    Vous pouvez ajouter une lien vers les résultats
+                    une fois la régate est en cours ou terminée.
+                </span>
+            </span>
 
             <hr />
             <span class="line">

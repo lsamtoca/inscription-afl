@@ -273,6 +273,13 @@ xhtml_pre1($page_title1);
         <?php include 'Preinscrits-html.php'; ?>
     </div><!-- prinscrits -->
 
-
+    <?php if(isset($regate['resultats']) && $regate['resultats'] != ''): ?>
+    <h3>Résultats</h3>
+    <div class="contenu" style="padding:10px;height:500px">
+        <?php include 'Resultats-html.php'; ?>
+    </div><!-- prinscrits -->
+    <?php endif; ?>
+    
 </div> <!-- accordion -->
-<?php xhtml_post(); ?>
+<?php
+xhtml_post();

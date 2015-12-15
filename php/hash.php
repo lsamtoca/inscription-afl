@@ -34,18 +34,4 @@ function generateHash() {
     return $ret;
 }
 
-/*
-// Tests 
-for ($i = 0; $i < 100; $i++) {
-    $lengthOfHash = $i;
-    $hash = generateHash();
-    $str = encodeHashId($hash, '333');
-    echo "Hash : $hash<br/>";
-    echo "Encoded : $str<br/>";
-    $hashp=decodeHashFromHashString($str);
-    echo "Decoded : $hashp<br/>";
-    echo "<br/>";
-}
-*/
 
-?>

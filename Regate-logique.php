@@ -65,11 +65,15 @@ function validate_post_and_update() {
         'titre', 'description',
         'cv_organisateur', 'lieu',
         'date_debut', 'date_fin', 'date_limite_preinscriptions',
-        'droits', 'courriel', 'paiement_en_ligne', 'informations');
+        'droits', 'courriel', 'paiement_en_ligne', 'informations', 'resultats');
 
-    // VALIDATE $post
+    $messages = '';
+    // VALIDATE AND UPDATE $post
     foreach ($fields as $field) {
+
         if (isset($post[$field])) {
+
+            $postOK = true;
             switch ($field) {
 
                 case 'date_debut':
@@ -81,12 +85,15 @@ function validate_post_and_update() {
                 case 'courriel':
                     $cleaned = filter_var($post[$field], FILTER_VALIDATE_EMAIL);
                     if (!$cleaned) {
-                        pageErreur('\'' . $post[$field] . '\' n\'est pas un courriel valide');
-                        exit(1);
+                        $postOK = false;
+                        $messages.='\'' . $post[$field] . '\' n\'est pas un courriel valide';
+                        $messages.="\n";
+                        break;
                     }
                     $post[$field] = $cleaned;
                     break;
 
+                case 'resultats':
                 case 'paiement_en_ligne':
                     $cleaned = filter_var($post[$field], FILTER_VALIDATE_URL);
                     if (!$cleaned && $post[$field] != '') {
@@ -95,8 +102,10 @@ function validate_post_and_update() {
                         if (!$cleaned_old_value && $old_value != '') {
                             update_field($field, '');
                         }
-                        pageErreur('\'' . $post[$field] . '\' n\'est pas un URL valide');
-                        exit(1);
+                        $postOK = false;
+                        $messages.='\'' . $post[$field] . '\' n\'est pas un URL valide';
+                        $messages.="\n";
+                        break;
                     }
                     $post[$field] = $cleaned;
                     break;
@@ -104,14 +113,16 @@ function validate_post_and_update() {
                 default:
                     break;
             }
+
+            // Immediately after we have validated it, we do the upate
+            if ($postOK) {
+                update_field($field, $post[$field]);
+            }
         }
     }
-
-    // UPDATE POST
-    foreach ($fields as $field) {
-        if (isset($post[$field])) {
-            update_field($field, $post[$field]);
-        }
+    if ($messages != '') {
+        pageErreur($messages);
+        exit(1);
     }
 }
 
@@ -156,7 +167,7 @@ if (isset($_POST['envoyer_mail'])) {
     $bcc = $_POST['to']; // destinataires en BCC
     $cc = $_POST['cc'];
 
-    if (send_mail_text_attachement($sender, $to, $subject, $message, $cc, $bcc)){
+    if (send_mail_text_attachement($sender, $to, $subject, $message, $cc, $bcc)) {
         pageAnswer("Message envoyé à:\n\t$bcc");
         exit(0);
     }
@@ -165,19 +176,18 @@ if (isset($_POST['envoyer_mail'])) {
 if (isset($_POST['helpdesk'])) {
 
     // From = replyto = to
-    $developer='luigi.santocanale@lif.univ-mrs.fr';
+    $developer = 'luigi.santocanale@lif.univ-mrs.fr';
     // Ici il faudrait ajouter
     // l'admin de la regate, ainsi que Pierre
-    $sender=$_SESSION['courriel'];
+    $sender = $_SESSION['courriel'];
     $to = $developer;
 
     $subject = clean_post_var($_POST['objet']);
     $message = clean_post_var($_POST['message']);
-    
-    $cc=$bcc="";
-   
-    if (send_mail_text($sender, $to, $subject, $message, $cc, $bcc))
-    {
+
+    $cc = $bcc = "";
+
+    if (send_mail_text($sender, $to, $subject, $message, $cc, $bcc)) {
         pageAnswer("Message envoyé.\nMerci bien.");
         exit(0);
     }

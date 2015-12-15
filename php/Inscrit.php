@@ -1,36 +1,30 @@
 <?php
 
 function Inscrit_selectById($ID_inscrit, $bd = null) {
-    global $pdo_path, $user, $pwd, $pdo_options;
 
     $closeConnection = false;
 
-    try {
-        if ($bd == null) {
-            $closeConnection = true;
-            $bd = new PDO($pdo_path, $user, $pwd, $pdo_options);
-        }
+    if ($bd == null) {
+        $closeConnection = true;
+        $bd = newBD();
+    }
 
-        $sql = 'SELECT * FROM Inscrit '
-                . 'WHERE ID_inscrit = ?';
-        $req = $bd->prepare($sql);
-        $req->execute(array($ID_inscrit));
-        if ($req->RowCount() == 0) {
-            pageErreur('Le coureur demandé n\'existe pas.');
-            exit;
-        }
-        // Tout ce qu'on veut savoir sur la regate
-        $inscrit = $req->fetch();
-
-        // Close the connection
-        if ($closeConnection)
-            $bd = null;
-
-        return $inscrit;
-    } catch (Exception $e) {
-        pageServerMisconfiguration('Erreur : ' . $e->getMessage());
+    $sql = 'SELECT * FROM Inscrit '
+            . 'WHERE ID_inscrit = ?';
+    $assoc = array($ID_inscrit);
+    $req = executePreparedQuery($sql, $assoc);
+    if ($req->RowCount() == 0) {
+        pageErreur('Le coureur demandé n\'existe pas.');
         exit;
     }
+    // Tout ce qu'on veut savoir sur l'inscrit
+    $inscrit = $req->fetch();
+
+    // Close the connection
+    if ($closeConnection)
+        $bd = null;
+
+    return $inscrit;
 }
 
 function Inscrit_selectByIdAndHash($ID_inscrit, $hash, $bd = null) {
@@ -112,3 +106,9 @@ function Inscrit_selectByHashAndOthers($hash, $nom, $prenom, $ID_regate, $bd = n
     }
 }
 
+function est_mineur($inscrit, $regate) {
+    $date_naissance = new DateTime($inscrit['naissance']);
+    $date_regate = new DateTime($regate['date_debut']);
+    $date_naissance->modify('+18 years');
+    return ($date_naissance > $date_regate);
+}

@@ -116,6 +116,16 @@ if (isset($_POST['loginAsClub']) && isset($_POST['IDR'])) {
     $idregate = filter_input(INPUT_POST, 'IDR', FILTER_VALIDATE_INT);
     $regate = Regate_selectById($idregate);
 
+    if (
+            ($_SESSION['ID_administrateur'] != $regate['ID_administrateur'])
+            and ( $_SESSION['ID_administrateur'] != 1)
+    ) {
+        $message = "Vous n'etes pas authorisé à administrer cette régate,"
+                ." car vous n'etes pas le createur de la régate";
+        pageErreur($message);
+        exit(0);
+    }
+
     $ID_regate = $regate['ID_regate'];
     $titre_regate = $regate['titre'];
     $date_debut = $regate['date_debut'];

@@ -1,1 +1,6 @@
 * controller---mais cela breakkara tutti i possibili links?
+* ne pas afficher une serie dans la liste de preinscrits si pas des preinscrits
+* ajouter la possibiulité de faire des optmistis, finn, europa, etc. 
+* etudier comment faire les deriveurs en equipage
+* ajouter un formulaire pour demande ouverture regate
+* methode pour envoyer ses photos

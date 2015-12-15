@@ -1,0 +1,1 @@
+<iframe style="width:100%;height:200%;background-color:white" src="<?php echo $regate['resultats'];?>"></iframe>

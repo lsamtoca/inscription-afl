@@ -1,9 +1,8 @@
 <?php
-
-require "partage.php";
+require_once('partage.php');
 
 function do_liste($req, $titre) {
-    echo "<h2>$titre</h2>\n";
+//echo "<h2>$titre</h2>\n";
 
 
     echo '<ul>';
@@ -28,48 +27,78 @@ function do_liste($req, $titre) {
     echo '</ul>';
 }
 
-try {
-//    $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-    $bdd = new PDO($pdo_path, $user, $pwd, $pdo_options);
+$bdd = newBd();
 
-    $condition = '`date_limite_preinscriptions` >= DATE(NOW())';
-    if (!$development and !$testing)
-        $condition .= ' AND `istest`=0';
+$condition = '`date_limite_preinscriptions` >= DATE(NOW())';
+if (!$development and !$testing)
+    $condition .= ' AND `istest`=0';
 
-    $sql = "SELECT `ID_regate`,`titre`,`lieu`, 
+$sql = "SELECT `ID_regate`,`titre`,`lieu`, 
 	`date_debut` as `date`,
 	 DATE_FORMAT(`date_debut`, '%d-%m-%Y') as `date_debut`,
 	 DATE_FORMAT(`date_fin`, '%d-%m-%Y') as `date_fin` FROM `Regate` 
 	 WHERE $condition order by `date`";
-    $regs_avenir = $bdd->query($sql);
 
-    $condition = '`date_limite_preinscriptions` < DATE(NOW()) AND '
-            . '`date_fin` > DATE(NOW() - INTERVAL 1 YEAR)';
-    if (!$development and !$testing)
-        $condition .= ' AND `istest`=0';
+$assoc = array();
+$regates_avenir = executePreparedQuery($sql, $assoc, $bdd);
 
-    $sql = 'SELECT `ID_regate`,`titre`,`lieu`,
+
+$condition = '`date_limite_preinscriptions` < DATE(NOW()) AND '
+        . '`date_fin` > DATE(NOW() - INTERVAL 1 YEAR)';
+if (!$development and !$testing)
+    $condition .= ' AND `istest`=0';
+
+$sql = 'SELECT `ID_regate`,`titre`,`lieu`,
      `date_debut` as `date`,
 	 DATE_FORMAT(`date_debut`, \'%d-%m-%Y\') as `date_debut`,
 	 DATE_FORMAT(`date_fin`, \'%d-%m-%Y\') as `date_fin` FROM `Regate`'
-            . " WHERE $condition "
-            . ' ORDER by `date`  DESC';
+        . " WHERE $condition "
+        . ' ORDER by `date`  DESC';
 
-    $regs_passees = $bdd->query($sql);
-} catch (Exception $e) {
-    // En cas d'erreur, on affiche un message et on arrête tout
-    die('Erreur : ' . $e->getMessage());
-}
-?>  
+$regates_passees = executePreparedQuery($sql, $assoc, $bdd);
+$title = "Régates ouvertes à l'inscription";
+xhtml_pre1($title);
+?>
 
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css" />
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js" type="text/javascript"></script>
+<script src="//code.jquery.com/ui/1.9.0/jquery-ui.js" type="text/javascript"></script>
+<script src="js/myaccordion.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        myaccordion_set_accordion();
+        $('#accordion').accordion({
+            active: 0
+        });
+    });
+
+</script>
 
 
 <?php
+xhtml_pre2($title);
+?>
 
-xhtml_pre("Régates ouvertes à l'inscription");
+<div id="accordion">
 
-do_liste($regs_avenir, 'Régates à venir');
-do_liste($regs_passees, 'Régates passées ou closes à la pré-inscription');
+    <h3>Régates à venir</h3>
+    <div class="contenu">
+        <?php
+        do_liste($regates_avenir, 'Régates à venir');
+        ?>
+    </div>
 
+    <h3>Régates passées ou closes à la pré-inscription</h3>
+    <div class="contenu">
+
+        <?php
+        do_liste($regates_passees, 'Régates passées ou closes à la pré-inscription');
+        ?>
+
+    </div>
+</div>
+<?php
 xhtml_post();
 ?>
