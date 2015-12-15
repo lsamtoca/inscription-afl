@@ -120,8 +120,8 @@ if (isset($_POST['loginAsClub']) && isset($_POST['IDR'])) {
             ($_SESSION['ID_administrateur'] != $regate['ID_administrateur'])
             and ( $_SESSION['ID_administrateur'] != 1)
     ) {
-        $message = "Vous n'etes pas authorisé à administrer cette régate,"
-                ." car vous n'etes pas le createur de la régate";
+        $message = "Vous n'êtes pas autorisé à administrer cette régate,"
+                ." car vous n'êtes pas son créateur";
         pageErreur($message);
         exit(0);
     }
