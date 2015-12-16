@@ -29,6 +29,8 @@
             var em_msg = "Entrez un adresse courriel valide";
             var url_msg = "Entrez un url valide";
             var nombre_msg = "Rentrez un nombre";
+            var max100_msg = "Au plus 100 caractères";
+            var max50_msg = "Au plus 50 caractères";
             $.validator.addMethod(
                     "pattern",
                     function (value, element, regexp) {
@@ -63,10 +65,12 @@
                         pattern: /^\d+|\d+,\d{1,2}$/
                     },
                     paiement_en_ligne: {
-                        url: true
+                        url: true,
+                        maxlength:50
                     },
                     resultats: {
-                        url: true
+                        url: true,
+                        maxlength:100
                     }
                 },
                 messages: {
@@ -90,10 +94,12 @@
                         required: req_msg
                     },
                     paiement_en_ligne: {
-                        url: url_msg
+                        url: url_msg,
+                        maxlength:max50_msg
                     },
                     resultats: {
-                        url: url_msg
+                        url: url_msg,
+                        maxlength:max100_msg
                     },
                     droits: {
                         pattern: nombre_msg
