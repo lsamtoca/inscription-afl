@@ -173,7 +173,7 @@
             <textarea id='paiement_en_ligne' name='paiement_en_ligne' cols='41' rows='1'><?php echo $paiement_EN_LIGNE ?></textarea>
             <span class="help">
                 <span class="facultatif">Lien vers le site de paiement en ligne. 
-                    Ce lien apparaitra seulement sur le courriel 
+                    Ce lien apparaîtra seulement sur le courriel 
                     demandant au coureur de confirmer son pré-inscription 
                     et de payer via le lien donné.</span>
             </span>
@@ -189,7 +189,7 @@
                       >
             <span class="help">
                 <span style="width:450px">Si cette régate est cochée comme n'étant pas visible, 
-                    elle apparaitra seulement sur le 
+                    elle apparaîtra seulement sur le 
                     site de développement 
                         du logiciel, http://regateslaser.info/inscriptions_afl_dev.
                     Vous pouvez décider de cacher cette régate pour le temps nécessaire à
