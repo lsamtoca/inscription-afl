@@ -7,6 +7,7 @@ var ids=[
          
 'liste_preinscrits',
 'deadline',
+'raceIsClosed',
 
 'searchform_help',
 'searchform_caveat',
@@ -38,7 +39,9 @@ var ids=[
 'etranger',
 'message_confirmation',
 'preregistration_form',
-'preregistered_sailors'
+'preregistered_sailors',
+
+'results_iframe'
 ];
 
 var document_language='fr';    

@@ -6,9 +6,9 @@
         <?php
         echo $LA4;
         ?>
-        <tr class="divisor"></tr>
+        <tr class="divisor"><td></td></tr>
         <?php echo $LAR; ?>
-        <tr class="divisor"></tr>
+        <tr class="divisor"><td></td></tr>
         <?php echo $LAS; ?>
     </table>
     

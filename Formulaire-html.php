@@ -97,12 +97,7 @@ xhtml_pre1($page_title1);
             </p>
 
             <?php if (!Regate_estOuverte($regate)): ?>
-                <p>
-                    La date limite pour se pré-inscrire à cette régate,
-                    le <?php echo Regate_formatDeadline($regate); ?> est passée.
-                    <br />
-                    Il n'est plus possible se pré-inscrire à cette régate :-(
-                </p>
+            <p><span id="raceIsClosed"></span></p>
             <?php endif; ?>
         <?php endif; ?>
 
@@ -274,7 +269,7 @@ xhtml_pre1($page_title1);
     </div><!-- prinscrits -->
 
     <?php if(isset($regate['resultats']) && $regate['resultats'] != ''): ?>
-    <h3>Résultats</h3>
+    <h3 id="resultats"><span id="results_iframe"></span></h3>
     <div class="contenu" style="padding:10px;height:500px">
         <?php include 'Resultats-html.php'; ?>
     </div><!-- prinscrits -->

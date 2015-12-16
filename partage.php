@@ -135,9 +135,23 @@ function format_confirmation_regate($id_coureur) {
 }
 
 // HTML PRE AND POST
-function xhtml_pre1($title) {//Afficher le prefixe xhtml
-    echo "
-<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
+function xhtml_pre1($title,$type='transitional') {//Afficher le prefixe xhtml
+    
+    $xhtmlStrict="<!DOCTYPE html PUBLIC "
+            ."\"-//W3C//DTD XHTML 1.0 Strict//EN\" "
+            . "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">";
+    
+    $xhtmlTransitional="<!DOCTYPE html PUBLIC "
+            ."\"-//W3C//DTD XHTML 1.0 Transitional//EN\" "
+            ."\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
+
+    if($type=='strict'){
+        $docType=$xhtmlStrict;
+    }else{
+        $docType=$xhtmlTransitional;
+    }
+    
+    echo "$docType
 <html xmlns=\"http://www.w3.org/1999/xhtml\">
 <head>
 <meta name=\"robots\" content=\"noindex,nofollow\" />
@@ -186,8 +200,8 @@ function background() {
 }
 
 function xhtml_pre2($title) {//Afficher le prefixe xhtml
-    echo "</head>\n<body>\n\n";
     background();
+    echo "</head>\n<body>\n\n";
     echo "<div id='content' class='white_over_dark' >\n\n";
     echo "<h1>$title</h1>\n";
 }

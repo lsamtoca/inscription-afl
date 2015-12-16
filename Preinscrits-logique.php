@@ -29,7 +29,7 @@ function construct_html_serie($id_regate, $titre_serie, $serie) {
     $req = executePreparedQuery($sql, $assoc);
 
     $ret = "";
-    if ($req->columnCount() > 0) {
+    if ($req->rowCount() > 0) {
   
         //$ret.="<div id=\"$serie\" style=\"margin-left:auto;margin-right:auto;width:200;margin-top:10mm;margin-bottom:10mm\">" . "\n";
 
