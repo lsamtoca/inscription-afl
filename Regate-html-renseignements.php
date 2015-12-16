@@ -66,11 +66,11 @@
                     },
                     paiement_en_ligne: {
                         url: true,
-                        maxlength:50
+                        maxlength: 50
                     },
                     resultats: {
                         url: true,
-                        maxlength:100
+                        maxlength: 100
                     }
                 },
                 messages: {
@@ -95,11 +95,11 @@
                     },
                     paiement_en_ligne: {
                         url: url_msg,
-                        maxlength:max50_msg
+                        maxlength: max50_msg
                     },
                     resultats: {
                         url: url_msg,
-                        maxlength:max100_msg
+                        maxlength: max100_msg
                     },
                     droits: {
                         pattern: nombre_msg
@@ -178,6 +178,27 @@
                     et de payer via le lien donné.</span>
             </span>
 
+            <br />
+            Visible :
+            Oui <input type="radio" name="istest" value="0" 
+            <?php if ($regate['istest'] == 0) echo "checked" ?>
+                       >
+
+            Non<input type="radio" name="istest" value="1"
+            <?php if ($regate['istest'] == 1) echo "checked" ?>
+                      >
+            <span class="help">
+                <span style="width:450px">Si cette régate est cochée comme n'étant pas visible, 
+                    elle apparaitra seulement sur le 
+                    site de développement 
+                        du logiciel, http://regateslaser.info/inscriptions_afl_dev.
+                    Vous pouvez décider de cacher cette régate pour le temps nécessaire à
+                    compléter tous les renseignements de la régate, 
+                    par exemple et en particulier si vous utilisé le lien pour le paiement en ligne.
+                </span>
+            </span>
+
+        
             <hr />
             <label>Lien vers les résultats :</label>
             <textarea id='resultats' name='resultats' cols='48' rows='1'><?php echo $regate['resultats'] ?></textarea>
@@ -202,8 +223,6 @@
                     </span>
                 </span>
             </span>
-
-            <hr />
 
             <br>
 

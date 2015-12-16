@@ -65,7 +65,8 @@ function validate_post_and_update() {
         'titre', 'description',
         'cv_organisateur', 'lieu',
         'date_debut', 'date_fin', 'date_limite_preinscriptions',
-        'droits', 'courriel', 'paiement_en_ligne', 'informations', 'resultats');
+        'droits', 'courriel', 'paiement_en_ligne', 'informations', 'resultats',
+        'istest');
 
     $messages = '';
     // VALIDATE AND UPDATE $post
@@ -86,7 +87,7 @@ function validate_post_and_update() {
                     $cleaned = filter_var($post[$field], FILTER_VALIDATE_EMAIL);
                     if (!$cleaned) {
                         $postOK = false;
-                        $messages.='\'' . $post[$field] . '\' n\'est pas un courriel valide';
+                        $messages.=' \'' . $post[$field] . '\' n\'est pas un courriel valide';
                         $messages.="\n";
                         break;
                     }
@@ -114,7 +115,7 @@ function validate_post_and_update() {
                     break;
             }
 
-            // Immediately after we have validated it, we do the upate
+// Immediately after we have validated it, we do the upate
             if ($postOK) {
                 update_field($field, $post[$field]);
             }
@@ -175,10 +176,10 @@ if (isset($_POST['envoyer_mail'])) {
 // If we are contacting the helpdesk
 if (isset($_POST['helpdesk'])) {
 
-    // From = replyto = to
+// From = replyto = to
     $developer = 'luigi.santocanale@lif.univ-mrs.fr';
-    // Ici il faudrait ajouter
-    // l'admin de la regate, ainsi que Pierre
+// Ici il faudrait ajouter
+// l'admin de la regate, ainsi que Pierre
     $sender = $_SESSION['courriel'];
     $to = $developer;
 
