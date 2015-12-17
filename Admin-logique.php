@@ -78,9 +78,9 @@ function envoyerMail($destinataire, $login, $mdp) {
     $subject = 'Création nouvelle régate sur '
             . 'le site des pré-inscription de l\'AFL';
 
-    $message = "Bonjour,\n"
-            . "M(me) $adminNom vient de créer une régate pour votre utilisation"
-            . " sur le site d'inscriptions de l'AFL.\n"
+    $message = "Bonjour,\n\n"
+            . "M(me) $adminNom vient de créer une régate pour vous "
+            . "sur le site des inscriptions aux régates de l'AFL.\n"
             . "Vous pouvez gérer cette régate en vous identifiant à l'adresse \n"
             . format_url_login_club()
             . "\n"
