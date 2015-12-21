@@ -20,8 +20,13 @@ xhtml_pre1('Administration des régates (événements et clubs)');
 
 <?php xhtml_pre2('Administration des régates (événements et clubs)'); ?>
 
-<div id='deconnexion'>[<a href='deconnexion.php'>Déconnexion</a>]</div>
+<div id='deconnexion'>
+    <ul>    
+        <li><a href="changePwd.php">Changez le mot de passe</a> </li>
+        <li><a href='deconnexion.php'>Déconnexion</a></li>
+    </ul>
 
+</div>
 
 <div id='accordion'>
     <!--      <h1>Gestion des Événements (et des Clubs)</h1>-->

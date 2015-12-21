@@ -1,22 +1,21 @@
 <?php
 
 // HTML PRE AND POST
-function xhtml_pre1($title,$type='transitional') {//Afficher le prefixe xhtml
-    
-    $xhtmlStrict="<!DOCTYPE html PUBLIC "
-            ."\"-//W3C//DTD XHTML 1.0 Strict//EN\" "
+function xhtml_pre1($title, $type = 'transitional') {//Afficher le prefixe xhtml
+    $xhtmlStrict = "<!DOCTYPE html PUBLIC "
+            . "\"-//W3C//DTD XHTML 1.0 Strict//EN\" "
             . "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">";
-    
-    $xhtmlTransitional="<!DOCTYPE html PUBLIC "
-            ."\"-//W3C//DTD XHTML 1.0 Transitional//EN\" "
-            ."\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
 
-    if($type=='strict'){
-        $docType=$xhtmlStrict;
-    }else{
-        $docType=$xhtmlTransitional;
+    $xhtmlTransitional = "<!DOCTYPE html PUBLIC "
+            . "\"-//W3C//DTD XHTML 1.0 Transitional//EN\" "
+            . "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
+
+    if ($type == 'strict') {
+        $docType = $xhtmlStrict;
+    } else {
+        $docType = $xhtmlTransitional;
     }
-    
+
     echo "$docType
 <html xmlns=\"http://www.w3.org/1999/xhtml\">
 <head>
@@ -116,40 +115,49 @@ function html_post() { // Afficher le postfixe html
     xhtml_post();
 }
 
+function goback() {
+    $referer = '';
+    if (isset($_SERVER['HTTP_REFERER'])) {
+        $referer = $_SERVER['HTTP_REFERER'];
+    }
+    if (!$referer == '') {
+        $goback = $referer;
+    } else {
+        $goback = "javascript:history.go(-1)";
+    }
+    return $goback;
+}
+
 function pageErreur($message, $goback = NULL) {
 
-    xhtml_pre('Erreur');
+    if ($goback == NULL) {
+        $goback = goback();
+    }
     $messageHtml = str_replace("\n", "<br />\n", $message);
 
+    xhtml_pre('Erreur');
+    echo '<div class="contenu smallform">' . "\n";
     echo "<p><span class=\"error_strings\">$messageHtml</span></p>";
-
-    if ($goback != NULL) {
-        echo "Retourner à la page <a href=\"$goback\">$goback</a><h3>";
-    } else {
-        $referer = $_SERVER['HTTP_REFERER'];
-        if (!$referer == '') {
-            echo '<p><a href="' . $referer . '" title="Return to the previous page">&laquo; Retour</a></p>';
-        } else {
-            echo '<p><a href="javascript:history.go(-1)" title="Return to the previous page">&laquo; Retour</a></p>';
-        }
-        //  echo "<A HREF=\"javascript:javascript:history.go(-1)\">Retourner à la page precedente</A>";
-    }
-
+    echo "<a href=\"$goback\">&laquo; Retour</a><h3>";
+    echo "\n</div>";
     xhtml_post();
 
     exit(1);
 }
 
-function pageAnswer($message, $title = 'Mission accomplie') {
+function pageAnswer($message, $goback = NULL, $title = 'Mission accomplie') {
 
-    xhtml_pre($title);
 
+    if ($goback == NULL) {
+        $goback = goback();
+    }
     $messageHtml = str_replace("\n", "<br />\n", $message);
 
-    echo "<p><span class=\"error_strings\">$messageHtml</span></p>";
-
-    echo "<A HREF=\"javascript:javascript:history.go(-1)\">Retourner à la page precedente</A>";
-
+    xhtml_pre($title);
+    echo '<div class="contenu smallform">' . "\n";
+    echo "<p><span>$messageHtml</span></p>";
+    echo "<a href=\"$goback\">&laquo; Retour</a><h3>";
+    echo "\n</div>";
     xhtml_post();
 
     exit(0);

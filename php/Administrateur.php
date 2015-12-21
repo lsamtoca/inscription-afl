@@ -1,34 +1,25 @@
 <?php
 
 function Administrateur_selectById($ID_administrateur, $bd = null) {
-    global $pdo_path, $user, $pwd, $pdo_options;
 
-    $closeConnection = false;
+    $sql = 'SELECT * FROM Administrateur '
+            . 'WHERE ID_administrateur = ?';
+    $assoc = array($ID_administrateur);
+    $req = executePreparedQuery($sql, $assoc, $bd);
 
-    try {
-        if ($bd == null) {
-            $closeConnection = true;
-            $bd = new PDO($pdo_path, $user, $pwd, $pdo_options);
-        }
-
-        $sql = 'SELECT * FROM Administrateur '
-                . 'WHERE ID_administrateur = ?';
-        $req = $bd->prepare($sql);
-        $req->execute(array($ID_administrateur));
-        if ($req->RowCount() == 0) {
-            pageErreur('L\'administrateur demandé n\'existe pas.');
-            exit;
-        }
-        // Tout ce qu'on veut savoir sur la regate
-        $administrateur = $req->fetch();
-
-        // Close the connection
-        if ($closeConnection)
-            $bd = null;
-
-        return $administrateur;
-    } catch (Exception $e) {
-        pageServerMisconfiguration('Erreur : ' . $e->getMessage());
+    if ($req->RowCount() == 0) {
+        pageErreur('L\'administrateur demandé n\'existe pas.');
         exit;
     }
+    // Tout ce qu'on veut savoir sur l'admin
+    $administrateur = $req->fetch();
+    return $administrateur;
+}
+
+function Administrateur_setField($ID_administrateur,$field,$value) {
+    
+    $sql = "UPDATE `Administrateur` SET $field=:value "
+        . "WHERE `ID_Administrateur`=:ID";
+    $assoc=array('value' => $value,'ID' => $ID_administrateur);
+    executePreparedQuery($sql, $assoc);
 }

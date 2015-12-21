@@ -10,7 +10,7 @@ if ($thisLogin->clubCorrectlyLogged()) {
 
 function doLogin($login, $codedPass) {
     global $thisLogin;
-    
+
     $sql = 'SELECT * from `Regate` '
             . 'WHERE `org_login`=:login AND `coded_org_passe`=:pass;';
     $assoc = array('login' => $login, 'pass' => $codedPass);
@@ -20,10 +20,10 @@ function doLogin($login, $codedPass) {
         $reponse = $req->fetch();
         $req->closeCursor();
         $ID_regate = $reponse['ID_regate'];
-        $titre_regate = $reponse['titre'];
-        $date_debut = $reponse['date_debut'];
-        $courriel = $reponse['courriel'];
-        $thisLogin->loginAsClub($ID_regate, $titre_regate, $date_debut, $courriel);
+//        $titre_regate = $reponse['titre'];
+//        $date_debut = $reponse['date_debut'];
+//        $courriel = $reponse['courriel'];
+        $thisLogin->loginAsClub($ID_regate);
     } else {
         $req->closeCursor();
         $message = 'Login ou mot de passe incorrect';
@@ -52,13 +52,14 @@ if (isset($_POST["submit"])) {
 
 //Here it begins the html
 
-xhtml_pre("Gestion de la régate, login"); ?>
+xhtml_pre("Gestion de la régate, login");
+?>
 
-<div class="contenu" style="width:400px;padding:20px;">
+<div class="contenu smallform">
     <form action="" method="post">
         <fieldset>
             <legend>Gérez votre régate</legend>
-            <div style="padding:10px;">
+            <div>
                 <label for="login">Login :</label>
                 <input name="login" type="text" id="login"/>
                 <br />

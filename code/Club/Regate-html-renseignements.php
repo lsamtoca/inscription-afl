@@ -151,7 +151,7 @@
                    value="<?php echo $DATE_LIMITE_PREINSCRIPTIONS; ?>" class="required"/>
 
             <span class="help">
-                <span>Après cette date il ne sera plus possible se pré-inscrire avec ce logiciel.</span>
+                <span class="normalwidth">Après cette date il ne sera plus possible se pré-inscrire avec ce logiciel.</span>
             </span>
 
             <hr /><!-- Sous -->
@@ -159,7 +159,7 @@
             <input name="droits" type="text" id="droits_inscription" 
                    value="<?php echo $DROITS_INSCRIPTION; ?>" />
             <span class="help">
-                <span >Combien coute s'inscrire à la régate ? 
+                <span class="normalwidth">Combien coûte s'inscrire à la régate ? 
                     Si la valeur est 0, rien ne sera affiché 
                     sur la page d'informations sur la régate du logiciel.</span>
             </span>
@@ -172,7 +172,7 @@
             -->
             <textarea id='paiement_en_ligne' name='paiement_en_ligne' cols='41' rows='1'><?php echo $paiement_EN_LIGNE ?></textarea>
             <span class="help">
-                <span class="facultatif">Lien vers le site de paiement en ligne. 
+                <span class="facultatif thin">Lien vers le site de paiement en ligne. 
                     Ce lien apparaîtra seulement sur le courriel 
                     demandant au coureur de confirmer son pré-inscription 
                     et de payer via le lien donné.</span>
@@ -188,7 +188,7 @@
             <?php if ($regate['istest'] == 1) echo "checked" ?>
                       >
             <span class="help">
-                <span style="width:450px">Si cette régate est cochée comme n'étant pas visible, 
+                <span class="wide">Si cette régate est cochée comme n'étant pas visible, 
                     elle apparaîtra seulement sur le 
                     site de développement 
                         du logiciel, http://regateslaser.info/inscriptions_afl_dev.
@@ -203,26 +203,26 @@
             <label>Lien vers les résultats :</label>
             <textarea id='resultats' name='resultats' cols='48' rows='1'><?php echo $regate['resultats'] ?></textarea>
             <span class="help">
-                <span class="facultatif">
+                <span class="facultatif thin">
                     Vous pouvez ajouter une lien vers les résultats
                     une fois la régate est en cours ou terminée.
                 </span>
             </span>
 
             <hr />
-            <span class="line">
+<!--            <span class="line"> -->
                 <label>Autres informations  :</label>
                 <textarea id='informations' name='informations' 
                           cols='50' rows='10'><?php echo $INFORMATIONS ?></textarea>
                 <span class="help">
-                    <span class="facultatif">Ajoutez ici tout autre renseignement qui vous 
+                    <span class="facultatif thin">Ajoutez ici tout autre renseignement qui vous 
                         semble intéressant transmettre  au coureur :
                         frais d'inscriptions majorées, à quelles conditions, 
                         lien vers le site du club, lien vers l'avis de course, 
                         lien vers les instructions de course. 
                     </span>
                 </span>
-            </span>
+<!--            </span> -->
 
             <br>
 

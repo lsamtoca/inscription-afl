@@ -1,13 +1,13 @@
 <?php
 
-session_start();
-error_reporting(-1);
-ini_set('display_errors', '1');
-
-if (!isset($_SESSION["ID_regate"])) {
-    header("Location: LoginClub.php");
-//$_SESSION["ID_regate"]=2;
-}
+//session_start();
+//error_reporting(-1);
+//ini_set('display_errors', '1');
+//
+//if (!isset($_SESSION["ID_regate"])) {
+//    header("Location: LoginClub.php");
+////$_SESSION["ID_regate"]=2;
+//}
 
 if (
         !isset($_GET['serie'])
@@ -23,7 +23,7 @@ if (
     //    die("Il faut spécifier une série");
 }
 
-require_once 'partage.php';
+
 require_once 'externals/PHPExcel/Classes/PHPExcel.php';
 require_once 'php/mailer.php';
 

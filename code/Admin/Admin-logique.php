@@ -82,7 +82,7 @@ function envoyerMail($destinataire, $login, $mdp) {
             . "M(me) $adminNom vient de créer une régate pour vous "
             . "sur le site des inscriptions aux régates de l'AFL.\n"
             . "Vous pouvez gérer cette régate en vous identifiant à l'adresse \n"
-            . format_url_login_club()
+            . format_url_login()
             . "\n"
             . "Vos identiants sont :\n\tLogin : '$login'\n\tMot de passe : '$mdp'\n"
             . "\n\n"
@@ -127,11 +127,8 @@ if (isset($_POST['loginAsClub']) && isset($_POST['IDR'])) {
     }
 
     $ID_regate = $regate['ID_regate'];
-    $titre_regate = $regate['titre'];
-    $date_debut = $regate['date_debut'];
-    $courriel = $regate['courriel'];
     $thisLogin = new Login;
-    $thisLogin->loginAsClub($ID_regate, $titre_regate, $date_debut, $courriel);
+    $thisLogin->loginAsClub($ID_regate);
     exit(0);
 }
 

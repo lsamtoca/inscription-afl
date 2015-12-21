@@ -74,6 +74,13 @@ function Regate_formatFin($regate) {
     list($year, $month, $day) = sscanf($regate['date_fin'], "%4d-%2d-%2d");
     $ret = str_replace(array('d', 'm', 'Y'), array($day, $month, $year), $Regate_htmlDateFormat);
 
-
     return $ret;
+}
+
+function Regate_setField($ID_regate,$field,$value) {
+    
+    $sql = "UPDATE `Regate` SET $field=:value "
+        . "WHERE `ID_REGATE`=:ID";
+    $assoc=array('value' => $value,'ID' => $ID_regate);
+    executePreparedQuery($sql, $assoc);
 }

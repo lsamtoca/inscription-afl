@@ -55,7 +55,16 @@ global $mails_all, $mails_confirme, $mails_pas_confirme;
 <?php xhtml_pre2('Gestion de votre régate'); ?>
 
 
-<div id='deconnexion'>[<a href='deconnexion.php'>Déconnexion</a>]</div>
+<div id='deconnexion'>
+    <ul>    
+        <?php if(isset($_SESSION['ID_administrateur'])): ?>
+        <li><a href="Admin.php">Retour à la page Administrateur</a> </li>
+        <?php endif; ?>
+        <li><a href="changePwd.php">Changez le mot de passe</a> </li>
+        <li><a href='deconnexion.php'>Déconnexion</a></li>
+    </ul>
+
+</div>
 
 
 <div id='accordion'>
@@ -66,6 +75,7 @@ global $mails_all, $mails_confirme, $mails_pas_confirme;
             Téléchargez la <a href="docs/Notice_07-03-12.pdf">notice</a> d'utilisation (mise à jour le 7/03/12). 
         </div>
     -->
+
     <h3 id="renseignements">Formulaire renseignements sur la régate</h3>
     <?php include('Regate-html-renseignements.php'); ?>
 

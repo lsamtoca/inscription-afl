@@ -52,11 +52,11 @@ if (isset($_POST['submit'])) {
 xhtml_pre('Login Administrateur');
 ?>
 
-<div class="contenu" style="width:400px;padding:20px;">
+<div class="contenu smallform">
     <form action="" method="post">
         <fieldset>
             <legend>Gérez les régates</legend>
-            <div style="padding:10px;">
+            <div>
                 <label for="login">Login :</label>
                 <input name="login" type="text" id="login"/>
                 <br />

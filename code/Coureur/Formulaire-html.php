@@ -126,8 +126,8 @@ xhtml_pre1($page_title1);
                         <fieldset>
                             <legend >
                                 <span id='search_legend'></span>
-                                <span class='help'>
-                                    <span id="searchform_help"></span>
+                                <span class='help wide'>
+                                    <span id="searchform_help" class="wide"></span>
                                 </span>
                             </legend>
 

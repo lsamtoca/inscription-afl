@@ -10,6 +10,7 @@ html, body {
     padding: 0;
     /* Make it fix, so that L. Gaudouen est hereux */
     font-size: 12pt ; /* Pour IE Explorer ? */
+    overflow: visible;
 
 }
 
@@ -28,11 +29,13 @@ img#bg {
     padding:10pt;
     position:relative;
     z-index:1;
+    overflow: visible;
 } 
 
 div.contenu {
     background-color: cadetblue;
-    color:white
+    color:white;
+    overflow: visible;
 }
 
 div.contenu A {
@@ -132,6 +135,30 @@ table.mytable td {
     /*    background-color:white;*/
 }
 
+/*#deconnexion:before {
+    content : "[ ";
+}*/
+
+#deconnexion ul:after {
+    content : " ]";
+}
+
+#deconnexion ul:before {
+    content: "[ ";
+}
+
+#deconnexion ul, #deconnexion li {
+    display: inline;
+    width:0px;
+}
+#deconnexion li:after{
+    content: " | ";
+}
+#deconnexion li:last-child:after{
+    content: "";
+}
+
+
 #choix_langue {
     position: absolute;
     width: auto;
@@ -199,7 +226,7 @@ span.menu {
     display:block;
     /*font-family: tt;*/
     color:black;
-    margin:10x;
+    margin:10px;
 
 }
 
@@ -211,35 +238,79 @@ span.menu {
 }
 
 .help:before{
-    content:"? ";
-    color:red;
+    content:url('img/info.png');
+    display:inline-block;
     vertical-align: top;
+    position:relative;
+    left:-10px;
+    top:-13px;
+    transform: scale(0.2, 0.2);
+    -ms-transform: scale(0.2, 0.2);
+    -webkit-transform: scale(0.2, 0.2);
+    max-width: 20px;
+    max-height: 20px;
+    margin : 5px;
+    /*    z-index:4;*/
+}
+
+.helpa:after{
+    content:url('img/info.png');
+    display:inline-block;
+    vertical-align: top;
+    position:relative;
+    left:-10px;
+    top:-13px;
+    transform: scale(0.2, 0.2);
+    -ms-transform: scale(0.2, 0.2);
+    -webkit-transform: scale(0.2, 0.2);
+    max-width: 20px;
+    max-height: 20px;
+    margin : 5px;
+    /*    z-index:4;*/
 }
 
 
 .help>span{
     display:none;
-    color:red;
-    background:yellow;
+    color:black;
+    background:#00ccff;
     margin-bottom: 10pt;
-    padding: 10px;
+    padding: 15px;
     vertical-align: top;
     position: absolute;
     top: 0px;
-    left: 15px;
-    width: 0px;
+    left: 26px;
+    /*    width: 0px; */
+    height: 0px;
+    /*    text-align: justify;*/
 }
 
-.help:hover span  {
+.help:hover>span  {
     display:block;
-    width: 290px; 
+    /*    width: 290px; */
+    height :auto;
     vertical-align: top;
     z-index:2;
     overflow: visible;
+    border-radius: 25px;
 }
+
+
 
 .facultatif:after{
     content:" Vous pouvez ne rien ajouter."
+}
+
+.wide {
+    width:500px;
+}
+
+.normalwidth {
+    width:310px;
+}
+
+.thin {
+    width:250px;    
 }
 
 img.displayed {
@@ -282,6 +353,23 @@ tr.divisor{
 form br {
     display: block;
     margin: 10px 0;
-/*    line-height:100px;*/
+    /*    line-height:100px;*/
     content: " ";
 }
+
+.smallform {    
+    width:450px;
+    padding:20px;
+    border-radius: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    /*    display: table-cell;*/
+    margin-top: 10%;
+    /*    vertical-align: middle;*/
+}
+
+.smallform div { padding:10px;}
+.smallform input[type="submit"]{
+    float :right;
+    display:inline-block;
+} 

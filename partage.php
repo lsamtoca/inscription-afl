@@ -14,7 +14,6 @@ include('bootstrap/develOrProduction.php');
 include('bootstrap/assert.php');
 include('bootstrap/noLG.php');
 
-
 // These are modules to loaded that shall (maybe used)
 require_once('databases/bds.php');
 require_once('php/Layouts.php');
