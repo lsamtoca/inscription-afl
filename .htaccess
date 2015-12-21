@@ -1,0 +1,11 @@
+RewriteEngine On
+RewriteBase /~lsantoca/inscriptions-afl/
+
+RewriteCond %{REQUEST_FILENAME} !\.pdf
+RewriteCond %{REQUEST_FILENAME} !\.properties
+RewriteCond %{REQUEST_FILENAME} !\.png
+RewriteCond %{REQUEST_FILENAME} !\.js
+RewriteCond %{REQUEST_FILENAME} !\.jpg
+RewriteCond %{REQUEST_FILENAME} !\.css
+RewriteCond %{REQUEST_FILENAME} !controller.php
+RewriteRule ^([^?]*)$ controller.php?path=$1 [NC,L,QSA]
