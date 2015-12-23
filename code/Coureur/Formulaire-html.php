@@ -39,7 +39,7 @@ xhtml_pre1($page_title1);
 
         $("#naissance").datepicker({
             dateFormat: "dd/mm/yy",
-            defaultDate: "01/01/94",
+            defaultDate: "01/01/98",
             changeYear: true,
             yearRange: "c-20:c+20"
         });
@@ -56,14 +56,16 @@ xhtml_pre1($page_title1);
 
 <?php xhtml_pre2($page_title2); ?>
 
-<div id='choix_langue' class="white_over_dark">
-    [<a id='lang'></a>]
+<div id='deconnexion' class="white_over_dark">
+    <ul>    
+        <li><a><span id='lang' class="msg"></span></a></li>
+    </ul>
 </div><!--choix langue-->
+
 
 <div id="accordion">
 
     <h3 id="infos"><?php echo $regate['titre']; ?>, infos</h3>
-
     <div id='infos_regate' class="contenu">
 
         <!--Dates, titre, description-->
@@ -92,28 +94,30 @@ xhtml_pre1($page_title1);
 
         <?php if ($regate['date_limite_preinscriptions'] != ''): ?>
             <p>
-                <span id="deadline"></span>
+                <span id="deadline" class="msg"></span>
                 <?php echo Regate_formatDeadline($regate); ?>
             </p>
 
             <?php if (!Regate_estOuverte($regate)): ?>
-            <p><span id="raceIsClosed"></span></p>
+                <p><span id="raceIsClosed"  class="msg"></span></p>
             <?php endif; ?>
         <?php endif; ?>
 
         <?php if ($regate['droits'] != '0'): ?>
-            <p>Droits d'inscription : <?php echo $regate['droits']; ?>
+            <p><span id="droits" class="msg"></span>
+                <?php echo $regate['droits']; ?>
                 &#8364;</p>
         <?php endif; ?>
         <?php if ($regate['informations'] != ''): ?>
             <p>
-                Autres informations : <?php echo $regate['informations']; ?>
+                <span id="autresInformations"  class="msg"></span>
+                <?php echo $regate['informations']; ?>
             </p>
         <?php endif; ?>
     </div> <!--infos_regate-->
 
     <?php if (Regate_estOuverte($regate)): ?>
-        <h3 id="formulaires"><span id="preregistration_form"></span></h3>
+        <h3 id="formulaires"><span id="preregistration_form" class="msg"></span></h3>
         <div id="forms" class="contenu">
             <?php
             if (!$confirmation):
@@ -125,29 +129,33 @@ xhtml_pre1($page_title1);
 
                         <fieldset>
                             <legend >
-                                <span id='search_legend'></span>
+                                <span id='search_legend' class="msg"></span>
                                 <span class='help wide'>
-                                    <span id="searchform_help" class="wide"></span>
+                                    <span id="searchform_help" class="wide msg"></span>
                                 </span>
                             </legend>
 
 
 
                             <input name="lang" type="hidden" id="search_input_lang" value="fr"/>
-                            <label class="left" id='l_search_lic'></label>
+                            <label class="left">
+                                <span id='l_search_lic' class="msg"></span>                   
+                            </label>
                             <input name="search_lic" id="search_lic" type="text"/>
                   <!--          <input name="search_submit" type='submit' value="Chercher">
                             -->          
 
 
-                            <label class="left" id='l_search_isaf'></label>
+                            <label class="left"><span class="msg" id='l_search_isaf'></span></label>
                             <input name="search_isaf"
                                    id="search_isaf" type="text" />
 
                             <input name="search_submit" type='submit' value="Chercher">
 
 
-                            <div id="searchform_caveat" style="padding:5px" class="caveat"></div>
+                            <div class="caveat" style="padding:5px;padding-left:0px">
+                                <span id="searchform_caveat" class="msg"></span>
+                            </div>
 
 
                         </fieldset>
@@ -161,7 +169,7 @@ xhtml_pre1($page_title1);
             else:
                 ?> 
                 <p style="color:red">
-                    <span id="message_confirmation"></span>
+                    <span id="message_confirmation"  class="msg"></span>
                 </p>
             <?php
             endif;
@@ -171,7 +179,7 @@ xhtml_pre1($page_title1);
 
                 <form id="mainform" action="Inscription.php" method="post">
                     <fieldset>
-                        <legend id='mainform_legend'></legend>
+                        <legend id='mainform_legend' class="msg"></legend>
 
                         <!-- Hidden inputs to handle control -->
                         <?php put_element('lang'); ?> 
@@ -179,7 +187,7 @@ xhtml_pre1($page_title1);
                         <?php put_element('conf'); ?> 
                         <?php put_element('ID_inscrit'); ?> 
 
-                        <!-- Donnés personnels : nom prenom, date naissance, sexe -->
+                        <!-- Donnés personnels : nom prénom, date naissance, sexe -->
 
                         <?php put_element('Nom'); ?> 
                         <?php put_element('Prenom'); ?> 
@@ -211,7 +219,6 @@ xhtml_pre1($page_title1);
 
                         <!-- Club -->
                         <?php put_element('nom_club'); ?>
-
                         <?php put_element('num_club'); ?>
 
                         <hr />
@@ -219,7 +226,7 @@ xhtml_pre1($page_title1);
 
 
                         <!-- No-voile -->
-                        <label class='left' id='l_Nvoile'></label>
+                        <?php echo_label('Nvoile'); ?>
                         <?php put_element('Cvoile'); ?>
                         <?php put_element('Nvoile'); ?>
                         <br />
@@ -245,13 +252,13 @@ xhtml_pre1($page_title1);
 
                         <br />
 
-                        <div id="licencie_ffv">
+                        <div id="licencie_ffv" class="msg">
                         </div>
 
-                        <div id="non_licencie">
+                        <div id="non_licencie" class="msg">
                         </div>
 
-                        <div id="etranger">
+                        <div id="etranger" class="msg">
                         </div>
 
                         <hr />
@@ -263,18 +270,16 @@ xhtml_pre1($page_title1);
         </div> <!-- forms -->
     <?php endif; ?>
 
-    <h3 id="preinscrits"><span id="preregistered_sailors"></span></h3>
+    <h3 id="preinscrits"><span id="preregistered_sailors" class="msg"></span></h3>
     <div class="contenu">
         <?php include 'Preinscrits-html.php'; ?>
     </div><!-- prinscrits -->
 
-    <?php if(isset($regate['resultats']) && $regate['resultats'] != ''): ?>
-    <h3 id="resultats"><span id="results_iframe"></span></h3>
-    <div class="contenu" style="padding:10px;height:500px">
-        <?php include 'Resultats-html.php'; ?>
-    </div><!-- prinscrits -->
+    <?php if (isset($regate['resultats']) && $regate['resultats'] != ''): ?>
+        <h3 id="resultats"  class="msg"><span id="results_iframe" class="msg"></span></h3>
+            <?php include 'Resultats-html.php'; ?>        
     <?php endif; ?>
-    
+
 </div> <!-- accordion -->
 <?php
 xhtml_post();

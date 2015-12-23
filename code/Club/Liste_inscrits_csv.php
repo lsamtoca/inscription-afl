@@ -1,11 +1,11 @@
 <?php
 
-session_start();
-if (!isset($_SESSION["ID_regate"])) {
-    header("Location: LoginClub.php");
-}
-
-require "partage.php";
+//session_start();
+//if (!isset($_SESSION["ID_regate"])) {
+//    header("Location: LoginClub.php");
+//}
+//
+//require "partage.php";
 
 $csv_sep = ";";
 //$csv_newline = "\r\n"; // we use DOS-WINDOWS

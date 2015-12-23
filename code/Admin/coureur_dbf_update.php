@@ -1,10 +1,10 @@
 <?php
 
-session_start();
-if (!isset($_SESSION['ID_administrateur'])) {
-    header('Location: LoginAdmin.php');
-}
-require_once 'partage.php';
+//session_start();
+//if (!isset($_SESSION['ID_administrateur'])) {
+//    header('Location: LoginAdmin.php');
+//}
+//require_once 'partage.php';
 
 
 $fileName = 'dbf/COUREUR.DBF';

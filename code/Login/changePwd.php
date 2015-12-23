@@ -1,9 +1,10 @@
 <?php
-require_once('partage.php');
+//require_once('partage.php');
+
 require_once('php/Regate.php');
 require_once('php/Administrateur.php');
 
-session_start();
+//session_start();
 
 $login = new Login;
 $club=$login->clubCorrectlyLogged();

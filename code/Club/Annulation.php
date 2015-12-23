@@ -1,11 +1,11 @@
 <?php
 
-  session_start();
-  if(!isset($_SESSION["ID_regate"]))
-  {
-		header("Location: LoginClub.php");
-  }
-  require "partage.php";
+//  session_start();
+//  if(!isset($_SESSION["ID_regate"]))
+//  {
+//		header("Location: LoginClub.php");
+//  }
+//  require "partage.php";
 
   try
   {

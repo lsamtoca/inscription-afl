@@ -1,13 +1,11 @@
 <?php
 
-session_start();
-if (!isset($_SESSION["ID_regate"])) {
-    header("Location: LoginClub.php");
-}
+//session_start();
+//if (!isset($_SESSION["ID_regate"])) {
+//    header("Location: LoginClub.php");
+//}
+//require "partage.php";
 
-
-
-require "partage.php";
 require "externals/PHPExcel/Classes/PHPExcel.php";
 
 //require_once "php/Regate.php";
