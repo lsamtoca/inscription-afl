@@ -373,3 +373,12 @@ form br {
     float :right;
     display:inline-block;
 } 
+
+/* Th following for the
+JQuery validation */
+form label.error {
+    margin-left: 10px;
+    width: auto;
+    display: inline;
+    color:red;
+}

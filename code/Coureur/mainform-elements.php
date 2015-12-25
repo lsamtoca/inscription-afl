@@ -1,6 +1,6 @@
 <?php
 
-$mainform_elements = array(
+$mainformInputs = array(
     'Nom' => array(
         'rendering' => 'text'
     ),
@@ -97,74 +97,3 @@ $mainform_elements = array(
     )
 );
 
-function echo_msg($id, $content = '') {
-    echo
-    "<span class='msg' id='$id'>"
-    . "$content"
-    . "</span>";
-}
-
-function echo_label($id, $content='') {
-    echo "<label class='left'>";
-    echo_msg("l_$id", $content);
-    echo "</label>\n\n";
-}
-
-function put_element($name) {
-
-    global $mainform_elements;
-    global $formData;
-
-    $object = $mainform_elements[$name];
-
-    switch ($object['rendering']) {
-
-        case 'radio':
-            if (isset($object['label'])) {
-                $label = $object['label'];
-                echo_label($name, $label);
-            }
-
-            foreach ($object['values'] as $value) {
-
-                if (is_array($value)) {
-                    $val = $value[0];
-                    $label = $value[1];
-                } else {
-                    $val = $label = $value;
-                }
-
-                $id = "$name$val";
-//                $id = "radio_$val";
-
-                $ischecked = '';
-                if (isset($object['default']) && $object['default'] == $val)
-                    $ischecked = 'checked';
-
-                echo "<input type = 'radio' name = '$name' id = 'radio_$id' value = '$val' $ischecked />\n";
-                echo "<label for = 'radio_$id' id = 'l_$id' class = 'msg'>$label</label>\n\n";
-            }
-            break;
-
-        case 'hidden':
-            $val = $object['default'];
-            echo "<input name = '$name' type = 'hidden' id = 'input_$name' value = '$val' />\n\n";
-            break;
-
-        case 'text':
-            $val = '';
-            if (isset($object['default']))
-                $val = $object['default'];
-
-            $strsize = '';
-            if (isset($object['size'])) {
-                $size = $object['size'];
-                $strsize = "size = '$size'";
-            }
-            if (!isset($object['nolabel']) or ! $object['nolabel'] === 'true') {
-                echo_label($name, '');
-            }
-//                echo "<label class = 'left msg' id = 'l_$name'></label>\n";
-            echo "<input name = '$name' type = 'text' id = '$name' value = '$val' $strsize />\n\n";
-    }
-}

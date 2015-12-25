@@ -7,8 +7,10 @@ if (!isset($_GET['regate'])) {
 assert('isset($_GET[\'regate\'])');
 $ID_regate = $_GET['regate'];
 
-// Where $mainform_elements is defined
-include 'mainform-elements.php';
+// $mainform_elements is needed
+// since we need to prefill the form
+// if we are in mode confirmation
+require_once 'mainform-elements.php';
 
 $premiere_inscription = TRUE;
 $confirmation = FALSE;
@@ -80,14 +82,14 @@ $assoc_COUREUR_form = array(
 );
 
 function fill_form_from_scratch() {
-    global $formData, $mainform_elements, $ID_regate;
+    global $formData, $mainformInputs, $ID_regate;
     global $confirmation, $ID_inscrit;
 
-    $mainform_elements['IDR']['default'] = $ID_regate;
+    $mainformInputs['IDR']['default'] = $ID_regate;
     if ($confirmation) {
         // Si nous arrivons pour confirmation
-        $mainform_elements['conf']['default'] = '1';
-        $mainform_elements['ID_inscrit']['default'] = $ID_inscrit;
+        $mainformInputs['conf']['default'] = '1';
+        $mainformInputs['ID_inscrit']['default'] = $ID_inscrit;
     }
 
     // Pour quelle raison cela ?
@@ -97,7 +99,7 @@ function fill_form_from_scratch() {
 
 function fill_form_from_db() {
 
-    global $assoc_INSCRIT_form, $assoc_COUREUR_form, $formData, $mainform_elements;
+    global $assoc_INSCRIT_form, $assoc_COUREUR_form, $formData, $mainformInputs;
     global $pdo_path, $user, $pwd, $pdo_options;
     global $gotoinscription, $confirmation;
     global $ID_inscrit, $hash;
@@ -150,14 +152,6 @@ function fill_form_from_db() {
                 'field_value' => $field_value));
         }
 
-        /*
-         * Test
-         */
-        //  $req->debugDumpParams();
-        //      pageErreur("'".$field_value."' --".$sql);
-        //   echo $req->rowCount();
-        //   exit;
-
         if ($req->rowCount() > 0) {
             // Si on a trouvé qqchose on pre-complete le formulaire
             // via le champ 'defaut' des elements
@@ -165,10 +159,10 @@ function fill_form_from_db() {
             $row = $req->fetch();
 
             foreach ($assoc_INSCRIT_form as $field_bd => $field_form) {
-                $mainform_elements[$field_form]['default'] = $_POST[$field_form] = $row[$field_bd];
+                $mainformInputs[$field_form]['default'] = $_POST[$field_form] = $row[$field_bd];
             }
-            $mainform_elements['naissance']['default'] = $_POST['naissance'] =
-                    dateReformatMysqlToJquery($mainform_elements['naissance']['default']);
+            $mainformInputs['naissance']['default'] = $_POST['naissance'] =
+                    dateReformatMysqlToJquery($mainformInputs['naissance']['default']);
 
             if ($gotoinscription) {
 
@@ -203,12 +197,12 @@ function fill_form_from_db() {
             if ($req->rowCount() > 0) {
                 $row = $req->fetch();
                 foreach ($assoc_COUREUR_form as $field_bd => $field_form) {
-                    $mainform_elements[$field_form]['default'] = strip_spaces($row[$field_bd]);
+                    $mainformInputs[$field_form]['default'] = strip_spaces($row[$field_bd]);
                 }
                 // On doit aussi re-ajouster la date de naissance
                 // qui est stockée dans COUREUR.DBF sous le format AAAAMMDD
-                $mainform_elements['naissance']['default'] =
-                        dateReformatDbfToJquery($mainform_elements['naissance']['default']);
+                $mainformInputs['naissance']['default'] =
+                        dateReformatDbfToJquery($mainformInputs['naissance']['default']);
             }
             else
                 pageErreur('On vous a pas troué');
@@ -223,6 +217,6 @@ fill_form_from_scratch();
 if ($comingfromsearch or $confirmation) {
     fill_form_from_db();
 }
-if ($regate['polo'] == 1)
-    $mainform_elements['taillepolo']['rendering'] = 'radio';
-?>
+if ($regate['polo'] == 1){
+    $mainformInputs['taillepolo']['rendering'] = 'radio';    
+}

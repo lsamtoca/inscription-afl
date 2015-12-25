@@ -1,61 +1,23 @@
 <?php
 
-//  session_start();
-//  if(!isset($_SESSION["ID_regate"]))
-//  {
-//		header("Location: LoginClub.php");
-//  }
-//  require "partage.php";
+require_once 'php/Inscrit.php';
 
-  try
-  {
-	// On se connecte à MySQL
-    $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-	//$bdd = new PDO('mysql:host=localhost;dbname=LASER', 'root', 'root', $pdo_options);
-    $bdd = new PDO($pdo_path, $user, $pwd, $pdo_options);
-    
-    $req = $bdd->prepare('SELECT nom, prenom, ID_regate FROM Inscrit WHERE ID_inscrit = ?');
-	$req->execute(array($_GET['ID']));
-    $donnees = $req->fetch();
-    
-    if(
-      isset($donnees['prenom']) // si nous avons trouvé le coureur
-      and
-      $donnees['ID_regate'] == $_SESSION['ID_regate']   // nous en avons les droits
-    ) 
-    {
-
-    	$sql = 'DELETE FROM Inscrit WHERE ID_inscrit =?';
-   		$req->closeCursor();
-		$req = $bdd->prepare($sql);
-		$req->execute(array($_GET['ID']));
-    }
-    else
-    {
-        xhtml_pre("Annullation d'une inscription");
-    	echo '<div>ERREUR : coureur pas trouvé dans cette régate</div>';
-    
-        echo '
-        <p></p> 
-        <div>
-        Retour à la page de <a href="Regate.php">gestion de la régate</a>.
-        </div>';
-        xhtml_post();
-    }
-    
-
-	
-	$req->closeCursor();
-
-
+$ID_inscrit=$_GET['ID'];
+$inscrit=Inscrit_selectById($ID_inscrit);
+if (
+        isset($inscrit['prenom']) // si nous avons trouvé le coureur
+        and
+        $inscrit['ID_regate'] == $_SESSION['ID_regate']   // nous en avons les droits
+) {
+    $sql1 = 'DELETE FROM Inscrit WHERE ID_inscrit =?';
+    $assoc1 = array($_GET['ID']);
+    $req1 = executePreparedQuery($sql1, $assoc1);
+} else {
+    $message = 'Ce coureur n\'a pas été trouvé dans cette régate';
+    pageErreur($message);
+    exit(0);
 }
-catch(Exception $e)
-{
-	// En cas d'erreur, on affiche un message et on arrête tout
-    die('Erreur : '.$e->getMessage());
-}
+$message = 'La pré-inscription du coureur a été annullée';
+pageAnswer($message);
 
-header("Location: Regate.php?item=inscrits");
-
-
-?>
+//header("Location: Regate.php?item=inscrits");

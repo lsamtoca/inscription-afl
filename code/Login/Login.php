@@ -1,85 +1,43 @@
 <?php
 // This, to be sure, should go under ssh
 
-//session_start();
-//require_once 'partage.php';
+
 require_once 'php/Login.php';
+require_once 'php/User.php';
 
-$Login = new Login;
-
-if ($Login->adminCorrectlyLogged()) {
-    header('Location: Admin.php');
-    exit(0);
-}
-
+// Is the stuff below really needed ?
+// 
+//$Login = new Login;
+//if ($Login->adminCorrectlyLogged()) {
+//    header('Location: Admin.php');
+//    exit(0);
+//}
 // This might rise problems
 //if ($Login->clubCorrectlyLogged()) {
 //    header('Location: Regate.php');
 //    exit(0);
 //}
 
-$adminFields = array(
-    'ID' => 'ID_administrateur',
-    'codedPasse' => 'coded_admin_passe',
-    'login' => 'admin_login',
-    'role' => "'Admin'"
-);
-
-$clubFields = array(
-    'ID' => 'ID_regate',
-    'codedPasse' => 'coded_org_passe',
-    'login' => 'org_login',
-    'role' => "'Club'"
-);
-
-function formatSql($fields, $table) {
-
-    //$last_key = end(array_keys($fields));
-    $sql = "select ";
-    foreach ($fields as $key => $value) {
-        $sql .="$value as $key";
-        if (next($fields) == true) {
-            $sql .= ', ';
-        } else {
-            $sql .= ' ';
-        }
-    }
-    $sql.="from $table"; //where 1 ";
-    return $sql;
-}
-
-$adminSql = formatSql($adminFields, 'Administrateur');
-$clubSql = formatSql($clubFields, 'Regate');
-$users = "(($adminSql) UNION ($clubSql))";
-
-//echo $users;
-//exit(0);
 
 function doLogin($login, $codedMdp) {
-    global $users, $Login;
+    global $Login;
 
-    $sql = "select ID,role from $users as Users where "
-            . "Users.login=:LOGIN and Users.codedPasse=:PASS ;";
-    $assoc = array('LOGIN' => $login, 'PASS' => $codedMdp);
-    $req = executePreparedQuery($sql, $assoc);
-
-    $nbligne = $req->rowCount();
-    if ($nbligne == 1) {
-        $user = $req->fetch();
-        switch ($user['role']) {
-            case 'Admin':
-                $Login->loginAsAdmin($user['ID']);
-                header("Location: Admin.php");
-                break;
-            case 'Club':
-                $Login->loginAsClub($user['ID']);
-                header("Location: Regate.php");
-                break;
-        }
-    } else {
+    $user = User_selectByLoginAndMdp($login, $codedMdp);
+    if ($user == NULL) {
         $message = "Le login ou le mot de passe n'est pas correcte";
         pageErreur($message);
         exit(1);
+    }
+
+    switch ($user['role']) {
+        case 'Admin':
+            $Login->loginAsAdmin($user['ID']);
+            header("Location: Admin.php");
+            break;
+        case 'Club':
+            $Login->loginAsClub($user['ID']);
+            header("Location: Regate.php");
+            break;
     }
     exit(0); // We do not return from here
 }
@@ -103,21 +61,38 @@ if (isset($_POST['submit'])) {
     exit(0); // We do not return from here
 }
 
-function doResetMdp ($courriel){
-    global $users;
-    
-    $sql = "select ID,role from $users as User where "
-            . "Users.courriel=:COURRIEL;";
-    $assoc = array('COURRIEL' => $courriel);
-    $req = executePreparedQuery($sql, $assoc);
-    
+function sendEmailWithNonceLink($courriel, $id, $nonce) {
+    return 0;
 }
+
+function doSetNonceAndSendEmail($courriel) {
+
+    $user = User_selectByLastCourriel($courriel);
+    if ($user == NULL) {
+        $message = "Ce courriel ne correspond à aucun utilisateur";
+        pageErreur($message);
+        exit(1);
+    }
+
+    $id = $user['ID'];
+    $nonce = User_setNonce($id);
+    sendEmailWithNonceLink($courriel, $id, $nonce);
+}
+
 if (isset($_POST['mdPOublie'])) {
+
+    $courriel = filter_input(INPUT_POST,'courriel',FILTER_VALIDATE_EMAIL);
+    if ($courriel == NULL) {
+        $message = "Pas un adresse email";
+        pageErreur($message);
+    }
     
-    $sql = "select ID,role from $users as Users where "
-            . "Users.login=:LOGIN and Users.codedPasse=:PASS ;";
-    $assoc = array('LOGIN' => $login, 'PASS' => $codedMdp);
-    $req = executePreparedQuery($sql, $assoc);
+    doSetNonceAndSendEmail($courriel);
+    $message = "Nous vous avons envoyé un courriel"
+            . "contenant un lien qui vous permettra de "
+            . "re-initialiser votre mot de passe";
+    pageAnswer($message);
+    exit(0);
 }
 
 
@@ -154,5 +129,4 @@ xhtml_pre('');
         </form>
 </div>
 
-<?php
-xhtml_post();
+<?php xhtml_post();

@@ -1,8 +1,8 @@
 <?php
 
 require_once './php/Regate.php';
+require_once './php/User.php';
 require_once './php/mailer.php';
-assertAdmin();
 
 function numberOfSailors($idregate) {
     $sql = 'SELECT COUNT(*) as `num` FROM Inscrit WHERE ID_regate= :IDR';
@@ -25,14 +25,11 @@ function detruireRegate($idregate) {
 }
 
 function creerRegate($login, $passe, $courriel, $dateDestruction) {
-    // On verifie d'abord s'il existe déjà une rehgate avec meme login
-    $sql0 = 'SELECT COUNT(*) as `num` FROM `Regate` '
-            . 'WHERE `org_login`=:org_login';
-    $assoc0 = array('org_login' => $login);
-    $req = executePreparedQuery($sql0, $assoc0);
-    $ret = ($req->fetch());
-    if ($ret['num'] != '0') {
-        $message = "Une regate avec le meme identifiant '$login' "
+    
+    // On verifie d'abord s'il existe déjà un utilisateur avec le meme login   
+    $user=  User_selectByLogin($login);
+    if ($user != NULL) {
+        $message = "Un utilisateur avec le même identifiant '$login' "
                 . "existe déjà dans la base de données.\n"
                 . "Veuillez choisir un autre identifiant";
         pageAnswer($message);
@@ -103,9 +100,9 @@ if (isset($_POST['detruire']) && isset($_POST['IDR'])) {
     ) {
         detruireRegate($idregate);
     } else {
-        $message = "Pour l'instant, il n'est pas possible detruire cette regate, "
-                . "car \n  (1) ou bien la date de destruction de cette regate n'est pas passée,"
-                . "\n (2) ou bien la regate a déjà un inscrit";
+        $message = "Pour l'instant, il n'est pas possible détruire cette régate, "
+                . "car \n  (1) ou bien la date de destruction de cette régate n'est pas passée,"
+                . "\n (2) ou bien la régate a déjà un inscrit";
         pageErreur($message);
         exit(0);
     }
