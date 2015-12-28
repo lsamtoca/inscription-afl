@@ -79,7 +79,7 @@ function Regate_formatFin($regate) {
 
 function Regate_setField($ID_regate,$field,$value) {
     
-    $sql = "UPDATE `Regate` SET $field=:value "
+    $sql = "UPDATE `Regate` SET `$field`=:value "
         . "WHERE `ID_REGATE`=:ID";
     $assoc=array('value' => $value,'ID' => $ID_regate);
     executePreparedQuery($sql, $assoc);

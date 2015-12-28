@@ -13,6 +13,11 @@ function format_url_login_club() {
     return sprintf("http://%sLoginClub.php", $path_to_site_inscription);
 }
 
+function format_url_chpwd() {
+    global $path_to_site_inscription;
+    return sprintf("http://%schangePwd.php", $path_to_site_inscription);
+}
+
 function format_url_login() {
     global $path_to_site_inscription;
     return sprintf("http://%sLogin.php", $path_to_site_inscription);
@@ -20,7 +25,7 @@ function format_url_login() {
 
 function format_url_club() {
     global $path_to_site_inscription;
-    return sprintf("http://Regate.php", $path_to_site_inscription);
+    return sprintf("http://%sRegate.php", $path_to_site_inscription);
 }
 
 function format_url_forms($id_regate, $gets = "") {

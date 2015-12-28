@@ -60,9 +60,12 @@ function executePreparedQuery($sql, $assoc, $bd = NULL, $debug = FALSE) {
 
     try {
         if ($bd == NULL) {
-            $bd = newbd();
+            $bd = newBd();
         }
-
+        
+        if ($debug) {
+            echo $sql;
+        }
         $req = $bd->prepare($sql);
         if ($debug) {
             $req->debugDumpParams();

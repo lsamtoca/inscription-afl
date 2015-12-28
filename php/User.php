@@ -1,6 +1,8 @@
 <?php
 
 require_once 'php/hash.php';
+require_once 'php/Regate.php';
+require_once 'php/Administrateur.php';
 
 $adminFields = array(
     'ID' => 'ID_administrateur',
@@ -8,7 +10,8 @@ $adminFields = array(
     'login' => 'admin_login',
     'courriel' => 'courriel',
     'role' => "'Admin'",
-    'date' => "'00/00/0000'"
+    'date' => "'00/00/0000'",
+    'nonce' => 'nonce'
 );
 
 $clubFields = array(
@@ -17,7 +20,8 @@ $clubFields = array(
     'login' => 'org_login',
     'courriel' => 'courriel',
     'role' => "'Club'",
-    'date' => "date_debut"
+    'date' => "date_debut",
+    'nonce' => 'nonce'
 );
 
 function formatSql($fields, $table) {
@@ -47,12 +51,29 @@ function User_selectByLoginAndMdp($login, $codedMdp) {
             . "Users.login=:LOGIN and Users.codedPasse=:PASS ;";
     $assoc = array('LOGIN' => $login, 'PASS' => $codedMdp);
     $req = executePreparedQuery($sql, $assoc);
-    
+
     $nbligne = $req->rowCount();
     if ($nbligne != 1) {
         return NULL;
     }
-    return $req->fetch();    
+    return $req->fetch();
+}
+
+function User_selectByIdAndNonce($id, $nonce) {
+    global $users;
+    if($nonce == '')
+        return NULL;
+    
+    $sql = "select * from $users as Users where "
+            . "Users.id=:ID and Users.nonce=:NONCE ;";
+    $assoc = array('ID' => $id, 'NONCE' => $nonce);
+    $req = executePreparedQuery($sql, $assoc);
+
+    $nbligne = $req->rowCount();
+    if ($nbligne != 1) {
+        return NULL;
+    }
+    return $req->fetch();
 }
 
 function User_selectByLogin($login) {
@@ -62,12 +83,12 @@ function User_selectByLogin($login) {
             . "Users.login=:LOGIN;";
     $assoc = array('LOGIN' => $login);
     $req = executePreparedQuery($sql, $assoc);
-    
+
     $nbligne = $req->rowCount();
     if ($nbligne != 1) {
         return NULL;
     }
-    return $req->fetch();    
+    return $req->fetch();
 }
 
 function User_selectByLastCourriel($courriel) {
@@ -78,27 +99,55 @@ function User_selectByLastCourriel($courriel) {
     $assoc = array('COURRIEL' => $courriel);
     $req = executePreparedQuery($sql, $assoc);
 
-    $nbligne = $req->rowCount();    
+    $nbligne = $req->rowCount();
     if ($nbligne == 0) {
         return NULL;
     }
-    return $req->fetch();    
+    return $req->fetch();
 }
 
+function User_setNonce($user) {
 
-function User_setNonce($id,$role) {
-
-    switch ($role){
+    $id = $user['ID'];
+    for ($i = 0; $i < 20; $i++) {
+        $nonce = generateHash();
+        $otherUser = User_selectByIdAndNonce($id, $nonce);
+        if ($otherUser == NULL) {
+            break;
+        }
+    }
+    if($i == 20){
+        return NULL;
+    }
+    
+    $role = $user['role'];
+    switch ($role) {
+        case 'Admin':
+            Administrateur_setField($id, 'nonce', $nonce);
+            break;
+        case 'Club':
+            Regate_setField($id, 'nonce', $nonce);
+            break;
         default:
             return NULL;
             break;
-            
-            case 'Club':
-                $nonce = generateHash();
-                Regate_setField($id, 'nonce', $nonce);
-                break;
-        
-    }
+   }
     return $nonce;
-    
+}
+
+function User_destroyNonce($user) {
+    $id = $user['ID'];
+    $role = $user['role'];
+
+    switch ($role) {
+        case 'Admin':
+            Administrateur_setField($id, 'nonce', '');
+            break;
+        case 'Club':
+            Regate_setField($id, 'nonce', '');
+            break;
+        default:
+            return NULL;
+            break;
+    }
 }

@@ -44,6 +44,7 @@ if (isset($paths[$requestedPath])) {
 
 
 require_once 'partage.php';
+
 $Login = new Login;
 switch ($aut) {
     case 'AutClub':

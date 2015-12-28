@@ -194,7 +194,8 @@
                         du logiciel, http://regateslaser.info/inscriptions_afl_dev.
                     Vous pouvez décider de cacher cette régate pour le temps nécessaire à
                     compléter tous les renseignements de la régate, 
-                    par exemple et en particulier si vous utilisé le lien pour le paiement en ligne.
+                    par exemple et en particulier, 
+                    si vous utilisez le lien pour le paiement en ligne.
                 </span>
             </span>
 

@@ -1,21 +1,22 @@
 <?php
-//require_once('partage.php');
-
 require_once('php/Regate.php');
 require_once('php/Administrateur.php');
+require_once('php/User.php');
 
-//session_start();
+$withOldPwd = True;
+if (isset($_SESSION['withOldPwd']) and $_SESSION['withOldPwd'] == False) {
+    $withOldPwd = False;
+}
 
 $login = new Login;
-$club=$login->clubCorrectlyLogged();
-$admin=$login->adminCorrectlyLogged();
-if($admin){
-    $club=false;
+$club = $login->clubCorrectlyLogged();
+$admin = $login->adminCorrectlyLogged();
+if ($admin) {
+    $club = false;
 }
-if (!$club and !$admin) {
+if (!$club and ! $admin) {
     header("Location: Login.php");
 }
-
 
 function verifyPostField($field) {
     return isset($_POST[$field]) && $_POST[$field] != '';
@@ -38,7 +39,7 @@ function verifyCondition($cond, $message) {
 
 function verifyOldPwd() {
     global $admin, $club;
-    
+
     $coded_pwd = '';
     if ($club) {
         $ID_regate = $_SESSION['ID_regate'];
@@ -60,11 +61,10 @@ function verifyOldPwd() {
     return md5($oldPwd) == $coded_pwd;
 }
 
-function updatePwd() { 
-    global $club, $admin;   
-    
-    $new_coded_pwd = md5($_POST['newPwd']);
+function updatePwd() {
+    global $club, $admin;
 
+    $new_coded_pwd = md5($_POST['newPwd']);
     if ($admin) {
         $ID_administrateur = $_SESSION['ID_administrateur'];
         Administrateur_setField($ID_administrateur, 'coded_admin_passe', $new_coded_pwd);
@@ -81,22 +81,25 @@ function updatePwd() {
 }
 
 if (isset($_POST['submit'])) {
-    verifyCondition(verifyPostField('oldPwd'), "L'ancien mot de passe est absent");
+    if ($withOldPwd) {
+        verifyCondition(verifyPostField('oldPwd'), "L'ancien mot de passe est absent");
+        verifyCondition(verifyOldPwd(), "L'autentication a echouée");
+    }
+
     verifyCondition(verifyPostField('newPwd'), "Le nouveau mot de passe est absent");
     verifyCondition(verifyPostField('confirmNewPwd'), "Vouz n'avez pas confirmé le mot de passe est absent");
     verifyCondition($_POST['newPwd'] == $_POST['confirmNewPwd'], "Les deux mots de passe rentrés ne sont pas egaux");
     verifyCondition(lengthNewPwd(), "Le nouveau mot de passe est trop court ou trop long");
-    verifyCondition(verifyOldPwd(), "L'autentication a echouée");
-
 
     updatePwd();
+    unset($_SESSION['oldPwd']);
 
-    if($club){
-        $goback='Regate.php';
-    }else{
-        $goback='Admin.php';
+    if ($club) {
+        $goback = 'Regate.php';
+    } else {
+        $goback = 'Admin.php';
     }
-    pageAnswer('Votre mot de passe a eté mis à jour',$goback);
+    pageAnswer('Votre mot de passe a eté mis à jour', $goback);
 }
 
 $whichPwd = 'Club';
@@ -116,13 +119,14 @@ xhtml_pre2('');
                 <?php echo $whichPwd ?>
             </legend>
             <div>
+                <?php if ($withOldPwd): ?>
+                    <label for="odlPwd">
+                        Ancien mot de passe :
+                    </label>
+                    <input type="password" name="oldPwd" size="10"/>
+                    <br />
+                <?php endif; ?>
 
-                <label for="odlPwd">
-                    Ancien mot de passe :
-                </label>
-                <input type="password" name="oldPwd" size="10"/>
-
-                <br />
                 <label for="newPwd">
                     Nouveau mot de passe :
                 </label>

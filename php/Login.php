@@ -1,7 +1,5 @@
 <?php
-
 require_once 'php/Regate.php';
-
 // LOGIN
 class Login {
 
@@ -11,15 +9,17 @@ class Login {
         $_SESSION['titre_regate'] = $regate['titre'];
         $_SESSION['debut_regate'] = $regate['date_debut'];
         $_SESSION['courriel'] = $regate['courriel'];
-        header("Location: Regate.php");
+        //header("Location: Regate.php");
     }
 
     public function loginAsAdmin($ID_admin) {
         $_SESSION['ID_administrateur'] = $ID_admin;
-        header("Location: Admin.php");
+        //header("Location: Admin.php");
     }
 
-    private function sessionHasExpired($minutes = 60) {
+            
+    private function sessionHasExpired($minutes = 120) {
+        // We let a Club session be 2 hours at most
         # Check for session timeout, else initiliaze time
         if (isset($_SESSION['timeout'])) {
             # Check Session Time for expiry
@@ -57,12 +57,4 @@ class Login {
         }
     }
 
-}
-
-function assertAdmin() {
-
-    if (!isset($_SESSION['ID_administrateur'])) {
-        header('Location: LoginAdmin.php');
-        exit(-1);
-    }
 }

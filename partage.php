@@ -6,6 +6,9 @@ date_default_timezone_set('Europe/Paris');
 
 // Can this be placed in php/Mailer.php ?
 $courrielDeveloppeur = 'luigi.santocanale@lif.univ-mrs.fr';
+define('PWDRECOVERYON', true);
+//define('PWDRECOVERYON', false);
+
 
 // Bootstrap
 // This is code to be executed to setup everything...
