@@ -1,6 +1,5 @@
 <?php
 
-require_once 'partage.php';
 
 // Remplace quoted_printable_encode, 
 // disponible pour php > = 5.3 seulement

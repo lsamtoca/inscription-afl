@@ -1,6 +1,5 @@
 <?php
 
-require_once "partage.php";
 require_once 'php/Regate.php';
 
 function cell($text) {

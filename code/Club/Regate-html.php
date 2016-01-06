@@ -1,6 +1,5 @@
 <?php
 // Affichage
-require_once "partage.php";
 
 if (!filter_var($_SESSION['courriel'], FILTER_VALIDATE_EMAIL)) {
 
@@ -11,7 +10,6 @@ if (!filter_var($_SESSION['courriel'], FILTER_VALIDATE_EMAIL)) {
     exit(-1); // Here there is a problem 
 }
 
-xhtml_pre1('Gestion de votre régate');
 
 global $TITRE_REGATE, $DESC_REGATE,
  $LIEU, $CV_ORGANISATEUR,
@@ -19,10 +17,12 @@ global $TITRE_REGATE, $DESC_REGATE,
  $COURRIEL;
 
 // global $DROITS;
-
-global $pdo_path, $user, $pwd, $pdo_options;
+// do we need the ones below
+//global $pdo_path, $user, $pwd, $pdo_options;
 
 global $mails_all, $mails_confirme, $mails_pas_confirme;
+
+xhtml_pre1('Gestion de votre régate');
 ?>
 
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css" />
@@ -52,20 +52,10 @@ global $mails_all, $mails_confirme, $mails_pas_confirme;
 
 </script>
 
-<?php xhtml_pre2('Gestion de votre régate'); ?>
-
-
-<div id='deconnexion'>
-    <ul>    
-        <?php if(isset($_SESSION['ID_administrateur'])): ?>
-        <li><a href="Admin.php">Retour à la page Administrateur</a> </li>
-        <?php endif; ?>
-        <li><a href="changePwd.php">Changez le mot de passe</a> </li>
-        <li><a href='deconnexion.php'>Déconnexion</a></li>
-    </ul>
-
-</div>
-
+<?php
+xhtml_pre2('Gestion de votre régate');
+doMenu();
+?>
 
 <div id='accordion'>
 

@@ -1,8 +1,5 @@
 <?php
-//session_start();
-//if (!isset($_SESSION["ID_regate"])) {
-//    header("Location: LoginClub.php");
-//}
+
 
 /* Format du ficheir dbf --
 
@@ -193,8 +190,7 @@ PHONE,C,20
 DATE_MAJ,D
 
 */
-//session_start();
-//require "partage.php";
+
 
 define("FILENAME",sprintf("%sinscrits.dbf",$unix_base.$racine)); //constante: nom du fichier à générer
 

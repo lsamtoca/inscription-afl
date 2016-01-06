@@ -1,6 +1,5 @@
 <?php
 
-require_once 'partage.php';
 if (!isset($_GET['regate'])) {
     pageErreur('Il faut choisir une regate');
     exit(0);

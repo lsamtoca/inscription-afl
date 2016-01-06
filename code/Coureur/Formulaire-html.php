@@ -43,13 +43,10 @@ xhtml_pre1($page_title1);
 
 </script>
 
-<?php xhtml_pre2($page_title2); ?>
+<?php xhtml_pre2($page_title2); 
+doMenu($menuLanguage);
+?>
 
-<div id='deconnexion' class="white_over_dark">
-    <ul>    
-        <li><a><span id='lang' class="msg"></span></a></li>
-    </ul>
-</div><!--choix langue-->
 
 
 <div id="accordion">

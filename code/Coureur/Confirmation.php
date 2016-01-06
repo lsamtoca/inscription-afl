@@ -1,39 +1,24 @@
 <?php
 
-require "partage.php";
+// On cherche l'inscrit
+$sql = 'SELECT nom, prenom FROM Inscrit WHERE ID_inscrit = ?';
+$assoc = array($_GET['ID']);
+$req = executePreparedQuery($sql, $assoc);
 
-try {
-    // On se connecte à la BD
-    $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-    $bdd = new PDO($pdo_path, $user, $pwd, $pdo_options);
+$donnees = $req->fetch();
+$req->closeCursor();
 
-    // On cherche l'inscrit
-    $req = $bdd->prepare('SELECT nom, prenom FROM Inscrit WHERE ID_inscrit = ?');
-    $req->execute(array($_GET['ID']));
-    $donnees = $req->fetch();
-    $req->closeCursor();
-
-    isset($donnees['prenom']) or
-            die('ERREUR : nous n\'avons pas trouvé votre pré-inscription dans la base de données :-(');
-
-    $sql = 'UPDATE Inscrit SET `conf`=?, `date confirmation`=? WHERE ID_inscrit =?';
-    $req = $bdd->prepare($sql);
-    $req->execute(array(1,date('Y-m-d G:i:s'),$_GET['ID']));
-    $req->closeCursor();
-} catch(Exception $e) {
-    // En cas d'erreur, on affiche un message et on arrête tout
-    die('Erreur : '.$e->getMessage());
+if (!isset($donnees['prenom'])) {
+    $message = "Nous n'avons pas trouvé votre pré-inscription dans la base de données";
+    pageErreur($message);
+    exit(0);
 }
 
-?>
+$sql1 = 'UPDATE Inscrit SET `conf`=?, `date confirmation`=? WHERE ID_inscrit =?';
+$assoc1 = array(1, date('Y-m-d G:i:s'), $_GET['ID']);
+$req = executePreparedQuery($sql1, $assoc1);
 
-<?php xhtml_pre('Confirmation'); ?>
-
-<div>
-
-    Bonjour <?php echo $donnees['prenom'].' '.$donnees['nom'] ?>,<br />
-    votre inscription est maintenant confirmée !!!
-
-</div>
-
-<?php xhtml_post(); ?>
+$nom = $donnees['nom'];
+$prenom = $donnees['prenom'];
+$messagep = "Bonjour $prenom $nom\nVotre inscription est maintenant confirmée.";
+pageAnswer($messagep, NULL,'Confirmation');

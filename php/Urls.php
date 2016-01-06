@@ -5,27 +5,27 @@ function format_url_regate($id_regate, $gets = "") {
     global $path_to_site_inscription;
     if ($gets != "")
         $gets = "&gets";
-    return sprintf("http://%sFormulaire.php?regate=%d%s", $path_to_site_inscription, $id_regate, $gets);
+    return sprintf("http://%sFormulaire?regate=%d%s", $path_to_site_inscription, $id_regate, $gets);
 }
 
 function format_url_login_club() {
     global $path_to_site_inscription;
-    return sprintf("http://%sLoginClub.php", $path_to_site_inscription);
+    return sprintf("http://%sLogin", $path_to_site_inscription);
 }
 
 function format_url_chpwd() {
     global $path_to_site_inscription;
-    return sprintf("http://%schangePwd.php", $path_to_site_inscription);
+    return sprintf("http://%schangePwd", $path_to_site_inscription);
 }
 
 function format_url_login() {
     global $path_to_site_inscription;
-    return sprintf("http://%sLogin.php", $path_to_site_inscription);
+    return sprintf("http://%sLogin", $path_to_site_inscription);
 }
 
 function format_url_club() {
     global $path_to_site_inscription;
-    return sprintf("http://%sRegate.php", $path_to_site_inscription);
+    return sprintf("http://%sRegate", $path_to_site_inscription);
 }
 
 function format_url_forms($id_regate, $gets = "") {

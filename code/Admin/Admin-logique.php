@@ -126,6 +126,7 @@ if (isset($_POST['loginAsClub']) && isset($_POST['IDR'])) {
     $ID_regate = $regate['ID_regate'];
     $thisLogin = new Login;
     $thisLogin->loginAsClub($ID_regate);
+    header('Location: Regate');
     exit(0);
 }
 

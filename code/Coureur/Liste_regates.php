@@ -1,5 +1,4 @@
 <?php
-require_once('partage.php');
 
 function do_liste($req, $titre) {
 //echo "<h2>$titre</h2>\n";
@@ -79,6 +78,8 @@ xhtml_pre1($title);
 
 <?php
 xhtml_pre2($title);
+doMenu();
+
 ?>
 
 <div id="accordion">
@@ -101,4 +102,3 @@ xhtml_pre2($title);
 </div>
 <?php
 xhtml_post();
-?>

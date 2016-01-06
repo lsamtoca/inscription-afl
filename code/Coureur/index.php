@@ -1,5 +1,4 @@
 <?php
-require_once('partage.php');
 $title = "Inscription aux régates de l'AFL";
 xhtml_pre1($title);
 ?>
@@ -20,7 +19,10 @@ xhtml_pre1($title);
 
 </script>
 
-<?php xhtml_pre2($title); ?>
+<?php xhtml_pre2($title); 
+
+doMenu();
+?>
 
 <!-- Vous etes -->
 

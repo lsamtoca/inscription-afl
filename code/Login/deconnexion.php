@@ -1,4 +1,7 @@
 <?php
-//	session_start();
 	session_destroy();
-	header('Location: index.php');
+        $message='Vous etes maintenant deconnecté';
+        $goback='index';
+        unset($_SESSION);
+        pageAnswer($message, $goback);
+//	header('Location:index');

@@ -6,7 +6,11 @@ if (!isset($_GET['path'])) {
     $requestedPath = $_GET['path'];
 }
 
-$coureurFiles = array('Formulaire', 'Liste_regates', 'index');
+$coureurFiles = array(
+    'Formulaire', 'Liste_regates', //, 
+    'Confirmation'
+        //'index'
+);
 $clubFiles = array('Regate', 'Annulation',
     'Liste_inscrits_csv',
     'Liste_inscrits_dbf',
@@ -17,33 +21,46 @@ $adminFiles = array('Admin');
 $loginFiles = array('Login', 'changePwd', 'deconnexion');
 
 $paths = array();
-function setPaths($files, $subdir, $aut) {   
+
+function setPaths($files, $subdir, $aut) {
     global $paths;
     foreach ($files as $file) {
         $paths[$file] = array("code/$subdir/$file.php", $aut);
         $paths["$file.php"] = array("code/$subdir/$file.php", $aut);
     }
 }
+
 setPaths($coureurFiles, 'Coureur', 'AutNone');
 setPaths($adminFiles, 'Admin', 'AutAdmin');
 setPaths($clubFiles, 'Club', 'AutClub');
 setPaths($loginFiles, 'Login', 'AutLogin');
-        
+$paths['Logout'] = array("code/Login/deconnexion.php", 'AutLogin');
 
-$defaultPath = 'code/Coureur/index.php';
+//
+$paths['index'] = $paths['Liste_regates'];
+$paths['index.php'] = $paths['Liste_regates'];
+
+$defaultPath = 'code/Coureur/Liste_Regates.php';
 //$defaultPath = $requestedPath;
 $defaultAuth = 'AutNone';
+
+require_once 'bootstrap.php';
 
 $path = $defaultPath;
 $aut = $defaultAuth;
 if (isset($paths[$requestedPath])) {
     $path = $paths[$requestedPath][0];
     $aut = $paths[$requestedPath][1];
+} else {
+    if ($requestedPath != '') {
+        $message = '404, pas trouvé';
+        pageErreur($message, 'index');
+        exit(0);
+    }
 }
 
 
 
-require_once 'partage.php';
 
 $Login = new Login;
 switch ($aut) {
@@ -58,6 +75,7 @@ switch ($aut) {
         break;
 
     case 'AutLogin':
+    default:
         session_start();
         break;
 }

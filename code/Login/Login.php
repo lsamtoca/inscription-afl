@@ -166,6 +166,7 @@ if (PWDRECOVERYON and isset($_GET[$hashGetString])) {
 }
 
 xhtml_pre('');
+doMenu();
 ?>
 
 <div class="contenu smallform">

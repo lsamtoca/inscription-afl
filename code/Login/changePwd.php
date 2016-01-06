@@ -110,6 +110,9 @@ if ($admin) {
 $title = 'Modifiez votre mot de passe';
 xhtml_pre1($title);
 xhtml_pre2('');
+
+doMenu();
+    
 ?>
 <div class="contenu smallform">
     <form action="" method="POST" >

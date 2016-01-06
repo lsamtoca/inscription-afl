@@ -68,7 +68,8 @@ function xhtml_pre2($title) {//Afficher le prefixe xhtml
     background();
     echo "</head>\n<body>\n\n";
     echo "<div id='content' class='white_over_dark' >\n\n";
-    echo "<h1>$title</h1>\n";
+    echo "<div id=\"title\"><h2>Pré-inscriptions aux régates de l'AFL</h2></div>\n";
+    echo "<h2>$title</h2>\n";
 }
 
 function xhtml_pre($title) {//Afficher le prefixe xhtml
@@ -136,6 +137,8 @@ function pageErreur($message, $goback = NULL) {
     $messageHtml = str_replace("\n", "<br />\n", $message);
 
     xhtml_pre('Erreur');
+    doMenu();
+    
     echo '<div class="contenu smallform">' . "\n";
     echo "<p><span class=\"error_strings\">$messageHtml</span></p>";
     echo "<a href=\"$goback\">&laquo; Retour</a><h3>";
@@ -147,13 +150,13 @@ function pageErreur($message, $goback = NULL) {
 
 function pageAnswer($message, $goback = NULL, $title = 'Mission accomplie') {
 
-
     if ($goback == NULL) {
         $goback = goback();
     }
     $messageHtml = str_replace("\n", "<br />\n", $message);
 
     xhtml_pre($title);
+    doMenu();
     echo '<div class="contenu smallform">' . "\n";
     echo "<p><span>$messageHtml</span></p>";
     echo "<a href=\"$goback\">&laquo; Retour</a><h3>";
@@ -165,8 +168,8 @@ function pageAnswer($message, $goback = NULL, $title = 'Mission accomplie') {
 
 function pageServerMisconfiguration($message) {
     xhtml_pre('Erreur');
+    
     $messageHtml = str_replace("\n", "<br />\n", $message);
-
     echo '<h3>';
     echo "Server misconfiguration";
     echo '</h3>';
@@ -180,6 +183,66 @@ function pageServerMisconfiguration($message) {
 function redirect($message, $time, $gowhere) {
     echo $message;
     printf("<script type=\"text/javascript\">setTimeout('location=(\"%s\")' ,%d);</script>", $gowhere, $time);
+}
+
+function echoMenu($choices) {
+    echo '<div id="deconnexion" class="white_over_dark">' . "\n";
+    echo '<ul>' . "\n";
+    foreach ($choices as $choice) {
+        $msg = $choice['message'];
+        $link = '';
+        if (isset($choice['link'])) {
+            $link = $choice['link'];
+        }
+        echo '<li>';
+        if ($link != '') {
+            echo "<a href=\"$link\">";
+        } else {
+            echo '<a>';
+        }
+        echo $msg;
+        echo '</a></li>';
+    }
+    echo '</ul>' . "\n";
+    echo '</div><!--menu-->';
+}
+
+$menuItem_Home = array('message' => '<span id="home" class="msg">Accueil</span>', 'link' => 'index');
+$menuItem_Club = array('message' => 'Accueil Club', 'link' => 'Regate');
+$menuItem_Admin = array('message' => 'Accueil Administrateur', 'link' => 'Admin');
+$menuItem_Login = array('message' => 'Connexion', 'link' => 'Login');
+$menuItem_Logout = array('message' => 'Deconnexion', 'link' => 'Logout');
+$menuItem_Language = array('message' => '<span id="lang" class="msg"></span>');
+$menuItem_ChPwd = array('message' => 'Modifiez le mot de passe', 'link' => 'changePwd');
+
+$menuUsual = array($menuItem_Home, $menuItem_Login);
+$menuLanguage = array($menuItem_Home, $menuItem_Language);
+$menuHome = array($menuItem_Home);
+$menuHomeClub = array($menuItem_Home,
+    $menuItem_Club,
+    $menuItem_ChPwd,
+    $menuItem_Logout
+);
+$menuHomeAdmin = array(
+    $menuItem_Home,
+    $menuItem_Admin,
+    $menuItem_ChPwd,
+    $menuItem_Logout);
+
+function doMenu($menu = array()) {
+    global $menuHomeAdmin, $menuHomeClub, $menuHome,$menuUsual;
+
+    if (count($menu) == 0) {
+        $login = new Login();
+        if ($login->adminCorrectlyLogged()) {
+            $menu = $menuHomeAdmin;
+        } elseif ($login->clubCorrectlyLogged()) {
+            $menu = $menuHomeClub;
+        } else {
+            $menu = $menuUsual;
+        }
+    }
+    echoMenu($menu);
 }
 
 /* This is not used anywhere
