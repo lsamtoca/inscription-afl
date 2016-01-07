@@ -40,12 +40,14 @@ $paths['Logout'] = array("code/Login/deconnexion.php", 'AutLogin');
 $paths['index'] = $paths['Liste_regates'];
 $paths['index.php'] = $paths['Liste_regates'];
 
-$defaultPath = 'code/Coureur/Liste_Regates.php';
+$defaultPath = 'code/Coureur/Liste_regates.php';
 //$defaultPath = $requestedPath;
 $defaultAuth = 'AutNone';
 
 require_once 'bootstrap.php';
 
+//$_SERVER['REQUEST_URI'] = dirname($_SERVER['PHP_SELF']);
+        
 $path = $defaultPath;
 $aut = $defaultAuth;
 if (isset($paths[$requestedPath])) {
@@ -53,13 +55,13 @@ if (isset($paths[$requestedPath])) {
     $aut = $paths[$requestedPath][1];
 } else {
     if ($requestedPath != '') {
-        $message = '404, pas trouvé';
+ //       $server = $_SERVER['PHP_SELF'];
+ //       $server .= $_SERVER['REQUEST_URI'];
+        $message = '404, pas trouvé ' . $server;
         pageErreur($message, 'index');
         exit(0);
     }
 }
-
-
 
 
 $Login = new Login;

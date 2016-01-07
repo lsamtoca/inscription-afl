@@ -15,15 +15,17 @@ function xhtml_pre1($title, $type = 'transitional') {//Afficher le prefixe xhtml
     } else {
         $docType = $xhtmlTransitional;
     }
-
+    
+    $base=dirname($_SERVER['PHP_SELF']);
     echo "$docType
 <html xmlns=\"http://www.w3.org/1999/xhtml\">
 <head>
 <meta name=\"robots\" content=\"noindex,nofollow\" />
 <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />
+<base href=\"$base/\" />
 <link rel=\"STYLESHEET\" type=\"text/css\" href=\"afl.css\" />
 <link rel=\"icon\" type=\"image/png\" href=\"img/favicon.png\" />
-<title>$title</title>";
+<title>$title</title>\n";
 }
 
 function lgtrick($image) {

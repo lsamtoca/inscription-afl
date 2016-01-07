@@ -14,8 +14,6 @@ if ($_SERVER['HTTP_HOST'] == 'localhost') {
     // $host, $user, $pwd, $db
     // pout l'acces à la bd
 
-    preg_match('/^.*www\//', __FILE__, $matches);
-    $unix_base = $matches[0];
     require $unix_base . 'basedesnoms/.AFLdb.php';
 }
 

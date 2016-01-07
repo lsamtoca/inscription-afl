@@ -191,6 +191,7 @@ DATE_MAJ,D
 
 */
 
+// unix_base and racine should be defined in
 
 define("FILENAME",sprintf("%sinscrits.dbf",$unix_base.$racine)); //constante: nom du fichier à générer
 

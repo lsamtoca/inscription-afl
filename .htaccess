@@ -1,12 +1,18 @@
 RewriteEngine On
+#RewriteBase /inscriptions_afl_dev/
+#RewriteBase /inscriptions_afl/
 RewriteBase /~lsantoca/inscriptions-afl/
 
-RewriteCond %{REQUEST_FILENAME} !\.pdf
+RewriteCond %{REQUEST_FILENAME} !\.js
+RewriteCond %{REQUEST_FILENAME} !\.css
 RewriteCond %{REQUEST_FILENAME} !\.properties
 RewriteCond %{REQUEST_FILENAME} !\.png
-RewriteCond %{REQUEST_FILENAME} !\.WDZ
-RewriteCond %{REQUEST_FILENAME} !\.js
 RewriteCond %{REQUEST_FILENAME} !\.jpg
-RewriteCond %{REQUEST_FILENAME} !\.css
+RewriteCond %{REQUEST_FILENAME} !\.pdf
+RewriteCond %{REQUEST_FILENAME} !\.WDZ
 RewriteCond %{REQUEST_FILENAME} !controller.php
 RewriteRule ^([^?]*)$ controller.php?path=$1 [NC,L,QSA]
+
+#RewriteCond %{REQUEST_FILENAME} !afl.css
+#RewriteCond %{REQUEST_FILENAME} \.css
+#RewriteRule ^([^?]*)$ afl.css
