@@ -14,7 +14,7 @@ if ($_SERVER['HTTP_HOST'] == 'localhost') {
     // $host, $user, $pwd, $db
     // pout l'acces à la bd
 
-    require $unix_base . 'basedesnoms/.AFLdb.php';
+    require '../basedesnoms/.AFLdb.php';
 }
 
 $pdo_path = "mysql:host=$host;dbname=$db";

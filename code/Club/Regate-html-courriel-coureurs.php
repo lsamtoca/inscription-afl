@@ -24,7 +24,10 @@
             }
         </script>
 
-        <form action='#courriel' method='POST' enctype='multipart/form-data'>
+        <form 
+            action='<?php echo urlSelf(); ?>#courriel' 
+            method='POST' 
+            enctype='multipart/form-data'>
             <fieldset>
                 Envoyer un courriel à :
                 <input type='radio' name='aqui' checked value='tous' onClick='set_tous()'><label>tous les préinscrits</label>
@@ -33,7 +36,8 @@
                 <hr />
                 <label>To : </label>
                 <br />
-                <input type='text' name='to' id='to' style='width:100%;' readonly value='<?php echo $mails_all; ?>' />
+                <input type='text' name='to' id='to' style='width:100%;' 
+                       readonly value='<?php echo $mails_all; ?>' />
                 <br />
                 <label>CC : </label>
                 <br />
@@ -57,4 +61,4 @@
 
     <?php endif; ?>
 
-</div>
+</div><!--envoyer email aux coureurs-->

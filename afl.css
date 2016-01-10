@@ -14,8 +14,6 @@ html, body {
 
 }
 
-
-
 img#bg {
     position:fixed;
     top:0;
@@ -124,7 +122,9 @@ table.mytable td {
 
 }
 
-#deconnexion {
+/* Menu deroulant */
+
+#menu {
     position: fixed;
     width: auto;
     height: auto;
@@ -136,30 +136,53 @@ table.mytable td {
     /*    background-color:white;*/
 }
 
-/*#deconnexion:before {
-    content : "[ ";
-}*/
-
-#deconnexion ul:after {
+#menu>ul:after {
     content : " ]";
 }
 
-#deconnexion ul:before {
+#menu>ul:before {
     content: "[ ";
 }
 
-#deconnexion ul, #deconnexion li {
+#menu>ul, #menu>ul>li {
     display: inline;
     width:0px;
 }
-#deconnexion li:after{
+#menu>ul>li:after{
     content: " | ";
 }
-#deconnexion li:last-child:after{
+#menu>ul>li:last-child:after{
     content: "";
 }
 
 
+
+
+#menu ul ul>li {
+    display: inherit;
+}
+
+#menu ul>li {
+    position: relative;
+}
+#menu>ul>li>ul {
+    position: absolute;
+    /* on cache les sous menus complètement sur la gauche */
+    /*left: -999em;*/
+    display:none;
+    text-align:left;
+    z-index: 1000;
+    background-color: cadetblue;
+    /*width:inherit;*/
+    padding:5px;
+}
+#menu>ul>li:hover>ul {
+    /* Au survol des li du menu on replace les sous menus */
+    left: 0px;
+    display:block;
+}
+
+/*
 #choix_langue {
     position: absolute;
     width: auto;
@@ -176,10 +199,11 @@ coucou#choix_langue A {
 }
 
 couocu#choix_langue A:hover {
-    /*text-decoration: none;*/
-    /*color: #FF0000;*/
+    text-decoration: none;
+    *color: #FF0000;
     cursor:pointer;
 }
+
 
 #back_to_menu {
     position: fixed;
@@ -191,6 +215,7 @@ couocu#choix_langue A:hover {
     padding-left: 1em;
 }
 
+*/
 
 /*#back_to_menu {
     position: fixed;

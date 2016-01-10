@@ -126,90 +126,81 @@ function fill_form_from_db() {
         //       echo 'OK';
     }
 
-    try {
-        $bd = new PDO($pdo_path, $user, $pwd, $pdo_options);
 
-        if (!$confirmation) {
-            // Si on est pas en train de confirmer
-            // Chercher par no licence on no isaf
-            $sql = "Select * from `Inscrit` "
-                    . "where $field_key=:field_value "
-                    . "order by `date preinscription` desc";
-            $req = $bd->prepare($sql);
-            $req->execute(array(
-                'field_value' => $field_value));
-        } else {
-            // Sinon, on est en train de confirmer
-            // Chercher par aussi via le hash
-            // le hash est ajouté pour garantir
-            // un certain anonymat de l'inscription
-            $sql = "SELECT * FROM `Inscrit` "
-                    . "WHERE $field_key=:field_value AND hash=:hash "
-                    . "ORDER BY `date preinscription` DESC";
-            $req = $bd->prepare($sql);
-            $req->execute(array(
-                'hash' => $hash,
-                'field_value' => $field_value));
+    if (!$confirmation) {
+        // Si on est pas en train de confirmer
+        // Chercher par no licence on no isaf
+        $sql = "Select * from `Inscrit` "
+                . "where $field_key=:field_value "
+                . "order by `date preinscription` desc";
+        $assoc = array(
+            'field_value' => $field_value);
+        $req = executePreparedQuery($sql, $assoc);
+    } else {
+        // Sinon, on est en train de confirmer
+        // Chercher par aussi via le hash
+        // le hash est ajouté pour garantir
+        // un certain anonymat de l'inscription
+        $sql = "SELECT * FROM `Inscrit` "
+                . "WHERE $field_key=:field_value AND hash=:hash "
+                . "ORDER BY `date preinscription` DESC";
+        $assoc = array(
+            'hash' => $hash,
+            'field_value' => $field_value);
+        $req = executePreparedQuery($sql, $assoc);
+    }
+
+    if ($req->rowCount() > 0) {
+        // Si on a trouvé qqchose on pre-complete le formulaire
+        // via le champ 'defaut' des elements
+
+        $row = $req->fetch();
+
+        foreach ($assoc_INSCRIT_form as $field_bd => $field_form) {
+            $mainformInputs[$field_form]['default'] = $_POST[$field_form] = $row[$field_bd];
+        }
+        $mainformInputs['naissance']['default'] = $_POST['naissance'] = dateReformatMysqlToJquery($mainformInputs['naissance']['default']);
+
+        if ($gotoinscription) {
+
+            $_POST['ID_inscrit'] = '0';
+            $_POST['maSoumission'] = '';
+            $_POST['IDR'] = $_GET['regate'];
+            // We get now 'lang' from the ?
+            //$_POST['lang'] = 'fr';
+            $_POST['conf'] = '0';
+
+            // Ces donnés devraient être soumis à un contrôle
+            // Afin de ne pas propager des erreurs
+            //               print_r($_POST);
+            include 'Inscription.php';
+            exit;
+        }
+    } else
+    // On a rien trouvé  dans la table INSCRIT
+    // On cherche alors dans la table COUREUR.DBF
+    // Faire la requete sur la table COUREUR.DBF
+    if (isset($_POST['search_lic'])) {
+        $sql = "Select * from `COUREUR.DBF` where `NO_LIC`= ?";
+        $assoc = array($_POST['search_lic']);
+        $req = executePreparedQuery($sql, $assoc);
+
+        //        $req->debugDumpParams();
+        function strip_spaces($string) {
+            return str_replace(' ', '', $string);
         }
 
+        // Si on a trouvé qqchose on pre-remplis le formulaire
         if ($req->rowCount() > 0) {
-            // Si on a trouvé qqchose on pre-complete le formulaire
-            // via le champ 'defaut' des elements
-
             $row = $req->fetch();
-
-            foreach ($assoc_INSCRIT_form as $field_bd => $field_form) {
-                $mainformInputs[$field_form]['default'] = $_POST[$field_form] = $row[$field_bd];
+            foreach ($assoc_COUREUR_form as $field_bd => $field_form) {
+                $mainformInputs[$field_form]['default'] = strip_spaces($row[$field_bd]);
             }
-            $mainformInputs['naissance']['default'] = $_POST['naissance'] =
-                    dateReformatMysqlToJquery($mainformInputs['naissance']['default']);
-
-            if ($gotoinscription) {
-
-                $_POST['ID_inscrit'] = '0';
-                $_POST['maSoumission'] = '';
-                $_POST['IDR'] = $_GET['regate'];
-                // We get now 'lang' from the ?
-                //$_POST['lang'] = 'fr';
-                $_POST['conf'] = '0';
-
-                // Ces donnés devraient être soumis à un contrôle
-                // Afin de ne pas propager des erreurs
-                //               print_r($_POST);
-                include 'Inscription.php';
-                exit;
-            }
+            // On doit aussi re-ajouster la date de naissance
+            // qui est stockée dans COUREUR.DBF sous le format AAAAMMDD
+            $mainformInputs['naissance']['default'] = dateReformatDbfToJquery($mainformInputs['naissance']['default']);
         } else
-        // On a rien trouvé  dans la table INSCRIT
-        // On cherche alors dans la table COUREUR.DBF
-        // Faire la requete sur la table COUREUR.DBF
-        if (isset($_POST['search_lic'])) {
-            $sql = "Select * from `COUREUR.DBF` where `NO_LIC`= ?";
-            $req = $bd->prepare($sql);
-            $req->execute(array($_POST['search_lic']));
-
-            //        $req->debugDumpParams();
-            function strip_spaces($string) {
-                return str_replace(' ', '', $string);
-            }
-
-            // Si on a trouvé qqchose on pre-remplis le formulaire
-            if ($req->rowCount() > 0) {
-                $row = $req->fetch();
-                foreach ($assoc_COUREUR_form as $field_bd => $field_form) {
-                    $mainformInputs[$field_form]['default'] = strip_spaces($row[$field_bd]);
-                }
-                // On doit aussi re-ajouster la date de naissance
-                // qui est stockée dans COUREUR.DBF sous le format AAAAMMDD
-                $mainformInputs['naissance']['default'] =
-                        dateReformatDbfToJquery($mainformInputs['naissance']['default']);
-            }
-            else
-                pageErreur('On vous a pas troué');
-        }
-    } catch (Exception $e) {
-        // En cas d'erreur, on affiche un message et on arrête tout de suite
-        die('Erreur : ' . $e->getMessage());
+            pageErreur('On vous a pas trouvé');
     }
 }
 
@@ -217,6 +208,6 @@ fill_form_from_scratch();
 if ($comingfromsearch or $confirmation) {
     fill_form_from_db();
 }
-if ($regate['polo'] == 1){
-    $mainformInputs['taillepolo']['rendering'] = 'radio';    
+if ($regate['polo'] == 1) {
+    $mainformInputs['taillepolo']['rendering'] = 'radio';
 }

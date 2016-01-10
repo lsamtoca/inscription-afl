@@ -15,8 +15,8 @@ function xhtml_pre1($title, $type = 'transitional') {//Afficher le prefixe xhtml
     } else {
         $docType = $xhtmlTransitional;
     }
-    
-    $base=dirname($_SERVER['PHP_SELF']);
+
+    $base = dirname($_SERVER['PHP_SELF']);
     echo "$docType
 <html xmlns=\"http://www.w3.org/1999/xhtml\">
 <head>
@@ -140,7 +140,7 @@ function pageErreur($message, $goback = NULL) {
 
     xhtml_pre('Erreur');
     doMenu();
-    
+
     echo '<div class="contenu smallform">' . "\n";
     echo "<p><span class=\"error_strings\">$messageHtml</span></p>";
     echo "<a href=\"$goback\">&laquo; Retour</a><h3>";
@@ -170,7 +170,7 @@ function pageAnswer($message, $goback = NULL, $title = 'Mission accomplie') {
 
 function pageServerMisconfiguration($message) {
     xhtml_pre('Erreur');
-    
+
     $messageHtml = str_replace("\n", "<br />\n", $message);
     echo '<h3>';
     echo "Server misconfiguration";
@@ -187,23 +187,55 @@ function redirect($message, $time, $gowhere) {
     printf("<script type=\"text/javascript\">setTimeout('location=(\"%s\")' ,%d);</script>", $gowhere, $time);
 }
 
+function languageSelector($lang,$msg){
+    return "<span class='languageSelector' title='$lang'>$msg</span>";
+}
+
+function multipleLanguahe($name,$defaultMsg=''){
+    return "<span class='msg' id='$lang'>$defaultMsg</span>";
+}
+
+function echoMenuChoice($choice) {
+    $msg = $choice['message'];
+    $link = '';
+    if (isset($choice['link'])) {
+        $link = $choice['link'];
+    }
+    echo '<li>';
+    echoMenuChoiceContent($choice);
+    echo '</li>'."\n";
+}
+function echoMenuChoiceContent($choice) {
+    $msg = $choice['message'];
+    $link = '';
+    if (isset($choice['link'])) {
+        $link = $choice['link'];
+    }
+    if ($link != '') {
+        echo "<a href=\"$link\">";
+    } else {
+        echo '<a>';
+    }
+    echo $msg;
+    echo '</a>';
+}
+
+
 function echoMenu($choices) {
-    echo '<div id="deconnexion" class="white_over_dark">' . "\n";
+    echo "\n".'<div id="menu" class="white_over_dark">' . "\n";
     echo '<ul>' . "\n";
     foreach ($choices as $choice) {
-        $msg = $choice['message'];
-        $link = '';
-        if (isset($choice['link'])) {
-            $link = $choice['link'];
-        }
         echo '<li>';
-        if ($link != '') {
-            echo "<a href=\"$link\">";
-        } else {
-            echo '<a>';
-        }
-        echo $msg;
-        echo '</a></li>';
+        echoMenuChoiceContent($choice);
+        if (isset($choice['subMenu'])) {
+            echo "\n".'<ul>' . "\n";
+            $subMenu = $choice['subMenu'];
+            foreach ($subMenu as $subChoice) {
+                echoMenuChoice($subChoice);
+            }
+            echo '</ul>' . "\n";
+        } 
+        echo '</li>',"\n";
     }
     echo '</ul>' . "\n";
     echo '</div><!--menu-->';
@@ -214,8 +246,17 @@ $menuItem_Club = array('message' => 'Accueil Club', 'link' => 'Regate');
 $menuItem_Admin = array('message' => 'Accueil Administrateur', 'link' => 'Admin');
 $menuItem_Login = array('message' => 'Connexion', 'link' => 'Login');
 $menuItem_Logout = array('message' => 'Deconnexion', 'link' => 'Logout');
-$menuItem_Language = array('message' => '<span id="lang" class="msg"></span>');
 $menuItem_ChPwd = array('message' => 'Modifiez le mot de passe', 'link' => 'changePwd');
+
+$sousMenuLanguage = array(
+    array('message' => languageSelector('fr','Francais')),
+    array('message' => languageSelector('en','English')),
+    array('message' => languageSelector('it','Italiano')),
+);
+$menuItem_Language = array(
+    'message' => 'Choose your language',
+    'subMenu' => $sousMenuLanguage
+);
 
 $menuUsual = array($menuItem_Home, $menuItem_Login);
 $menuLanguage = array($menuItem_Home, $menuItem_Language);
@@ -232,7 +273,7 @@ $menuHomeAdmin = array(
     $menuItem_Logout);
 
 function doMenu($menu = array()) {
-    global $menuHomeAdmin, $menuHomeClub, $menuHome,$menuUsual;
+    global $menuHomeAdmin, $menuHomeClub, $menuHome, $menuUsual;
 
     if (count($menu) == 0) {
         $login = new Login();
@@ -246,10 +287,3 @@ function doMenu($menu = array()) {
     }
     echoMenu($menu);
 }
-
-/* This is not used anywhere
-function self() {
-    return $_SERVER['PHP_SELF'] . "?regate=" . $_GET['regate'];
-}
-*/
-

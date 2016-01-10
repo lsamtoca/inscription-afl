@@ -1,4 +1,5 @@
 * comprendre pourquoi Liste_regates_dbf ne marche pas
+* in password recovery find email case insensitive
 * ameliorer le layout (afl.css) de facon que que le scroollable 
 soit tout en bas de de le header
 * ajouter la possibilité de faire des optmistis, finn, europa, etc. 

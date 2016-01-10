@@ -52,3 +52,9 @@ function format_confirmation_regate($id_coureur) {
     global $path_to_site_inscription;
     return sprintf("http://%sConfirmation.php?ID=%d", $path_to_site_inscription, $id_coureur);
 }
+
+function urlSelf(){
+    global $requestedPath;
+    return $requestedPath;
+    //$_SERVER['PHP_SELF'];
+}

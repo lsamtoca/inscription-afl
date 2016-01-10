@@ -1,6 +1,8 @@
 <?php
 require_once 'php/Forms.php';
-require 'mainform-elements.php';
+// We do not need to load this,
+// as it has been loaded and modified by logique.php 
+//require_once 'mainform-elements.php';
 global $mainformInputs;
 
 function echoInput($name) {
@@ -9,7 +11,6 @@ function echoInput($name) {
 }
 ?>
 <div id='formulaire'>
-
     <form id="mainform" action="Inscription.php" method="post">
         <fieldset>
             <legend id='mainform_legend' class="msg">
@@ -23,7 +24,6 @@ function echoInput($name) {
             <?php echoInput('ID_inscrit'); ?> 
 
             <!-- Donnés personnels : nom prénom, date naissance, sexe -->
-
             <?php echoInput('Nom'); ?> 
             <?php echoInput('Prenom'); ?> 
 

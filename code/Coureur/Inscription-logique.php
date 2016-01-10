@@ -240,11 +240,9 @@ function do_insert($hash) {
 
 // Compose the mail...
 function compose_mail($ID_inscrit, $ID_regate, $titre_regate, $courriel_cv) {
-
-    global $development;
     global $hashGetString;
-
     global $regate;
+    
     $inscrit = Inscrit_selectById($ID_inscrit);
     $hash = $inscrit['hash'];
     
@@ -272,7 +270,8 @@ function compose_mail($ID_inscrit, $ID_regate, $titre_regate, $courriel_cv) {
 
     $url_paiement = $regate['paiement_en_ligne'];
     $est_mineur = est_mineur($inscrit, $regate);
-    $message = message_email($prenom, $titre_regate, $url_confirmation, $url_paiement, $est_mineur);
+    $message = // This in Inscription.php
+            message_email($prenom, $titre_regate, $url_confirmation, $url_paiement, $est_mineur);
 
     return send_mail_text($sender, $to, $subject, $message, $cc, $bcc);
 }
@@ -304,6 +303,8 @@ if ($post['conf'] != '0') {
 
 
 $ID_regate = $post['IDR'];
+//echo $ID_regate;
+//exit(0);
 $regate = Regate_selectById($ID_regate);
 $URLPRE = format_url_preinscrits($ID_regate);
 if ($modeInsert) {

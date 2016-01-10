@@ -1,6 +1,5 @@
 <div class="contenu" class="form">
     <script type="text/javascript">
-
         $(document).ready(function () {
             //function set_form_info_regate() = {
 
@@ -110,7 +109,9 @@
         });
     </script>
 
-    <form id='form_info_regate' action='#renseignements' method='post'>
+    <form id='form_info_regate' 
+          action='<?php echo urlSelf(); ?>#renseignements' 
+          method='post'>
         <fieldset>
 
             <label>Titre :</label>

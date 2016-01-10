@@ -8,7 +8,8 @@ if (!isset($_GET['path'])) {
 
 $coureurFiles = array(
     'Formulaire', 'Liste_regates', //, 
-    'Confirmation'
+    'Confirmation',
+    'Inscription'
         //'index'
 );
 $clubFiles = array('Regate', 'Annulation',

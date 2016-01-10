@@ -1,74 +1,47 @@
-// TODO :
-// If there is a label in the page,
-// then its id should be automatically added to the form
+// Global variables imported:
+// debug
+var documentLanguage = 'fr';
+var messagesFileName = 'Messages';
+var messagesPath = 'bundle/';
+var debug=true;
+var allowI18Cache=true;
+if(debug){
+ allowI18Cache=false;   
+}
 
-var ids = [
-    'lang',
-    'liste_preinscrits',
-    'deadline',
-    'raceIsClosed',
-    'droits',
-    'autresInformations',
-    'searchform_help',
-    'searchform_caveat',
-    'search_legend',
-    'l_search_lic',
-    'l_search_isaf',
-    'mainform_legend',
-    'l_Nom',
-    'l_Prenom',
-    'l_naissance',
-    'l_sexeM',
-    'l_sexeF',
-    'l_mail',
-    'l_lic',
-    'l_isaf_no',
-    'l_statutLicencie',
-    'l_statutEtranger',
-    'l_statutAutre',
-    'l_adherant',
-    'l_adherant1',
-    'l_adherant0',
-    'l_Nvoile',
-    'l_num_club',
-    'l_nom_club',
-    'l_taillepolo',
-    'licencie_ffv',
-    'non_licencie',
-    'etranger',
-    'message_confirmation',
-    'preregistration_form',
-    'preregistered_sailors',
-    'results_iframe'
-];
-var document_language = 'fr';
 $(document).ready(function () {
-
     if (debug)
         console.log('>> Ajout du i18n');
-    loadBundles('fr');
-    $('#lang').live('click', changerLangue);
+    loadBundles(documentLanguage);
+    //$('#lang').live('click', switchLanguage);
+    $('.languageSelector').each(function () {
+        $(this).live('click',
+                function () {
+                    documentLanguage = $(this).attr('title');
+                    loadBundles(documentLanguage);
+                })
+    });
     if (debug)
         console.log('<< i18n ajouté');
 });
-function changerLangue() {
 
-    if (document_language == 'fr')
-        document_language = 'en';
-    else
-        document_language = 'fr';
-    loadBundles(document_language);
-//doUpdate();
-
-}
+/*
+ function switchLanguage() {
+ if (documentLanguage == 'fr')
+ documentLanguage = 'en';
+ else
+ documentLanguage = 'fr';
+ loadBundles(documentLanguage);
+ }
+ */
 
 function loadBundles(lang) {
     $.i18n.properties({
-        name: 'Messages',
-        path: 'bundle/',
+        name: messagesFileName,
+        path: messagesPath,
         mode: 'both',
         //            encoding: 'utf-8',
-        //            cache:true,
+        cache:allowI18Cache,
         language: lang,
         callback: function () {
             doUpdate();
@@ -76,79 +49,88 @@ function loadBundles(lang) {
     });
 }
 
-
-// doUpdate is the main function we
-// execute when 'change_lang' is clicked
+// doUpdate is the main function we execute 
+// when #lang or .languageSelector are clicked
 function doUpdate() {
-
-
-    updateFields();
-    // Mise a jour du datepicker
-    if (document_language == 'fr')
-        $.datepicker.setDefaults($.datepicker.regional['fr']);
-    else
-        $.datepicker.setDefaults($.datepicker.regional['']);
-    // A venir, mise a jour des messages d'erreur de la validation
+    updateMultipleMessages();
+    updateLeftLabels();
+    updateSubmits();
+    updateDatePickers();
     updateValidationMessages();
-    $('form').validate();
-    set_input_lang();
+    updateInput_lang();
 }
 
+function msgUndefinedLog(msg) {
+    if ($.i18n.prop(msg) == '[' + msg + ']') {
+        if (debug) {
+            console.warn("Message " + msg + " undefined or empty");
+        }
+        return true;
+    }
+    return false;
+}
 
-function updateFields() {
-
+function updateMultipleMessages() {
     $('.msg').each(function () {
-
         var id = $(this).attr('id');
         var msg = 'msg_' + id;
-
-        if ($.i18n.prop(msg) == '[' + msg + ']') {
-            if (debug) {
-                console.warn(msg + " pas defini ou vide");
-            }
-            //continue;
-        } else {
+        if (!msgUndefinedLog(msg)) {
             $(this).empty().append(eval(msg));
         }
-    })
-            ;
-
-    // Mise a jour des buttons valider 
-    if ($('#searchform').length != 0)
-        $('#searchform input[type=submit]').attr('value', msg_chercher);
-    if ($('#mainform').length != 0) {
-        $('#mainform input[type=submit]').attr('value', msg_valider);
-        // mise a jour des deux points apres les etiquettes
-        $("label.left>.msg").append(label_termination);
-    }
-
-
-
-
+    });
 }
 
-// Mise à jour du field input_lang (hidden)
-function set_input_lang() {
+function updateSubmits() {
+// Mise a jour des buttons valider 
+    if (!msgUndefinedLog(msg_chercher)) {
+        if ($('#searchform').length != 0)
+            $('#searchform input[type=submit]').attr('value', msg_chercher);
+    }
+    if (!msgUndefinedLog(msg_valider)) {
+        if ($('#mainform').length != 0) {
+            $('#mainform input[type=submit]').attr('value', msg_valider);
+        }
+    }
+}
 
-    /*    if( document_language == 'fr')
-     $('#input_lang').attr('value','fr');
-     else
-     $('#input_lang').attr('value','en');
-     */
-    /*if(debug) console.log($('#input_lang').val());
-     */
+function  updateLeftLabels() {
+// mise a jour des deux points apres les etiquettes
+  //  if (!msgUndefinedLog(label_termination)) {
+        $("label.left>.msg").append(label_termination);
+    //}
+}
 
-    $('#input_lang').val(document_language);
-    $('#search_input_lang').val(document_language);
-    if (debug)
-        console.log($('#input_lang').val());
-    if (debug)
-        console.log($('#search_input_lang').val());
+function updateDatePickers() {
+// Mise a jour du datepicker
+    switch (documentLanguage) {
+        case 'it':
+        case 'fr':
+            $.datepicker.setDefaults($.datepicker.regional['fr']);
+            break;
+        default:
+            $.datepicker.setDefaults($.datepicker.regional['']);
+            break;
+    }
 }
 
 function updateValidationMessages() {
+    if (typeof set_validations == 'function'){
+        // This is defined in Formulaire-Validation
+        set_validations();
+        if ($('form').length != 0) {
+            $('form').validate().resetForm();
+            $('form').validate();
+        }
+    }
+}
 
-    set_validations();
-    if ($('form').length != 0)
-        $('form').validate().resetForm();
+function updateInput_lang() {
+    // Mise à jour du field input_lang (hidden)
+    $('#input_lang').val(documentLanguage);
+    if (debug)
+        console.log($('#input_lang').val());
+
+    $('#search_input_lang').val(documentLanguage);
+    if (debug)
+        console.log($('#search_input_lang').val());
 }

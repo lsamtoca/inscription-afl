@@ -12,18 +12,18 @@ $unix_base ='';
 function computeUnixBase(){
     // preg_match('/^.*www\//', __FILE__, $matches);
     // return $matches[0];
-    return  dirname(dirname(__FILE__));
+    return  dirname(dirname(__FILE__)) .'/';
     exit(0);
-    
 }
 
 function executeSetupDevelOrProduction() {
 
-    global $development, $testing, $path_to_site_inscription, $racine;
+    global $development, $testing, $path_to_site_inscription, $racine, $unix_base;
 
     if ($_SERVER['HTTP_HOST'] == 'localhost') {
-        $www_site = 'localhost';
-        $racine = dirname($_SERVER['REQUEST_URI']) . '/';
+        $www_site = 'localhost/~lsantoca/';
+        $racine = basename(dirname(dirname(realpath(__FILE__)))) . '/';
+ //       $racine = dirname($_SERVER['REQUEST_URI']) . '/';
         $development = true;
     } else {
         $development = false;

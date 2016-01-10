@@ -1,10 +1,20 @@
 <?php
 
-if (isset($post['lang']) && $post['lang'] == 'en') {
-    $lang = 'en';
+require_once 'php/ParseProperties.php';
+
+// SET A DEFAULT LANGUAGE
+if (isset($post['lang'])) {
+    $lang = $post['lang'];
 } else {
     $lang = 'fr';
 }
+
+// IF A LANGUAGE IS NOT YET IMPLEMENTED USE ENGLISH
+if (!in_array($lang, array('fr', 'en', 'it'))) {
+    $lang = en;
+}
+
+//$lang = 'it';
 
 switch ($lang) {
 
@@ -81,6 +91,42 @@ switch ($lang) {
         $messagePreregClosed = 'This race is not  anymore open to preregistration. '
                 . 'Therefore, you cannot modify your preregistration.';
         $messageInvalidEmail = 'Invalid email address';
+
+        break;
+
+    case 'it':
+        parseProperties('Inscription_it');
+
+        // Email asking confirmation
+        function message_email($prenome, $titolo_regata, $url_confirmazione, $url_pagamento = '', $est_mineur = false) {
+
+            // from the properties
+            global $message_paiement, $message_email, $message_mineur;
+
+            global $url_confirmation, $url_paiement, $url_aut_parentale;
+            $url_paiement = $url_pagamento;
+            $url_confirmation = $url_confirmazione;
+            $url_aut_parentale = format_url_aut_parentale();
+
+            global $prenom, $titre_regate;
+            $titre_regate = $titolo_regata;
+            $prenom = $prenome;
+
+            $message_paiement = fixVariablesInProperties($message_paiement) . "\n\n";
+            if ($url_paiement == '') {
+                $message_paiement = '';
+            }
+
+            $message_mineur = fixVariablesInProperties($message_mineur) . "\n\n";
+            if (!$est_mineur) {
+                $message_mineur = '';
+            }
+
+            $message_email = fixVariablesInProperties($message_email);
+            // pageAnswer($message_email);
+
+            return $message_email;
+        }
 
         break;
 
@@ -161,8 +207,18 @@ switch ($lang) {
                 . 'vous ne pouvez plus modifier votre pré-inscription.';
 
         $messageInvalidEmail = 'Le courriel n\'est pas valide';
+        
+        break;
 }
 
+function messageAckConfirmation($prenome, $id_regate) {
 
+    global $prenom;
+    $prenom = $prenome;
+    global $url_listePreiscrits;
+    $url_listePreiscrits = format_url_preinscrits($id_regate);
+    global $messageAckConfirmation;
 
-
+    $messageAckConfirmation = fixVariablesInProperties($messageAckConfirmation);
+    return $messageAckConfirmation;
+}

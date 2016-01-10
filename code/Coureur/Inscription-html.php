@@ -1,6 +1,17 @@
-<?php if ($modeInsert): ?>
+<?php
+/// We are inside a function !!!
+global $menuHome; 
 
-    <?php xhtml_pre($titleModeInsert); ?>
+global $dear,$ask,$sentyou, $lastemail, $modifyit, $youremail,$checkitout;
+global $hello, $regok, $verifier;
+
+if ($modeInsert):
+    ?>
+
+    <?php
+    xhtml_pre($titleModeInsert);
+    doMenu($menuHome);
+    ?>
 
     <big>
         <?php
@@ -16,8 +27,8 @@
         <?php echo $sentyou; ?>
         <?php if (isset($post['no_email'])): ?> 
             <?php echo $lastemail; ?>
-        <?php else: ?>¯
-            <?php echo $youremail; ?>
+    <?php else: ?>¯
+        <?php echo $youremail; ?>
             <br />
             <div style="margin-left:20mm;margin-top:5mm">
                 <address><?php echo $post['mail'] ?></address>
@@ -26,8 +37,8 @@
         <br />
         <?php echo $modifyit; ?>
         <br />
-        <?php echo " " . $checkitout;
-        ?>
+    <?php echo " " . $checkitout;
+    ?>
     </big>
 
     <br/><br/>
@@ -43,7 +54,19 @@
 
 <?php if ($modeConfirm): ?>
 
-    <?php xhtml_pre($titleModeConfirm); ?>
+      <?php
+  
+    if($post['lang'] == 'it'){
+        $message=messageAckConfirmation($inscrit['prenom'],$post['IDR']);
+        pageAnswer($message, NULL, 'Vous etes cofirmé');
+        exit(0);
+    }
+    
+    xhtml_pre($titleModeConfirm);
+    doMenu($menuHome);
+    
+    
+    ?>
 
     <div>
         <big>
@@ -62,7 +85,7 @@
                 echo $verifier;
                 ?>
                 <a href="<?php echo $URLPRE; ?>">
-                    <?php echo $liste; ?></a>.
+    <?php echo $liste; ?></a>.
             </p>
         </big>
     </div>
@@ -70,4 +93,5 @@
     <?php xhtml_post(); ?>
 
 
-<?php endif; ?>
+    <?php
+ endif; 
