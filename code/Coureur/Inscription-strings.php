@@ -1,6 +1,8 @@
 <?php
 
-require_once 'php/ParseProperties.php';
+$base = dirname(dirname(dirname(__FILE__)));
+require_once "$base/" . 'php/ParseProperties.php';
+//require_once 'php/ParseProperties.php';
 
 // SET A DEFAULT LANGUAGE
 if (isset($post['lang'])) {
@@ -11,214 +13,126 @@ if (isset($post['lang'])) {
 
 // IF A LANGUAGE IS NOT YET IMPLEMENTED USE ENGLISH
 if (!in_array($lang, array('fr', 'en', 'it'))) {
-    $lang = en;
+    $lang = 'en';
 }
 
-//$lang = 'it';
+/*
+  //$lang = 'it';
+  // provides 13 words
+  $providedWords = array(
+  'titleModeInsert',
+  'lastemail',
+  'youremail',
+  'messageAckInsertion',
+  'messageUseAck',
+  'titleModeConfirm',
+  'messageAckConfirmation',
+  'message_paiement',
+  'message_mineur',
+  'message_email',
+  'messageErrAlreadyThere',
+  'messageErrPreregClosed',
+  'messageInvalidEmail'
+  );
+ * 
+ * 
+ */
 
-switch ($lang) {
+// We need it as we might be within a function, 
+// so the scope is not necessartily global
+global $dict;
 
-    case 'en':
-        // Insertion
-        $titleModeInsert = 'You are (almost) pre-registered';
-        // Answer to insertion
-        $dear = 'Dear';
-        $ask = 'we ask you to confirm your pre-registration.';
-        $sentyou = 'We have sent you a message';
-        $lastemail = 'at your email address '
-                . '(the last address you used with this system).';
-        $youremail = 'at the email address';
-        $modifyit = 'The message contains a link '
-                . 'by which you will be able to '
-                . 'confirm and/or modify your pre-registration.';
-        $checkitout = 'If you do not receive this message within the next few minutes, '
-                . 'please verify the Spam folder of your email account '
-                . 'before trying to preregister once more.';
-
-        //  Answer to confirmation
-        $hello = 'Hello';
-        $regok = 'your pre-registration is now completed.';
-        $verifier = 'You can verify it on the';
-        $liste = 'list of preregistered sailors';
-
-        // Email asking confirmation
-        function message_email($prenom, $titre_regate, $url_confirmation, $url_paiement = '', $est_mineur = FALSE) {
-            $message_paiement = '';
-            if ($url_paiement != '') {
-                //Should we verify once more that this is a vaild address ?
-                $message_paiement = "\n\n"
-                        . '*You can pay the inscriptions fees by following this link*: '
-                        . "\n"
-                        . '' . $url_paiement . "\n"
-                        . '*Your registration will be completed once the payment is received by the organizing club*. '
-                        . "\n"
-                        . 'If you do not pay the fees before the deadline for pre-registration '
-                        . 'you might be asked to pay additional fees.'
-                ;
-            }
-
-            $message_mineur = '';
-            if ($est_mineur) {
-                $message_mineur = 'You will be minor at the date of the race. '
-                        . "You can ask your parents to complete now the authorisation form \n"
-                        . "that you can find a this address: \n"
-                        . format_url_aut_parentale()
-                        . "\n"
-                        . "Bring the completed and signed form the first day of the race at the registration desk.";
-            }
-
-            return "Hello  $prenom,\n\n"
-                    . "please confirm your registration to the race '$titre_regate' by clicking on the following link:\n"
-                    . $url_confirmation
-                    . "\n"
-                    . "You'll be able to modify your pre-registration "
-                    . "by using the link above, until the deadline for pre-registrations."
-                    . "\n\n"
-                    . "If you wish to cancel your pre-registration, "
-                    . "please contact the organizing club by replying to this email."
-                    . $message_paiement
-                    . "\n\n"
-                    . $message_mineur
-                    . "\n\n"
-                    . "Bon vent,\n\t the AFL (for the organizing club)";
-        }
-
-        // Erreurs
-        $messageErrAlreadyThere = 'A sailor, with the same licence number of same ISAF number, but a different email, '
-                . 'is already preregistered.'
-                . "Please contact the organizing club to join this race.";
-
-        $messagePreregClosed = 'This race is not  anymore open to preregistration. '
-                . 'Therefore, you cannot modify your preregistration.';
-        $messageInvalidEmail = 'Invalid email address';
-
-        break;
-
-    case 'it':
-        parseProperties('Inscription_it');
-
-        // Email asking confirmation
-        function message_email($prenome, $titolo_regata, $url_confirmazione, $url_pagamento = '', $est_mineur = false) {
-
-            // from the properties
-            global $message_paiement, $message_email, $message_mineur;
-
-            global $url_confirmation, $url_paiement, $url_aut_parentale;
-            $url_paiement = $url_pagamento;
-            $url_confirmation = $url_confirmazione;
-            $url_aut_parentale = format_url_aut_parentale();
-
-            global $prenom, $titre_regate;
-            $titre_regate = $titolo_regata;
-            $prenom = $prenome;
-
-            $message_paiement = fixVariablesInProperties($message_paiement) . "\n\n";
-            if ($url_paiement == '') {
-                $message_paiement = '';
-            }
-
-            $message_mineur = fixVariablesInProperties($message_mineur) . "\n\n";
-            if (!$est_mineur) {
-                $message_mineur = '';
-            }
-
-            $message_email = fixVariablesInProperties($message_email);
-            // pageAnswer($message_email);
-
-            return $message_email;
-        }
-
-        break;
-
-    case 'fr':
-    default:
-        // Insertion
-        $titleModeInsert = 'Vous êtes (presque) préinscrit';
-        $dear = 'Cher(e)';
-        $ask = 'nous vous demandons de confirmer votre pré-inscription.';
-        $sentyou = 'Nous avons envoyé un courriel';
-        $lastemail = 'à votre adresse email (le dernier utilisé sur ce système).';
-        $youremail = 'à l\'adresse';
-        $modifyit = 'Le courriel contient un lien '
-                . 'qui vous permettra de confirmer '
-                . 'et/ou modifier votre pré-inscription.';
-        $checkitout = 'Si vous ne recevez pas ce courriel dans des brefs délais, '
-                . 'vérifiez le répertoire Spam de votre compte email '
-                . 'avant essayer de vous pré-inscrire une nouvelle fois.';
-
-
-        // Confirmation
-        $titleModeConfirm = 'Confirmation';
-        $hello = 'Bonjour';
-        $regok = 'votre pré-inscription est maintenant confirmée';
-        $verifier = 'Vous pouvez vérifier votre inscription sur la';
-        $liste = 'liste des pré-inscrits';
-
-        // Courriel to confirm
-        function message_email($prenom, $titre_regate, $url_confirmation, $url_paiement = '', $est_mineur = FALSE) {
-
-            $message_paiement = '';
-            if ($url_paiement != '') {
-                //Should we verify once more that this is a vaild address ?
-                $message_paiement = "\n\n"
-                        . '*Vous pouvez régler les droits d\'inscriptions à l\'adresse suivant* : '
-                        . "\n"
-                        . '' . $url_paiement . "\n"
-                        . '*Votre inscription sera complète lorsque votre paiement sera perçu par le club*. '
-                        . "\n"
-                        . 'Si vous ne payez pas ces droits avant la date limite des pré-inscriptions, '
-                        . 'vous pouvez être assujetti à des frais additionnelles.'
-                ;
-            }
-            $message_mineur = '';
-            if ($est_mineur) {
-                $message_mineur = 'Vous serez mineur le jour de la régate. '
-                        . "Vous pouvez demander à vos parents de compléter de maintenant le formulaire d'autorisation parentale "
-                        . "que vous pouvez trouver en suivant ce lien : \n"
-                        . format_url_aut_parentale()
-                        . "\n"
-                        . "Apportez ce formulaire, complété et signé, le jour de la compétition à la confirmation des inscriptions.";
-            }
-
-            return "Bonjour " . $prenom . ",\n\n"
-                    . "veuillez confirmer votre pré-inscription à la régate '$titre_regate' en cliquant le lien suivant :"
-                    . "\n"
-                    . $url_confirmation
-                    . "\n"
-                    . "Vous pouvez modifier les données concernant votre pré-inscription "
-                    . "à l'aide du lien ci-dessus, jusqu'à la date limite des pré-inscriptions."
-                    . "\n\n"
-                    . "Si vous souhaitez annuler votre pré-inscription, "
-                    . "veuillez contacter le club organisateur en répondant à ce courriel."
-                    . $message_paiement
-                    . "\n\n"
-                    . $message_mineur
-                    . "\n\n"
-                    . "Bon vent,\n\t l'AFL (pour le club organisateur)";
-        }
-
-// Err messages
-        $messageErrAlreadyThere = "Un coureur est déjà pré-inscrit à cette régate,"
-                . " avec le même numéro de licence ou le même numéro ISAF, mais avec un
- courriel différent."
-                . "Veuillez demander directement au club organisateur de vous pré-inscrire.";
-
-        $messageErrPreregClosed = 'Cette régate n\'est plus ouverte à la pré-inscription ; '
-                . 'vous ne pouvez plus modifier votre pré-inscription.';
-
-        $messageInvalidEmail = 'Le courriel n\'est pas valide';
-        
-        break;
+function getLang($lang, $path = 'bundle/') {
+    return parseProperties('Inscription_' . $lang, $path);
 }
 
-function messageAckConfirmation($prenome, $id_regate) {
+function messageAckInsertion($prenom, $email = '') {
+    global $dict;
+    $dict['prenom'] = $prenom;
+    if ($email == '') {
+        $dict['toWhichEmail'] = $dict['lastemail'];
+    } else {
+        $dict['toWhichEmail'] = fixVariablesInProperties(
+                $dict['youremail'],
+                array('email'=> $email));
+    }
+    
+    $messageAckInsertion = fixVariablesInProperties(
+            $dict['messageAckInsertion'], $dict);
+    return $messageAckInsertion ." ". $dict['messageUseAck'];
+}
 
-    global $prenom;
-    $prenom = $prenome;
-    global $url_listePreiscrits;
-    $url_listePreiscrits = format_url_preinscrits($id_regate);
-    global $messageAckConfirmation;
+function messageAckConfirmation($prenom, $url_listePreiscrits) {
 
-    $messageAckConfirmation = fixVariablesInProperties($messageAckConfirmation);
+    global $dict;
+    $dict['prenom'] = $prenom;
+    $dict['url_listePreiscrits'] = $url_listePreiscrits;
+    $messageAckConfirmation = fixVariablesInProperties(
+            $dict['messageAckConfirmation'], $dict);
     return $messageAckConfirmation;
 }
+
+// Email asking confirmation
+function message_email($prenom, $titre_regate, $url_confirmation, 
+        $url_paiement = '', $url_aut_parentale,$est_mineur = false) {
+
+    global $dict;
+    $dict['url_paiement'] = $url_paiement;
+    $dict['url_confirmation'] = $url_confirmation;
+    $dict['url_aut_parentale'] = $url_aut_parentale;
+    $dict['prenom'] = $prenom;
+    $dict['titre_regate'] = $titre_regate;
+
+    if ($url_paiement == '') {
+        $dict['message_paiement'] = '';
+    } else {
+        $dict['message_paiement'] = fixVariablesInProperties(
+                        $dict['message_paiement'], $dict) ;
+    }
+
+    if (!$est_mineur) {
+        $dict['message_mineur'] = '';
+    } else {
+        $dict['message_mineur'] = fixVariablesInProperties(
+                        $dict['message_mineur'], $dict);
+    }
+
+    $message_email = fixVariablesInProperties($dict['message_email'], $dict);
+    // pageAnswer($message_email);
+
+    return $message_email;
+}
+
+// For testing from console
+
+
+function testIt() {
+    global $dict, $base, $argv;
+    echo $argv[1];
+    $dict = getLang($argv[1], "$base/bundle/");
+
+    echo "\n\n*****Ack Insertion From Search:\n";
+    echo messageAckInsertion('Luigi');
+ 
+    echo "\n\n*****Ack Insertion From Scratch:\n";
+    echo messageAckInsertion('Luigi','l.s.@lif.com');
+ 
+    echo "\n\n*****Ack Confirmation:\n";
+    echo messageAckConfirmation('Luigi', 'httP:url_liste');
+    echo "\n\n*****Email:\n";
+    echo message_email('Luigi', 'Regata del cavolo', 
+            'http:confirmation_ici', 
+            'http:payement_ici',
+            'http:aut_parentale',
+            TRUE);
+    echo "\n\n\n";
+}
+
+$thisTesting = False;
+if ($thisTesting) {
+    testIt();
+    exit(0);
+}
+$dict = getLang($lang);
+
+

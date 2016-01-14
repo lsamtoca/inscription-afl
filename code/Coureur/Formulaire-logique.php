@@ -162,7 +162,6 @@ function fill_form_from_db() {
         $mainformInputs['naissance']['default'] = $_POST['naissance'] = dateReformatMysqlToJquery($mainformInputs['naissance']['default']);
 
         if ($gotoinscription) {
-
             $_POST['ID_inscrit'] = '0';
             $_POST['maSoumission'] = '';
             $_POST['IDR'] = $_GET['regate'];
@@ -173,8 +172,7 @@ function fill_form_from_db() {
             // Ces donnés devraient être soumis à un contrôle
             // Afin de ne pas propager des erreurs
             //               print_r($_POST);
-            include 'Inscription.php';
-            exit;
+            return;
         }
     } else
     // On a rien trouvé  dans la table INSCRIT
@@ -207,6 +205,13 @@ function fill_form_from_db() {
 fill_form_from_scratch();
 if ($comingfromsearch or $confirmation) {
     fill_form_from_db();
+    if ($gotoinscription) {
+        // We should not include 
+        // from inside a function 
+        // as this raises scope issues
+        include 'Inscription.php';
+        exit(0);
+    }
 }
 if ($regate['polo'] == 1) {
     $mainformInputs['taillepolo']['rendering'] = 'radio';

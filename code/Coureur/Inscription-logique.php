@@ -269,9 +269,12 @@ function compose_mail($ID_inscrit, $ID_regate, $titre_regate, $courriel_cv) {
     $bcc = '';
 
     $url_paiement = $regate['paiement_en_ligne'];
+    $url_aut_parentale=  format_url_aut_parentale();
     $est_mineur = est_mineur($inscrit, $regate);
     $message = // This in Inscription.php
-            message_email($prenom, $titre_regate, $url_confirmation, $url_paiement, $est_mineur);
+            message_email($prenom, $titre_regate, 
+                    $url_confirmation, $url_paiement, $url_aut_parentale,
+             $est_mineur);
 
     return send_mail_text($sender, $to, $subject, $message, $cc, $bcc);
 }
@@ -323,6 +326,7 @@ if ($modeInsert) {
 
 if ($modeConfirm) {
 // Si c'est la premiere fois qu'on met à jour
-    do_update();
-    $inscrit = Inscrit_selectById($ID_inscrit);
+    do_update();    
 }
+
+$inscrit = Inscrit_selectById($ID_inscrit);

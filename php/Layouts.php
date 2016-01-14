@@ -249,7 +249,7 @@ $menuItem_Logout = array('message' => 'Deconnexion', 'link' => 'Logout');
 $menuItem_ChPwd = array('message' => 'Modifiez le mot de passe', 'link' => 'changePwd');
 
 $sousMenuLanguage = array(
-    array('message' => languageSelector('fr','Francais')),
+    array('message' => languageSelector('fr','Français')),
     array('message' => languageSelector('en','English')),
     array('message' => languageSelector('it','Italiano')),
 );
