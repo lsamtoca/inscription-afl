@@ -1,26 +1,40 @@
 // Global variables imported:
 // debug
-var documentLanguage = 'fr';
+if (typeof documentLanguage == 'undefined') {
+    var documentLanguage = 'fr';
+}
+
 var messagesFileName = 'Messages';
 var messagesPath = 'bundle/';
-var debug=true;
-var allowI18Cache=true;
-if(debug){
- allowI18Cache=false;   
+var debug = true;
+var allowI18Cache = true;
+if (debug) {
+    allowI18Cache = false;
 }
 
 $(document).ready(function () {
     if (debug)
         console.log('>> Ajout du i18n');
-    loadBundles(documentLanguage);
+
+    //loadBundles(documentLanguage);
     //$('#lang').live('click', switchLanguage);
     $('.languageSelector').each(function () {
         $(this).live('click',
                 function () {
                     documentLanguage = $(this).attr('title');
+                    $('.languageSelector').css({'text-decoration': 'none'});
+                    $(this).css({'text-decoration': 'underline'});
                     loadBundles(documentLanguage);
                 })
     });
+    //var userLang = navigator.language || navigator.userLanguage;
+    //var windowLang = window.navigator.language || window.navigator.userLanguage;
+    //alert(userLang+' '+windowLang);
+    var userLang=documentLanguage;
+    var selector = '.languageSelector[title="' + userLang + '"]';
+    console.log(selector);
+    $(selector).trigger("click");
+    
     if (debug)
         console.log('<< i18n ajouté');
 });
@@ -41,7 +55,7 @@ function loadBundles(lang) {
         path: messagesPath,
         mode: 'both',
         //            encoding: 'utf-8',
-        cache:allowI18Cache,
+        cache: allowI18Cache,
         language: lang,
         callback: function () {
             doUpdate();
@@ -95,8 +109,8 @@ function updateSubmits() {
 
 function  updateLeftLabels() {
 // mise a jour des deux points apres les etiquettes
-  //  if (!msgUndefinedLog(label_termination)) {
-        $("label.left>.msg").append(label_termination);
+    //  if (!msgUndefinedLog(label_termination)) {
+    $("label.left>.msg").append(label_termination);
     //}
 }
 
@@ -114,7 +128,7 @@ function updateDatePickers() {
 }
 
 function updateValidationMessages() {
-    if (typeof set_validations == 'function'){
+    if (typeof set_validations == 'function') {
         // This is defined in Formulaire-Validation
         set_validations();
         if ($('form').length != 0) {

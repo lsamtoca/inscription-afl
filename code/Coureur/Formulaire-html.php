@@ -15,6 +15,12 @@ xhtml_pre1($page_title1);
 <script src="js/jquery.i18n.properties.js" type="text/javascript"></script>
 <script src="js/ui.datepicker-fr.js" type="text/javascript"></script>
 
+<?php if(LANGUAGEON): ?>
+    <script type="text/javascript">
+        var documentLanguage='<?php echo LANGUAGE ; ?>';
+    </script>
+<?php endif;?>
+
 <script src="js/Formulaire-i18n.js" type="text/javascript"></script>
 <script src="js/Formulaire-validation.js" type="text/javascript"></script>
 <script src="js/Formulaire-dynamic.js" type="text/javascript"></script>

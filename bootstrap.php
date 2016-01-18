@@ -15,6 +15,7 @@ define('PWDRECOVERYON', true);
 include('bootstrap/log.php');
 include('bootstrap/develOrProduction.php');
 include('bootstrap/assert.php');
+include('bootstrap/language.php');
 include('bootstrap/noLG.php');
 
 // These are modules to loaded that shall (maybe used)
