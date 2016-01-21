@@ -1,4 +1,6 @@
 <?php
+include_once('undergoingWorks.php');
+exit(0);
 
 if (!isset($_GET['path'])) {
     $requestedPath = 'index.php';
@@ -49,6 +51,7 @@ require_once 'bootstrap.php';
 
 //$_SERVER['REQUEST_URI'] = dirname($_SERVER['PHP_SELF']);
         
+
 $path = $defaultPath;
 $aut = $defaultAuth;
 if (isset($paths[$requestedPath])) {

@@ -94,19 +94,19 @@
 
     <br />
     On peut lire ces fichiers aussi avec Excel, OpenOffice, ou un editeur de texte.
-
-    <h5>Ancienne méthode d'importation :</h5>
-    <ul>
-        <li>
-            Télécharger la liste des <strong>inscrits ayant confirmé</strong> au <a href="Liste_inscrits_dbf.php?confirme=1">format dbf</a> ;
-        </li>
-        <li>
-            Télécharger la liste des <strong>tous les inscrits</strong> au <a href="Liste_inscrits_dbf.php">format dbf</a>.
-        </li>
-    </ul>
-    Pour importer le fichier ins_dbf.dbf vers votre régate dans FREG, vous devez disposer du module FF_PRE_INS.EXE, à demander par courriel au support de FREG.
-
-    <br/>
-    On peut lire ces fichiers aussi avec Excel, OpenOffice, XBase.
-
+    <!--
+        <h5>Ancienne méthode d'importation :</h5>
+        <ul>
+            <li>
+                Télécharger la liste des <strong>inscrits ayant confirmé</strong> au <a href="Liste_inscrits_dbf.php?confirme=1">format dbf</a> ;
+            </li>
+            <li>
+                Télécharger la liste des <strong>tous les inscrits</strong> au <a href="Liste_inscrits_dbf.php">format dbf</a>.
+            </li>
+        </ul>
+        Pour importer le fichier ins_dbf.dbf vers votre régate dans FREG, vous devez disposer du module FF_PRE_INS.EXE, à demander par courriel au support de FREG.
+    
+        <br/>
+        On peut lire ces fichiers aussi avec Excel, OpenOffice, XBase.
+    -->
 </div>

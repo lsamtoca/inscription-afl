@@ -1,6 +1,6 @@
 <?php
 	session_destroy();
-        $message='Vous etes maintenant deconnecté';
+        $message='Vous êtes maintenant déconnecté';
         $goback='index';
         unset($_SESSION);
         pageAnswer($message, $goback);
