@@ -12,7 +12,7 @@ if (isset($post['lang'])) {
 }
 
 // IF A LANGUAGE IS NOT YET IMPLEMENTED USE ENGLISH
-if (!in_array($lang, array('fr', 'en', 'it'))) {
+if (!in_array($lang, array('fr', 'en', 'it','es'))) {
     $lang = 'en';
 }
 

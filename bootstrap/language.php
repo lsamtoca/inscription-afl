@@ -5,6 +5,7 @@
 
 define('LANGUAGEON', TRUE);
 define('LANGUAGEDEFAULT', 'fr');
+$availableLanguages = array('fr', 'en', 'it','es');
 
 function parseDefaultLanguage($http_accept, $deflang = LANGUAGEDEFAULT) {
     if (isset($http_accept) && strlen($http_accept) > 1) {
@@ -31,7 +32,7 @@ function parseDefaultLanguage($http_accept, $deflang = LANGUAGEDEFAULT) {
 }
 
 function setLanguage($lang) {
-    $availableLanguages = array('fr', 'en', 'it');
+    global $availableLanguages;
 
     if (in_array($lang, $availableLanguages)) {
         define('LANGUAGE', $lang);

@@ -2,6 +2,8 @@
 
 // HTML PRE AND POST
 function xhtml_pre1($title, $type = 'transitional') {//Afficher le prefixe xhtml
+    global $testing, $development;
+    
     $xhtmlStrict = "<!DOCTYPE html PUBLIC "
             . "\"-//W3C//DTD XHTML 1.0 Strict//EN\" "
             . "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">";
@@ -15,12 +17,22 @@ function xhtml_pre1($title, $type = 'transitional') {//Afficher le prefixe xhtml
     } else {
         $docType = $xhtmlTransitional;
     }
+    if (
+            ($testing and (!$development))
+            ||
+            preg_match("/Formulaire/", $_SERVER['REQUEST_URI']) == 1
+            ) {
+        $noRobots = "<meta name=\"robots\" content=\"noindex,nofollow\" />";
+    } else {
+        $noRobots = "<!-- robots allowed. Please index this -->\n"
+                . "<meta name=\"robots\" content=\"nofollow\" />";
+    }
 
     $base = dirname($_SERVER['PHP_SELF']);
     echo "$docType
 <html xmlns=\"http://www.w3.org/1999/xhtml\">
 <head>
-<meta name=\"robots\" content=\"noindex,nofollow\" />
+$noRobots
 <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />
 <base href=\"$base/\" />
 <link rel=\"STYLESHEET\" type=\"text/css\" href=\"afl.css\" />
@@ -187,11 +199,11 @@ function redirect($message, $time, $gowhere) {
     printf("<script type=\"text/javascript\">setTimeout('location=(\"%s\")' ,%d);</script>", $gowhere, $time);
 }
 
-function languageSelector($lang,$msg){
+function languageSelector($lang, $msg) {
     return "<span class='languageSelector' title='$lang'>$msg</span>";
 }
 
-function multipleLanguahe($name,$defaultMsg=''){
+function multipleLanguahe($name, $defaultMsg = '') {
     return "<span class='msg' id='$lang'>$defaultMsg</span>";
 }
 
@@ -203,8 +215,9 @@ function echoMenuChoice($choice) {
     }
     echo '<li>';
     echoMenuChoiceContent($choice);
-    echo '</li>'."\n";
+    echo '</li>' . "\n";
 }
+
 function echoMenuChoiceContent($choice) {
     $msg = $choice['message'];
     $link = '';
@@ -220,22 +233,21 @@ function echoMenuChoiceContent($choice) {
     echo '</a>';
 }
 
-
 function echoMenu($choices) {
-    echo "\n".'<div id="menu" class="white_over_dark">' . "\n";
+    echo "\n" . '<div id="menu" class="white_over_dark">' . "\n";
     echo '<ul>' . "\n";
     foreach ($choices as $choice) {
         echo '<li>';
         echoMenuChoiceContent($choice);
         if (isset($choice['subMenu'])) {
-            echo "\n".'<ul>' . "\n";
+            echo "\n" . '<ul>' . "\n";
             $subMenu = $choice['subMenu'];
             foreach ($subMenu as $subChoice) {
                 echoMenuChoice($subChoice);
             }
             echo '</ul>' . "\n";
-        } 
-        echo '</li>',"\n";
+        }
+        echo '</li>', "\n";
     }
     echo '</ul>' . "\n";
     echo '</div><!--menu-->';
@@ -249,9 +261,10 @@ $menuItem_Logout = array('message' => 'Deconnexion', 'link' => 'Logout');
 $menuItem_ChPwd = array('message' => 'Modifiez le mot de passe', 'link' => 'changePwd');
 
 $sousMenuLanguage = array(
-    array('message' => languageSelector('fr','Français')),
-    array('message' => languageSelector('en','English')),
-    array('message' => languageSelector('it','Italiano')),
+    array('message' => languageSelector('fr', 'Français')),
+    array('message' => languageSelector('en', 'English')),
+    array('message' => languageSelector('it', 'Italiano')),
+    array('message' => languageSelector('es', 'Español')),
 );
 $menuItem_Language = array(
     'message' => 'Choose your language',

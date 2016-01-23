@@ -1,6 +1,6 @@
 <?php
-include_once('undergoingWorks.php');
-exit(0);
+//include_once('undergoingWorks.php');
+//exit(0);
 
 if (!isset($_GET['path'])) {
     $requestedPath = 'index.php';
@@ -20,7 +20,10 @@ $clubFiles = array('Regate', 'Annulation',
     'Liste_inscrits_xls',
     'accueil_participants'
 );
-$adminFiles = array('Admin');
+$adminFiles = array(
+    'Admin',
+    'coureur_dbf_update'
+    );
 $loginFiles = array('Login', 'changePwd', 'deconnexion');
 
 $paths = array();
@@ -39,9 +42,11 @@ setPaths($clubFiles, 'Club', 'AutClub');
 setPaths($loginFiles, 'Login', 'AutLogin');
 $paths['Logout'] = array("code/Login/deconnexion.php", 'AutLogin');
 
-//
+// Aliases
 $paths['index'] = $paths['Liste_regates'];
 $paths['index.php'] = $paths['Liste_regates'];
+$paths['LoginClub.php'] = $paths['Login'];
+$paths['LoginAdmin.php'] = $paths['Login'];
 
 $defaultPath = 'code/Coureur/Liste_regates.php';
 //$defaultPath = $requestedPath;

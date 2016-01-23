@@ -30,11 +30,11 @@ $(document).ready(function () {
     //var userLang = navigator.language || navigator.userLanguage;
     //var windowLang = window.navigator.language || window.navigator.userLanguage;
     //alert(userLang+' '+windowLang);
-    var userLang=documentLanguage;
+    var userLang = documentLanguage;
     var selector = '.languageSelector[title="' + userLang + '"]';
     console.log(selector);
     $(selector).trigger("click");
-    
+
     if (debug)
         console.log('<< i18n ajouté');
 });
@@ -54,7 +54,7 @@ function loadBundles(lang) {
         name: messagesFileName,
         path: messagesPath,
         mode: 'both',
-        //            encoding: 'utf-8',
+        encoding: 'utf-8',
         cache: allowI18Cache,
         language: lang,
         callback: function () {
@@ -94,17 +94,15 @@ function updateMultipleMessages() {
     });
 }
 
-function updateSubmits() {
-// Mise a jour des buttons valider 
-    if (!msgUndefinedLog(msg_chercher)) {
-        if ($('#searchform').length != 0)
-            $('#searchform input[type=submit]').attr('value', msg_chercher);
-    }
-    if (!msgUndefinedLog(msg_valider)) {
-        if ($('#mainform').length != 0) {
-            $('#mainform input[type=submit]').attr('value', msg_valider);
-        }
-    }
+function updateSubmits() {// Mise a jour des buttons valider 
+    if ($('#searchform').length != 0 &&
+            !msgUndefinedLog('msg_chercher'))
+        $('#searchform input[type=submit]').attr('value', msg_chercher);
+
+    if ($('#mainform').length != 0
+            && !msgUndefinedLog('msg_valider'))
+        $('#mainform input[type=submit]').attr('value', msg_valider);
+
 }
 
 function  updateLeftLabels() {
