@@ -9,7 +9,9 @@ $courrielDeveloppeur = 'luigi.santocanale@lif.univ-mrs.fr';
 define('PWDRECOVERYON', true);
 //define('PWDRECOVERYON', false);
 
-
+// Read configuration file
+// this builds the global array $config
+include('bootstrap/readConfig.php');
 // Bootstrap
 // This is code to be executed to setup everything...
 include('bootstrap/log.php');

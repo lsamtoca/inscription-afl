@@ -92,11 +92,11 @@ function sendEmailWithNonceLink($user, $nonce) {
 
     $cc = $sender = $courrielDeveloppeur;
     $to = $destinataire;
-    $subject = 'Jeton pour changer le mot de passe '
-            . 'sur le site des pré-inscription de l\'AFL';
+    $subject = 'Jeton pour reinitialiser le mot de passe '
+            . 'sur le site des pré-inscriptions de l\'AFL';
 
     $message = "Bonjour,\n\n"
-            . "vous pouvez mofifier votre mot de passe en suivant ce lien : "
+            . "vous pouvez modifier votre mot de passe en suivant ce lien : "
             . "\n"
             . $urlChpwdNonce
             . "\n\n"

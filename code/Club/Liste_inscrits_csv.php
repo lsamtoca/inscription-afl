@@ -98,7 +98,8 @@ function compute_age_cat($bornYear) {
             break;
         }
     }
-
+// Next for testing
+//    echo "$bornYear -> $age -> $category (".$cat[0]. "--".$cat[1]. ") <br />";
     return $category;
 }
 
@@ -245,11 +246,12 @@ function generate_csv() {
 $csv = generate_csv();
 
 $date = date("ymd");
+// For testing
+//exit(0);
 // Direct output to a client’s web browser (Excel5)
 header('Content-Type: text/csv');
 header("Content-Disposition: attachment;filename=\"LASER_$date.csv\"");
 header('Cache-Control: max-age=0');
 echo $csv;
 
-exit;
-?>
+exit(0);

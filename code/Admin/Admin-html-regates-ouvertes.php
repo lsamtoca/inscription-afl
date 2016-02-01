@@ -32,7 +32,7 @@
                 <td scope="col"><?php echo $createur; ?></td>
                 
                 <td scope="col">
-                    <form action="#regatesouvertes" method="post"  onSubmit="return validate_date_destr('<?php echo $destruction ?>')">
+                    <form action="<?php echo urlSelf(); ?>#regatesouvertes" method="post"  onSubmit="return validate_date_destr('<?php echo $destruction ?>')">
                         <input type="submit" name="detruire" value="X" />
                         <input name="IDR" type="hidden" value='<?php echo $regate['ID_regate'] ?>' />
                     </form>

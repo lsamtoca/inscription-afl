@@ -13,8 +13,8 @@ function echoInput($name) {
 <div id='formulaire'>
     <form id="mainform" action="Inscription.php" method="post">
         <fieldset>
-            <legend id='mainform_legend' class="msg">
-                <?php echoMsg($id); ?>
+            <legend>
+                <?php echoMsg('mainform_legend'); ?>
             </legend>
 
             <!-- Hidden inputs to handle control -->

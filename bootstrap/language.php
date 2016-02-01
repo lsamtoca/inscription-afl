@@ -5,7 +5,14 @@
 
 define('LANGUAGEON', TRUE);
 define('LANGUAGEDEFAULT', 'fr');
-$availableLanguages = array('fr', 'en', 'it','es');
+
+$availableLanguages = array_map(
+        function($array){return $array[0];},
+        $config['availableLanguages']
+                ); 
+
+//print_r($availableLanguages);
+//exit(0);
 
 function parseDefaultLanguage($http_accept, $deflang = LANGUAGEDEFAULT) {
     if (isset($http_accept) && strlen($http_accept) > 1) {

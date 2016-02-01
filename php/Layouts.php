@@ -3,7 +3,7 @@
 // HTML PRE AND POST
 function xhtml_pre1($title, $type = 'transitional') {//Afficher le prefixe xhtml
     global $testing, $development;
-    
+
     $xhtmlStrict = "<!DOCTYPE html PUBLIC "
             . "\"-//W3C//DTD XHTML 1.0 Strict//EN\" "
             . "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">";
@@ -18,10 +18,9 @@ function xhtml_pre1($title, $type = 'transitional') {//Afficher le prefixe xhtml
         $docType = $xhtmlTransitional;
     }
     if (
-            ($testing and (!$development))
-            ||
+            ($testing and ( !$development)) ||
             preg_match("/Formulaire/", $_SERVER['REQUEST_URI']) == 1
-            ) {
+    ) {
         $noRobots = "<meta name=\"robots\" content=\"noindex,nofollow\" />";
     } else {
         $noRobots = "<!-- robots allowed. Please index this -->\n"
@@ -260,12 +259,23 @@ $menuItem_Login = array('message' => 'Connexion', 'link' => 'Login');
 $menuItem_Logout = array('message' => 'Deconnexion', 'link' => 'Logout');
 $menuItem_ChPwd = array('message' => 'Modifiez le mot de passe', 'link' => 'changePwd');
 
-$sousMenuLanguage = array(
-    array('message' => languageSelector('fr', 'Français')),
-    array('message' => languageSelector('en', 'English')),
-    array('message' => languageSelector('it', 'Italiano')),
-    array('message' => languageSelector('es', 'Español')),
-);
+$sousMenuLanguage = array();
+foreach ($config['availableLanguages'] as $language) {
+//    echo "'". $language[0] . '--' . $language[1]."'<br />";
+    array_push(
+    $sousMenuLanguage,
+        array('message' => languageSelector($language[0], $language[1]))
+            );
+}
+//exit(0);
+
+//$sousMenuLanguage = array(
+//    array('message' => languageSelector('fr', 'Français')),
+//    array('message' => languageSelector('en', 'English')),
+//    array('message' => languageSelector('it', 'Italiano')),
+//    array('message' => languageSelector('es', 'Español')),
+//    array('message' => languageSelector('pt', 'Português')),
+//);
 $menuItem_Language = array(
     'message' => 'Choose your language',
     'subMenu' => $sousMenuLanguage

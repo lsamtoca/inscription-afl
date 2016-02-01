@@ -86,7 +86,7 @@
 
     </script>
 
-    <form action='#regatesouvertes' method='post' id="formnewrace">
+    <form action='<?php echo urlSelf(); ?>#regatesouvertes' method='post' id="formnewrace">
 
         <fieldset>
 
