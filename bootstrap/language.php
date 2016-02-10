@@ -6,8 +6,17 @@
 define('LANGUAGEON', TRUE);
 define('LANGUAGEDEFAULT', 'fr');
 
+function first($array){
+    return $array[0];
+}
+
+//$availableLanguages = array_map(
+//        function($array){return $array[0];},
+//        $config['availableLanguages']
+//                ); 
+
 $availableLanguages = array_map(
-        function($array){return $array[0];},
+        'first',
         $config['availableLanguages']
                 ); 
 
