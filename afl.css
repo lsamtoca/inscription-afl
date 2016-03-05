@@ -160,6 +160,8 @@ table.mytable td {
 
 #menu ul ul>li {
     display: inherit;
+    width:100%;
+    white-space: nowrap;
 }
 
 #menu ul>li {

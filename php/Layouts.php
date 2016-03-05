@@ -142,6 +142,11 @@ function goback() {
     return $goback;
 }
 
+function echoGoBack(){
+    $goback = goback();
+    echo "<a href=\"$goback\">&laquo; Retour</a><h3>";
+}
+
 function pageErreur($message, $goback = NULL) {
 
     if ($goback == NULL) {
@@ -202,8 +207,8 @@ function languageSelector($lang, $msg) {
     return "<span class='languageSelector' title='$lang'>$msg</span>";
 }
 
-function multipleLanguahe($name, $defaultMsg = '') {
-    return "<span class='msg' id='$lang'>$defaultMsg</span>";
+function multipleLanguage($name, $defaultMsg = '') {
+    return "<span class='msg' id='$name'>$defaultMsg</span>";
 }
 
 function echoMenuChoice($choice) {
@@ -252,7 +257,19 @@ function echoMenu($choices) {
     echo '</div><!--menu-->';
 }
 
-$menuItem_Home = array('message' => '<span id="home" class="msg">Accueil</span>', 'link' => 'index');
+$sousMenuHome = array(
+    array(
+        'message' => multipleLanguage('about','A propos'),
+        'link' => 'about',
+    )
+);
+
+$menuItem_Home = array(
+    'message' => multipleLanguage('home','Accueil'),
+    'link' => 'index',
+    'subMenu' => $sousMenuHome
+);
+
 $menuItem_Club = array('message' => 'Accueil Club', 'link' => 'Regate');
 $menuItem_Admin = array('message' => 'Accueil Administrateur', 'link' => 'Admin');
 $menuItem_Login = array('message' => 'Connexion', 'link' => 'Login');
@@ -261,13 +278,10 @@ $menuItem_ChPwd = array('message' => 'Modifiez le mot de passe', 'link' => 'chan
 
 $sousMenuLanguage = array();
 foreach ($config['availableLanguages'] as $language) {
-//    echo "'". $language[0] . '--' . $language[1]."'<br />";
     array_push(
-    $sousMenuLanguage,
-        array('message' => languageSelector($language[0], $language[1]))
-            );
+            $sousMenuLanguage, array('message' => languageSelector($language[0], $language[1]))
+    );
 }
-//exit(0);
 
 //$sousMenuLanguage = array(
 //    array('message' => languageSelector('fr', 'Français')),

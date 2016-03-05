@@ -41,6 +41,7 @@ setPaths($adminFiles, 'Admin', 'AutAdmin');
 setPaths($clubFiles, 'Club', 'AutClub');
 setPaths($loginFiles, 'Login', 'AutLogin');
 $paths['Logout'] = array("code/Login/deconnexion.php", 'AutLogin');
+$paths['about'] = array("code/About/about.php", 'AutNone');
 
 // Aliases
 $paths['index'] = $paths['Liste_regates'];

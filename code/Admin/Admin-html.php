@@ -38,7 +38,7 @@ doMenu();
     <?php include 'Admin-html-update-COUREUR-DBF.php'; ?>
 
     <h3 id="celogiciel">A propos de ce logiciel</h3>
-    <?php $administrateur=TRUE; include('news.php'); ?>
+    <?php $administrateur=TRUE; include('code/About/news.php'); ?>
 
 </div><!-- accordion -->
 

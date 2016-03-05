@@ -88,7 +88,7 @@ doMenu();
     <?php include('Regate-html-helpdesk.php'); ?>
 
     <h3 id="celogiciel">A propos de ce logiciel</h3>
-    <?php include('news.php'); ?>
+    <?php include('code/About/news.php'); ?>
 
 </div>
 
