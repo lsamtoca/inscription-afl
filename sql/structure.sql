@@ -26,9 +26,11 @@ CREATE TABLE `Administrateur` (
   `ID_administrateur` int(11) NOT NULL AUTO_INCREMENT,
   `admin_login` varchar(10) DEFAULT NULL,
   `admin_passe` varchar(10) DEFAULT NULL,
+  `coded_admin_passe` varchar(32) DEFAULT NULL,
   `Nom` varchar(20) DEFAULT NULL,
   `Prenom` varchar(20) DEFAULT NULL,
   `courriel` varchar(50) DEFAULT NULL,
+  `nonce` varchar(16) DEFAULT NULL,
   PRIMARY KEY (`ID_administrateur`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -86,7 +88,7 @@ CREATE TABLE `Inscrit` (
   PRIMARY KEY (`ID_inscrit`),
   KEY `FK_Inscrit_ID_regate` (`ID_regate`),
   CONSTRAINT `FK_Inscrit_ID_regate` FOREIGN KEY (`ID_regate`) REFERENCES `regate` (`ID_regate`)
-) ENGINE=InnoDB AUTO_INCREMENT=1910 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6661 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -98,11 +100,14 @@ DROP TABLE IF EXISTS `Regate`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Regate` (
   `ID_regate` int(11) NOT NULL AUTO_INCREMENT,
+  `nonce` varchar(16) NOT NULL DEFAULT '',
   `org_login` varchar(10) DEFAULT NULL,
   `org_passe` varchar(10) DEFAULT NULL,
+  `coded_org_passe` varchar(32) NOT NULL,
   `istest` tinyint(4) NOT NULL DEFAULT '0',
   `titre` text NOT NULL,
   `description` varchar(500) DEFAULT NULL,
+  `informations` varchar(500) NOT NULL COMMENT 'Complémentaire à ''decription'' au cas que le club souhaite ajouter plus d''informations',
   `cv_organisateur` text NOT NULL,
   `courriel` varchar(50) NOT NULL,
   `lieu` text NOT NULL,
@@ -111,12 +116,14 @@ CREATE TABLE `Regate` (
   `date_limite_preinscriptions` date NOT NULL,
   `polo` tinyint(4) NOT NULL DEFAULT '0',
   `droits` int(11) NOT NULL,
+  `paiement_en_ligne` varchar(50) NOT NULL,
+  `resultats` varchar(100) NOT NULL,
   `destruction` date DEFAULT NULL,
   `ID_administrateur` int(11) NOT NULL,
   PRIMARY KEY (`ID_regate`),
   KEY `FK_Regate_ID_administrateur` (`ID_administrateur`),
   CONSTRAINT `FK_Regate_ID_administrateur` FOREIGN KEY (`ID_administrateur`) REFERENCES `administrateur` (`ID_administrateur`)
-) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=135 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -128,4 +135,4 @@ CREATE TABLE `Regate` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-12-15 22:13:04
+-- Dump completed on 2016-03-06 19:35:27
