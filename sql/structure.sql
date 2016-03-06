@@ -25,7 +25,6 @@ DROP TABLE IF EXISTS `Administrateur`;
 CREATE TABLE `Administrateur` (
   `ID_administrateur` int(11) NOT NULL AUTO_INCREMENT,
   `admin_login` varchar(10) DEFAULT NULL,
-  `admin_passe` varchar(10) DEFAULT NULL,
   `coded_admin_passe` varchar(32) DEFAULT NULL,
   `Nom` varchar(20) DEFAULT NULL,
   `Prenom` varchar(20) DEFAULT NULL,
@@ -102,7 +101,6 @@ CREATE TABLE `Regate` (
   `ID_regate` int(11) NOT NULL AUTO_INCREMENT,
   `nonce` varchar(16) NOT NULL DEFAULT '',
   `org_login` varchar(10) DEFAULT NULL,
-  `org_passe` varchar(10) DEFAULT NULL,
   `coded_org_passe` varchar(32) NOT NULL,
   `istest` tinyint(4) NOT NULL DEFAULT '0',
   `titre` text NOT NULL,
@@ -135,4 +133,4 @@ CREATE TABLE `Regate` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-03-06 19:35:27
+-- Dump completed on 2016-03-06 20:28:51
