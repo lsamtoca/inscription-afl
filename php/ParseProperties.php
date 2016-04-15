@@ -2,9 +2,11 @@
 
 function parseProperties($fileName, $path = 'bundle/') {
     $text = file_get_contents($path . $fileName . '.properties');
-    $encoding = mb_detect_encoding($text, 'UTF-8, ISO-8859-1', true);
-    $txtProperties = mb_convert_encoding($text,'UTF-8',$encoding);
+    //$encoding = mb_detect_encoding($text, 'UTF-8, ISO-8859-1', true);
+    //$txtProperties = mb_convert_encoding($text,'UTF-8',$encoding);
 
+    $txtProperties = $text;
+    
     $result = array();
     $lines = explode("\n", $txtProperties);
     $key = "";
