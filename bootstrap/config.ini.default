@@ -1,0 +1,38 @@
+;; Location du ficher mdp BD
+bdFile=databases/database.php
+
+;; Pour pouvoir modifier le mot de passe
+pwdRecoveryOn = false
+
+;; Parametrage des courriels
+webMaster = My Self
+webMasterEmail = my.email@my.address.com
+developer = Luigi Santocanale
+developerEmail = luigi.santocanale@lif.univ-mrs.fr
+
+;; LANGUAGES
+; Comment out those you do not want
+availableLanguages = fr-Français,en-English,it-Italiano,es-Español,pt-Português
+defaultLanguage=fr
+
+;; Message d'accueil
+titleMsg = Pré-inscriptions aux régates
+
+;; Images
+defaultBackground = background.jpg
+favIcon = favicon.png
+
+;; Qui sommes nous
+; sera utilisédans un futur
+whoAreWe =l'AFL
+
+
+;; Various modules
+;; language.php, log, undergoingWorks, develOrProduction, noLG, Backgrounds
+
+moduleUndergoingWorks = false
+moduleNoLG = true
+moduleLog = true
+moduleDevelOrProduction = true
+moduleLanguage = true
+moduleBackgrounds=false

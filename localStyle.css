@@ -1,0 +1,23 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 13 déc. 2016, 07:05:47
+    Author     : lsantoca
+*/
+
+
+/* 
+    Colors 
+    cadetblue --- AFL
+    sortOfViolet rgb(21, 65, 135) -- LaPelle
+*/
+
+#title, div.contenu, #menu>ul>li>ul,#accordion>div,div.explication>div{
+    /* background-color: cadetblue; */
+    /* background: cadetblue; */
+    background-color: rgb(21, 65, 135);
+    background: rgb(21, 65, 135);
+}
