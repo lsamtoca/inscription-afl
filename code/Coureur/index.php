@@ -1,4 +1,5 @@
 <?php
+// TODO : is thi script used anymore
 $title = "Inscription aux régates de l'AFL";
 xhtml_pre1($title);
 ?>

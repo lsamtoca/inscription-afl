@@ -104,6 +104,25 @@ table.mytable td {
     /* width:50%;*/
 }
 
+table.mytable thead th { 
+    padding: 5px;
+    margin: 0px;
+    border-width:1px;
+    border-style: solid; 
+    border-color:black;
+    color:black;
+    /* width:50%;*/
+}
+
+.mytable td:first-child {
+    border-color:black;
+    color:black;
+}
+.mytable td:nth-child(2) {
+    border-color:black;
+    color:black;
+}
+
 .error_strings {
     color:red;
     background:yellow;
@@ -168,14 +187,14 @@ table.mytable td {
     position: relative;
 }
 #menu>ul>li>ul {
+    background-color: cadetblue; 
     position: absolute;
     /* on cache les sous menus complètement sur la gauche */
     /*left: -999em;*/
     display:none;
     text-align:left;
     z-index: 1000;
-    background-color: cadetblue;
-    /*width:inherit;*/
+    /*   width:inherit;*/
     padding:5px;
 }
 #menu>ul>li:hover>ul {
@@ -183,51 +202,6 @@ table.mytable td {
     left: 0px;
     display:block;
 }
-
-/*
-#choix_langue {
-    position: absolute;
-    width: auto;
-    height: auto;
-    top: 0.2em;
-    right: 0;
-    bottom: auto;
-    padding-right: 1em;
-}
-
-coucou#choix_langue A {
-    text-decoration:underline;
-    color:blue;
-}
-
-couocu#choix_langue A:hover {
-    text-decoration: none;
-    *color: #FF0000;
-    cursor:pointer;
-}
-
-
-#back_to_menu {
-    position: fixed;
-    width: auto;
-    height: auto;
-    top: auto;
-    left: 0;
-    bottom: 0.1em;
-    padding-left: 1em;
-}
-
-*/
-
-/*#back_to_menu {
-    position: fixed;
-    width: auto;
-    height: auto;
-    top: 0.1em;
-    left: 0;
-    bottom: auto;
-    padding-left: 1em;
-}*/
 
 #bas {
     /*    background-color:white;*/
@@ -239,7 +213,9 @@ couocu#choix_langue A:hover {
     z-index:2;
 }
 
-#accordion>div{background:cadetblue}
+#accordion>div{
+    background:cadetblue;
+}
 
 div.explication>h4 {
     color:red;
@@ -411,6 +387,7 @@ form label.error {
     color:red;
 }
 
+
 #title {
     display:block;
     background-color: cadetblue;
@@ -425,3 +402,24 @@ form label.error {
     height:10%;
     z-index: 2;
 }
+
+.sortable { 
+    list-style-type: none; 
+    margin: 0; 
+    padding: 0; 
+    /*width: 60%; */
+}
+
+.sortable li { 
+    margin: 0 1px 1px 1px; 
+    padding: 0.4em; 
+    padding-left: 1.2em; 
+    /*font-size: 1.4em; 
+    height: 18px; */
+}
+
+.sortable li span { 
+    position: absolute; 
+    margin-left: -1.0em; 
+}
+

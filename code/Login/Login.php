@@ -129,7 +129,7 @@ function doSetNonceAndSendEmail($courriel) {
     sendEmailWithNonceLink($user, $nonce);
 }
 
-if (PWDRECOVERYON and isset($_POST['mdpOublie'])) {
+if ($config['pwdRecoveryOn'] and isset($_POST['mdpOublie'])) {
 
     //echo "couocu";
 
@@ -147,7 +147,7 @@ if (PWDRECOVERYON and isset($_POST['mdpOublie'])) {
     exit(0);
 }
 
-if (PWDRECOVERYON and isset($_GET[$hashGetString])) {
+if ($config['pwdRecoveryOn'] and isset($_GET[$hashGetString])) {
 
     $hashstring = $_GET[$hashGetString];
     $id = decodeIdFromHashString($hashstring);
@@ -184,7 +184,7 @@ doMenu();
             </div>
         </fieldset>
 
-        <?php if (PWDRECOVERYON): ?>
+        <?php if ($config['pwdRecoveryOn']): ?>
             <br />
             <br />
             <form action="" method="post">

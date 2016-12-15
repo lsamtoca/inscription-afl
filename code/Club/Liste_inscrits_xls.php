@@ -1,19 +1,6 @@
 <?php
 
-//session_start();
-//if (!isset($_SESSION["ID_regate"])) {
-//    header("Location: LoginClub.php");
-//}
-//require "partage.php";
-
 require "externals/PHPExcel/Classes/PHPExcel.php";
-
-//require_once "php/Regate.php";
-//$ID_regate = $_GET['regate'];
-//$regate = Regate_selectById($ID_regate);
-
-
-//define("FILENAME",sprintf("%sinscrits.xlsx",$racine)); //constante: nom du fichier à generer
 
 $fields = array(
     'nom' => 'Nom',
@@ -40,10 +27,7 @@ $fields = array(
     'date confirmation' => 'Date confirmation',
 );
 
-//if($regate['taille_polo'] == '1'){
-//    
-//}
-    
+
 function generate_excel() {
 
     global $fields;
@@ -53,36 +37,29 @@ function generate_excel() {
             ->setLastModifiedBy("Luigi Santocanale")
             ->setTitle("Liste des inscrits à ma regate");
 
-    $condition = sprintf("WHERE  `ID_regate` = '%s'", $_SESSION['ID_regate']);
-    if (isset($_GET['confirme']) and $_GET['confirme'] == '1')
-        $condition.=' AND `conf`=\'1\'';
-    $query = "SELECT * FROM `Inscrit` " . $condition;
 
-    $conn = connect();
-    $res = mysql_query($query, $conn) or die('Problème lors de la réception des enregistrements ' . $query); //Exécution de la requête
-
+    if (isset($_GET['confirme']) and $_GET['confirme'] == '1') {
+        $postfix = ' AND `conf`=\'1\'';
+    } else {
+        $postfix = "";
+    }    $sql = "SELECT * FROM Inscrit WHERE (ID_regate =:ID_REGATE)$postfix";
+    $assoc = array('ID_REGATE' => $_SESSION['ID_regate']);
+    $req = executePreparedQuery($sql, $assoc);
 
     $row_no = 1;
     $column_no = 65;
 
+    //Header
     $i = 0;
-//     while ($i < mysql_num_fields($res)) { 
-//       $meta = mysql_fetch_field($res, $i); 
-//         
-//        $excel->setActiveSheetIndex(0)
-//  		    ->setCellValue(chr($column_no+$i).$row_no,$meta->name);
-// 
-//       $i++; 
-//     }  
-
     foreach ($fields as $key => $value) {
         $excel->setActiveSheetIndex(0)
                 ->setCellValue(chr($column_no) . $row_no, $value);
         $column_no++;
     }
 
+    // Content
     $row_no++;
-    while ($row = mysql_fetch_assoc($res)) {//Parcours du résultat de la requête
+    while ($row = $req->fetch()) {//Parcours du résultat de la requête
         $column_no = 65; //C'est ici qu'on va jouer sur les codes ascii
 
         foreach ($fields as $field => $value) {
@@ -90,16 +67,19 @@ function generate_excel() {
                     ->setCellValue(chr($column_no) . $row_no, $row[$field]);
             $column_no++;
         }
-        /* 		foreach($row as $key => $value)
+        /* Ce code obselete ... mais il sert à quoi ? */
+        /*
+        foreach($row as $key => $value)
           {
           $excel->setActiveSheetIndex(0)
           ->setCellValue(chr($column_no).$row_no,$value);
           $column_no++;
-          } */
+          }
+          */
+        
         $row_no++;
     }
 
-    mysql_close($conn);
     return $excel;
 }
 
@@ -112,5 +92,4 @@ header('Cache-Control: max-age=0');
 
 $objWriter = PHPExcel_IOFactory::createWriter($excel, 'Excel5');
 $objWriter->save('php://output');
-exit;
-?>
+exit(0);

@@ -106,9 +106,12 @@
                 }
 
             });
-        });
+            $(function () {
+                $(".sortable").sortable();
+                $(".sortable").disableSelection();
+            });
+        }); // Document ready
     </script>
-
     <form id='form_info_regate' 
           action='<?php echo urlSelf(); ?>#renseignements' 
           method='post'>
@@ -155,6 +158,58 @@
                 <span class="normalwidth">Après cette date il ne sera plus possible se pré-inscrire avec ce logiciel.</span>
             </span>
 
+            <hr /><!-- Series -->
+            <!-- <label>Séries :</label> <br /> -->
+            <?php
+            require_once 'php/Series.php';
+            require_once 'php/Forms.php';
+            global $availableSeries;
+
+            /*
+              foreach ($availableSeries as $serie) {
+              $value = 0;
+              if (isset($regate['series'][$serie['nom']])) {
+              $value = 1;
+              }
+              $formInputs = array(
+              $serie['nom'] =>
+              array(
+              'name' => $serie['nom'],
+              'rendering' => 'checkbox',
+              'label' => $serie['nomLong'],
+              'value' => $value
+              )
+              );
+              echo_input($serie['nom'], $formInputs);
+              }
+             */
+            $choices = array();
+            foreach ($regate['series'] as $nom => $serie) {
+                $choices[$nom] = array(
+                    'label' => $serie['nomLong'],
+                    'checked' => true
+                );
+            }
+            foreach ($availableSeries as $nom => $serie) {
+                if (!isset($choices[$nom])) {
+                    $choices[$nom] = array(
+                        'label' => $serie['nomLong'],
+                        'checked' => false
+                    );
+                }
+            }
+
+            $formInputs = array(
+                'series' =>
+                array(
+                    'rendering' => 'orderedMChoice',
+                    'label' => 'Series',
+                    'choices' => $choices
+                )
+            );
+            echo_input('series', $formInputs); 
+            ?>
+
             <hr /><!-- Sous -->
             <label>Droits d'inscription :</label>
             <input name="droits" type="text" id="droits_inscription" 
@@ -192,7 +247,7 @@
                 <span class="wide">Si cette régate est cochée comme n'étant pas visible, 
                     elle apparaîtra seulement sur le 
                     site de développement 
-                        du logiciel, http://regateslaser.info/inscriptions_afl_dev.
+                    du logiciel, http://regateslaser.info/inscriptions_afl_dev.
                     Vous pouvez décider de cacher cette régate pour le temps nécessaire à
                     compléter tous les renseignements de la régate, 
                     par exemple et en particulier, 
@@ -200,7 +255,7 @@
                 </span>
             </span>
 
-        
+
             <hr />
             <label>Lien vers les résultats :</label>
             <textarea id='resultats' name='resultats' cols='48' rows='1'><?php echo $regate['resultats'] ?></textarea>
@@ -213,22 +268,22 @@
 
             <hr />
 <!--            <span class="line"> -->
-                <label>Autres informations  :</label>
-                <textarea id='informations' name='informations' 
-                          cols='50' rows='10'><?php echo $INFORMATIONS ?></textarea>
-                <span class="help">
-                    <span class="facultatif thin">Ajoutez ici tout autre renseignement qui vous 
-                        semble intéressant transmettre  au coureur :
-                        frais d'inscriptions majorées, à quelles conditions, 
-                        lien vers le site du club, lien vers l'avis de course, 
-                        lien vers les instructions de course. 
-                    </span>
+            <label>Autres informations  :</label>
+            <textarea id='informations' name='informations' 
+                      cols='50' rows='10'><?php echo $INFORMATIONS ?></textarea>
+            <span class="help">
+                <span class="facultatif thin">Ajoutez ici tout autre renseignement qui vous 
+                    semble intéressant transmettre  au coureur :
+                    frais d'inscriptions majorées, à quelles conditions, 
+                    lien vers le site du club, lien vers l'avis de course, 
+                    lien vers les instructions de course. 
                 </span>
-<!--            </span> -->
+            </span>
+            <!--            </span> -->
 
             <br>
 
-            <input type="submit" id="Modifier" value="Modifier" />
+            <input type="submit" name="submitRenseignements" value="Modifier" />
 
         </fieldset>
     </form>

@@ -1,3 +1,5 @@
+#php_flag opcache.enable Off
+
 RewriteEngine On
 #RewriteBase /inscriptions_afl_dev/
 #RewriteBase /inscriptions_afl/
@@ -9,4 +11,5 @@ RewriteCond %{REQUEST_FILENAME} !\.js$|\.properties$
 RewriteCond %{REQUEST_FILENAME} !\.png$|\.jpg$
 RewriteCond %{REQUEST_FILENAME} !\.pdf$|\.WDZ$
 RewriteCond %{REQUEST_FILENAME} !controller.php
+RewriteCond %{REQUEST_FILENAME} !phpinfo.php
 RewriteRule ^([^?]*)$ %1/controller.php?path=$1 [NC,L,QSA]

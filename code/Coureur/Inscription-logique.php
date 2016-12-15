@@ -9,7 +9,6 @@ require_once 'php/Regate.php';
 require_once 'php/mailer.php';
 
 
-
 /* Des fonctions ... */
 
 function validatePOST() {
@@ -243,6 +242,7 @@ function compose_mail($ID_inscrit, $ID_regate, $titre_regate, $courriel_cv) {
     global $hashGetString;
     global $regate;
     global $post;
+    global $config;
 
     $inscrit = Inscrit_selectById($ID_inscrit);
     $hash = $inscrit['hash'];
@@ -262,7 +262,7 @@ function compose_mail($ID_inscrit, $ID_regate, $titre_regate, $courriel_cv) {
             . "$lang" . "#formulaires";
 
     // Format fields of answer
-    $ME = "inscriptions-afl@regateslaser.info";
+    $ME = $config['webMasterEmail'];
     $subject = "Inscription à la régate, confirmation";
     if (filter_var($courriel_cv, FILTER_VALIDATE_EMAIL)) {
         $sender = $courriel_cv;
@@ -288,8 +288,13 @@ global $post;
 $post = validatePOST();
 
 // On vient par la seulement si on a complete le formulaire !!!
-if (!isset($post['maSoumission'])) {
-    pageErreur('Hacker !!!');
+// Mais on peut venir par la aussi si on a cherché par LICENCE et ...
+
+// TODO : here big issu as we cannot join the regata via a search from
+// coureur.dbf
+
+if (!isset($post['maSoumission']) && !isset($post['search_submit'])) {
+    pageErreur('Un erreur imprévu :-(');
     exit(1);
 }
 assert('isset($post[\'maSoumission\'])');

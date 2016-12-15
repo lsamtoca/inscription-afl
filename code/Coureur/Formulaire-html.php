@@ -1,5 +1,5 @@
 <?php
-global $regate, $confirmation;
+global $config, $regate, $confirmation;
 
 
 $page_title1 = 'Pré-inscription à la régate ' . $regate['titre'];
@@ -15,11 +15,18 @@ xhtml_pre1($page_title1);
 <script src="js/jquery.i18n.properties.js" type="text/javascript"></script>
 <script src="js/ui.datepicker-fr.js" type="text/javascript"></script>
 
-<?php if(LANGUAGEON): ?>
+<?php if ($config['moduleLanguage']): ?>
     <script type="text/javascript">
-        var documentLanguage='<?php echo LANGUAGE ; ?>';
+        var documentLanguage = '<?php echo LANGUAGE; ?>';
     </script>
-<?php endif;?>
+<?php endif; ?>
+
+ <?php if ($comingFromSearchDbf): ?>
+    <script type="text/javascript">
+        window.location.hash = "formulaires";
+    </script>
+<?php endif; ?>
+
 
 <script src="js/Formulaire-i18n.js" type="text/javascript"></script>
 <script src="js/Formulaire-validation.js" type="text/javascript"></script>
@@ -30,26 +37,27 @@ xhtml_pre1($page_title1);
 
 <script type="text/javascript">
 
-    $(document).ready(function () {
+        $(document).ready(function () {
 
-        $("#naissance").datepicker({
-            dateFormat: "dd/mm/yy",
-            defaultDate: "01/01/98",
-            changeYear: true,
-            yearRange: "c-20:c+20"
+            $("#naissance").datepicker({
+                dateFormat: "dd/mm/yy",
+                defaultDate: "01/01/98",
+                changeYear: true,
+                yearRange: "c-20:c+20"
+            });
+
+            myaccordion_set_accordion();
+
+            $('mainform').submit(function () {
+                alert($(this).serialize());
+                return false;
+            });
         });
-
-        myaccordion_set_accordion();
-
-        $('mainform').submit(function () {
-            alert($(this).serialize());
-            return false;
-        });
-    });
 
 </script>
 
-<?php xhtml_pre2($page_title2); 
+<?php
+xhtml_pre2($page_title2);
 doMenu($menuLanguage);
 ?>
 
@@ -63,14 +71,16 @@ doMenu($menuLanguage);
     <?php if (Regate_estOuverte($regate)): ?>
         <h3 id="formulaires"><span id="preregistration_form" class="msg"></span></h3>
         <div id="forms" class="contenu">
-            <?php if (!$confirmation): ?> 
+            <?php if (!$confirmation && !$comingFromSearchDbf): ?> 
                 <?php include 'searchform-html.php'; ?>
 
                 <br />
             <?php else: ?> 
-                <p style="color:red">
-                    <span id="message_confirmation"  class="msg"></span>
-                </p>
+                <?php if (!$comingFromSearchDbf): ?> 
+                    <p style="color:red">
+                        <span id="message_confirmation"  class="msg"></span>
+                    </p>
+                <?php endif; ?>
             <?php endif; ?> 
 
             <?php include 'mainform-html.php'; ?>

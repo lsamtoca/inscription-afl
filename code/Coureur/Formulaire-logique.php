@@ -7,15 +7,11 @@ if (!isset($_GET['regate'])) {
 assert('isset($_GET[\'regate\'])');
 $ID_regate = $_GET['regate'];
 
-// $mainform_elements is needed
-// since we need to prefill the form
-// if we are in mode confirmation
-require_once 'mainform-elements.php';
-
 $premiere_inscription = TRUE;
 $confirmation = FALSE;
 $comingfromsearch = FALSE;
 $gotoinscription = FALSE;
+$comingFromSearchDbf = FALSE;
 
 require_once 'php/hash.php';
 
@@ -40,13 +36,16 @@ if ($comingfromsearch)
 
 
 require_once 'php/Regate.php';
-
 //
 // Récuellir les informations sur la régate
 //
-
 $regate = Regate_selectById($ID_regate);
 $URLPRE = format_url_preinscrits($ID_regate);
+
+// mainform_elements.php is needed
+// since we need to prefill the form
+// if we are in mode confirmation
+require_once 'mainform-elements.php';
 
 // Pour le preremplissage du formulaire
 // Association :
@@ -101,7 +100,7 @@ function fill_form_from_db() {
 
     global $assoc_INSCRIT_form, $assoc_COUREUR_form, $formData, $mainformInputs;
     global $pdo_path, $user, $pwd, $pdo_options;
-    global $gotoinscription, $confirmation;
+    global $gotoinscription, $confirmation,$comingFromSearchDbf;
     global $ID_inscrit, $hash;
 
     assert(isset($_POST['search_submit']) or $confirmation);
@@ -178,6 +177,7 @@ function fill_form_from_db() {
     // On a rien trouvé  dans la table INSCRIT
     // On cherche alors dans la table COUREUR.DBF
     // Faire la requete sur la table COUREUR.DBF
+    // We should also search for NO ISAF
     if (isset($_POST['search_lic'])) {
         $sql = "Select * from `COUREUR.DBF` where `NO_LIC`= ?";
         $assoc = array($_POST['search_lic']);
@@ -190,6 +190,11 @@ function fill_form_from_db() {
 
         // Si on a trouvé qqchose on pre-remplis le formulaire
         if ($req->rowCount() > 0) {
+            // WE have to reset $gotoinscription to false, 
+            // sine we have set this to true at the beginning
+            $gotoinscription = false;
+            $comingFromSearchDbf=true; // This needed not to display again the serach form ?
+
             $row = $req->fetch();
             foreach ($assoc_COUREUR_form as $field_bd => $field_form) {
                 $mainformInputs[$field_form]['default'] = strip_spaces($row[$field_bd]);
@@ -197,6 +202,15 @@ function fill_form_from_db() {
             // On doit aussi re-ajouster la date de naissance
             // qui est stockée dans COUREUR.DBF sous le format AAAAMMDD
             $mainformInputs['naissance']['default'] = dateReformatDbfToJquery($mainformInputs['naissance']['default']);
+            $mainformInputs['statut']['default'] = 'Licencie';            
+            //          
+//            echo '<pre>';
+//            print_r($row);
+//            print_r($mainformInputs);
+//            echo '</pre>';
+//            exit(0);
+            
+            //
         } else
             pageErreur('On vous a pas trouvé');
     }
@@ -205,6 +219,7 @@ function fill_form_from_db() {
 fill_form_from_scratch();
 if ($comingfromsearch or $confirmation) {
     fill_form_from_db();
+    //
     if ($gotoinscription) {
         // We should not include 
         // from inside a function 

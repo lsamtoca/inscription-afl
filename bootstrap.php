@@ -4,23 +4,34 @@ error_reporting(-1);
 ini_set('display_errors', '1');
 date_default_timezone_set('Europe/Paris');
 
-// Can this be placed in php/Mailer.php ?
-$courrielDeveloppeur = 'luigi.santocanale@lif.univ-mrs.fr';
-define('PWDRECOVERYON', true);
-//define('PWDRECOVERYON', false);
-
+// Bootstrap -- the very least
+include('bootstrap/assert.php');
 // Read configuration file
 // this builds the global array $config
 include('bootstrap/readConfig.php');
-// Bootstrap
+
+function testModule($moduleName){
+    global $config;
+    $mName="module".ucfirst($moduleName);
+    return (isset($config[$mName]) 
+            and ($config[$mName]));
+}
+
+
+// Modules, conditionally included according to config.ini 
+// they should be moved to 
 // This is code to be executed to setup everything...
-include('bootstrap/log.php');
-include('bootstrap/develOrProduction.php');
-include('bootstrap/assert.php');
-include('bootstrap/language.php');
-include('bootstrap/noLG.php');
+testModule('undergoingWorks') and include('bootstrap/undergoingWorks.php') ; //We exit from here
+testModule('log') and include('bootstrap/log.php');
+testModule('develOrProduction') and include('bootstrap/develOrProduction.php');
+// Here I do not see yet how to get rid of this module
+testModule('language') and include('bootstrap/language.php');
+testModule('noLG') and include('bootstrap/noLG.php');
+testModule('chooseBackground') and include('bootstrap/chooseBackground.php');
+
 
 // These are modules to loaded that shall (maybe used)
+//define('$config['pwdRecoveryOn']', $config['pwdRecoveryOn']);
 require_once('databases/bds.php');
 require_once('php/Layouts.php');
 require_once('php/Login.php');

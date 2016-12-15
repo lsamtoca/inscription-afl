@@ -1,25 +1,15 @@
 <?php
 
-//session_start();
-//error_reporting(-1);
-//ini_set('display_errors', '1');
-//
-//if (!isset($_SESSION["ID_regate"])) {
-//    header("Location: LoginClub.php");
-////$_SESSION["ID_regate"]=2;
-//}
+$regate = Regate_selectById($_SESSION['ID_regate']);
+//$series = array_keys($regate['series']);
 
 if (
         !isset($_GET['serie'])
-        or (
-        $_GET['serie'] != 'LAS'
-        and
-        $_GET['serie'] != 'LAR'
-        and
-        $_GET['serie'] != 'LA4'
-        )
+        or ( !isset($regate['series'][$_GET['serie']]))
 ) {
-    pageErreur('Il faut spécifier une série (LA4/LAR/LAS)');
+    $series = implode('/', array_keys($regate['series']));
+    pageErreur("Il faut spécifier une série ($series)");
+    exit(1);
     //    die("Il faut spécifier une série");
 }
 
@@ -267,7 +257,6 @@ function do_form($participant) {
         new_line();
         set('');
         $sheet->getRowDimension($line_no)->setRowHeight(75);
-
     }
 
     $sheet->getStyle('A' . $first_line . ':A' . $line_no)->applyFromArray($style_Center);

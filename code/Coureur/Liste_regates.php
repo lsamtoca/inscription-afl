@@ -1,8 +1,9 @@
 <?php
+// Are we coming from a function call ???
+global $testing, $development;
 
 function do_liste($req, $titre) {
 //echo "<h2>$titre</h2>\n";
-
 
     echo '<ul>';
     if ($req->rowCount() == 0) {
@@ -29,7 +30,7 @@ function do_liste($req, $titre) {
 $bdd = newBd();
 
 $condition = '`date_limite_preinscriptions` >= DATE(NOW())';
-if (!$development and !$testing)
+if (!$development and ! $testing)
     $condition .= ' AND `istest`=0';
 
 $sql = "SELECT `ID_regate`,`titre`,`lieu`, 
@@ -44,7 +45,7 @@ $regates_avenir = executePreparedQuery($sql, $assoc, $bdd);
 
 $condition = '`date_limite_preinscriptions` < DATE(NOW()) AND '
         . '`date_fin` > DATE(NOW() - INTERVAL 1 YEAR)';
-if (!$development and !$testing)
+if (!$development and ! $testing)
     $condition .= ' AND `istest`=0';
 
 $sql = 'SELECT `ID_regate`,`titre`,`lieu`,
@@ -79,7 +80,6 @@ xhtml_pre1($title);
 <?php
 xhtml_pre2($title);
 doMenu();
-
 ?>
 
 <div id="accordion">

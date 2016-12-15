@@ -53,14 +53,51 @@ function get_field_value($field) {
     return $result[$field];
 }
 
-function validate_post_and_update() {
+function chosen_series() {
+    $newSeriesString = "";
 
-    // Make a copy of post and work on it
-    foreach ($_POST as $key => $value) {
-        $post[$key] = $value;
+    function map($string) {
+        global $availableSeries;
+        $series = array_keys($availableSeries);
+
+
+        if (($len = strlen($string)) < 6) {
+            return array(false, "");
+        }
+        $prefix = substr($string, 0, 6);
+        $suffix = substr($string, 6, $len);
+        $boolval = $prefix === "series" && in_array($suffix, $series);
+
+        return array($boolval, $suffix);
     }
 
-    // Update the informations on the database if these are set
+    function filtre(array $ar) {
+        return $ar[0] == true;
+    }
+
+    $series = array_map('map', array_keys($_POST));
+    $series = array_filter($series,'filtre');
+    $series = array_map(function(array $ar) {
+        return $ar[1];
+    }, $series);
+    return implode(',', $series);
+}
+
+function validate_post_and_update() {
+
+// Make a copy of post and work on it
+    foreach ($_POST as $key => $value) {
+        $post[$key] = $value;
+//        if ($key == 'series') {
+//            $string = implode(',', array_keys($value));
+//            echo "$key->$string<br />";
+//        } else {
+   //     echo "$key->$value<br />";
+//        }
+    }
+  //  exit();
+
+// Update the informations on the database if these are set
     $fields = array(
         'titre', 'description',
         'cv_organisateur', 'lieu',
@@ -69,7 +106,7 @@ function validate_post_and_update() {
         'istest');
 
     $messages = '';
-    // VALIDATE AND UPDATE $post
+// VALIDATE AND UPDATE $post
     foreach ($fields as $field) {
 
         if (isset($post[$field])) {
@@ -114,13 +151,24 @@ function validate_post_and_update() {
                 default:
                     break;
             }
-
 // Immediately after we have validated it, we do the upate
             if ($postOK) {
                 update_field($field, $post[$field]);
             }
         }
+    } /// For Loop on POST finishes here
+
+
+    $newSeries = chosen_series();
+//    echo $newSeries;
+//    exit();
+    if ($newSeries != '') {
+        update_field('series', $newSeries);
+    } else {
+        $messages .="Il faut choisir au moins une série\n";
     }
+
+
     if ($messages != '') {
         pageErreur($messages);
         exit(1);
@@ -130,7 +178,9 @@ function validate_post_and_update() {
 // Get the informations from the database
 $ID_regate = $_SESSION["ID_regate"];
 $bd = newBd();
-validate_post_and_update();
+if (isset($_POST['submitRenseignements'])) {
+    validate_post_and_update();
+}
 
 $regate = Regate_selectById($ID_regate, $bd);
 

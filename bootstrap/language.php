@@ -1,27 +1,22 @@
 <?php
+// This module computes the standard language from the Browser
+// If this is not among the available languages
+// then the default language is from config.ini
 
-// goal : define the constant LANGUAGE 
+// // goal : define the constant LANGUAGE 
 // WHICH IS MEANT TO BE THE LANGUAGE TO BE USED 
 
-define('LANGUAGEON', TRUE);
-define('LANGUAGEDEFAULT', 'fr');
 
-function first($array){
+function first($array) {
     return $array[0];
 }
 
-//$availableLanguages = array_map(
-//        function($array){return $array[0];},
-//        $config['availableLanguages']
-//                ); 
-
+// To be moved to readConfig ?
 $availableLanguages = array_map(
-        'first',
-        $config['availableLanguages']
-                ); 
+        'first', $config['availableLanguages']
+);
 
-//print_r($availableLanguages);
-//exit(0);
+define('LANGUAGEDEFAULT',$config['defaultLanguage']);
 
 function parseDefaultLanguage($http_accept, $deflang = LANGUAGEDEFAULT) {
     if (isset($http_accept) && strlen($http_accept) > 1) {
@@ -59,6 +54,7 @@ function setLanguage($lang) {
 }
 
 function executeLanguage() {
+    global $config;
 
     if (isset($_GET['lang']) &&
             setLanguage($_GET['lang'])
@@ -73,11 +69,7 @@ function executeLanguage() {
             return;
         }
     }
-    define('LANGUAGE', LANGUAGEDEFAULT);
+    define('LANGUAGE', $config['defaultLanguage']);
 }
 
-if (LANGUAGEON) {
-    executeLanguage();
-    //echo LANGUAGE;
-    //exit(0);
-}
+executeLanguage();

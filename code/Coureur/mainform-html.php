@@ -1,14 +1,17 @@
 <?php
 require_once 'php/Forms.php';
-// We do not need to load this,
+
+// We do not need to load mainform-elements.php,
 // as it has been loaded and modified by logique.php 
-//require_once 'mainform-elements.php';
+// require_once 'mainform-elements.php';
+
 global $mainformInputs;
 
 function echoInput($name) {
     global $mainformInputs;
     echo_input($name, $mainformInputs);
 }
+
 ?>
 <div id='formulaire'>
     <form id="mainform" action="Inscription.php" method="post">
@@ -70,7 +73,7 @@ function echoInput($name) {
             <?php echoInput('serie'); ?>
             <hr />
 
-            <!-- Statut : Licence et AFL -->
+            <!-- Statut : Licence et adherant classe -->
 
             <?php echoInput('statut'); ?>
 

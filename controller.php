@@ -1,13 +1,15 @@
 <?php
-//include_once('undergoingWorks.php');
-//exit(0);
 
+// Read the bootstrap
+require_once 'bootstrap.php';
+
+// Routing
+// Determine the script to load
 if (!isset($_GET['path'])) {
     $requestedPath = 'index.php';
 } else {
     $requestedPath = $_GET['path'];
 }
-
 $coureurFiles = array(
     'Formulaire', 'Liste_regates', //, 
     'Confirmation',
@@ -53,7 +55,6 @@ $defaultPath = 'code/Coureur/Liste_regates.php';
 //$defaultPath = $requestedPath;
 $defaultAuth = 'AutNone';
 
-require_once 'bootstrap.php';
 
 //$_SERVER['REQUEST_URI'] = dirname($_SERVER['PHP_SELF']);
         
@@ -93,3 +94,4 @@ switch ($aut) {
 }
 
 include_once($path);
+exit(0);

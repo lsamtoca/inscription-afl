@@ -1,5 +1,16 @@
 <?php
 
+global $regate;
+
+$series = array();
+
+foreach ($regate['series'] as $serie) {
+    array_push($series, array($serie['nom'], $serie['nomLong'])
+    );
+}
+
+
+
 $mainformInputs = array(
     'Nom' => array(
         'rendering' => 'text'
@@ -38,12 +49,8 @@ $mainformInputs = array(
     ),
     'serie' => array(
         'rendering' => 'radio',
-        'values' => array(
-            array('LA4', '4.7'),
-            array('LAR', 'Laser Radial'),
-            array('LAS', 'Laser Standard')
-        ),
-        'default' => 'LA4'
+        'values' => $series,
+        'default' => $series[0][0]
     ),
     'Cvoile' => array(
         'rendering' => 'text',
@@ -65,6 +72,7 @@ $mainformInputs = array(
         'default' => 'Autre'
     ),
     'adherant' => array(
+         // TODO : adapter pour LaPelle
         'label' => 'Adhérant AFL',
         'rendering' => 'radio',
         'values' => array('1', '0'),

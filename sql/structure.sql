@@ -31,7 +31,7 @@ CREATE TABLE `Administrateur` (
   `courriel` varchar(50) DEFAULT NULL,
   `nonce` varchar(16) DEFAULT NULL,
   PRIMARY KEY (`ID_administrateur`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -70,11 +70,12 @@ CREATE TABLE `Inscrit` (
   `naissance` date DEFAULT NULL,
   `num_lic` varchar(8) DEFAULT NULL,
   `isaf_no` varchar(10) NOT NULL,
-  `num_club` varchar(5) DEFAULT NULL COMMENT 'Une chaine de caracteres pour compatibilité FREG',
-  `nom_club` text NOT NULL,
+  `num_club` varchar(5) DEFAULT NULL 
+        COMMENT 'Une chaine de caracteres pour compatibilité FREG',
+  `nom_club` varchar(100) NOT NULL,
   `prefix_voile` varchar(4) DEFAULT NULL,
   `num_voile` int(11) DEFAULT NULL,
-  `serie` enum('LA4','LAR','LAS') DEFAULT NULL,
+  `serie` varchar(5) DEFAULT NULL,
   `adherant` tinyint(1) DEFAULT NULL,
   `sexe` enum('F','M') DEFAULT NULL,
   `taille_polo` enum('XS','S','M','L','XL','XXL') NOT NULL DEFAULT 'M',
@@ -86,8 +87,8 @@ CREATE TABLE `Inscrit` (
   `ID_regate` int(11) NOT NULL,
   PRIMARY KEY (`ID_inscrit`),
   KEY `FK_Inscrit_ID_regate` (`ID_regate`),
-  CONSTRAINT `FK_Inscrit_ID_regate` FOREIGN KEY (`ID_regate`) REFERENCES `regate` (`ID_regate`)
-) ENGINE=InnoDB AUTO_INCREMENT=6661 DEFAULT CHARSET=latin1;
+  CONSTRAINT `FK_Inscrit_ID_regate` FOREIGN KEY (`ID_regate`) REFERENCES `Regate` (`ID_regate`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -103,25 +104,27 @@ CREATE TABLE `Regate` (
   `org_login` varchar(10) DEFAULT NULL,
   `coded_org_passe` varchar(32) NOT NULL,
   `istest` tinyint(4) NOT NULL DEFAULT '0',
-  `titre` text NOT NULL,
+  `titre` varchar(100) DEFAULT NULL,
   `description` varchar(500) DEFAULT NULL,
-  `informations` varchar(500) NOT NULL COMMENT 'Complémentaire à ''decription'' au cas que le club souhaite ajouter plus d''informations',
-  `cv_organisateur` text NOT NULL,
+  `informations` varchar(500) DEFAULT NULL
+    COMMENT 'Complémentaire à ''decription'' au cas que le club souhaite ajouter plus d''informations',
+  `cv_organisateur` varchar(100) DEFAULT NULL,
   `courriel` varchar(50) NOT NULL,
-  `lieu` text NOT NULL,
-  `date_debut` date NOT NULL,
-  `date_fin` date NOT NULL,
-  `date_limite_preinscriptions` date NOT NULL,
+  `lieu` varchar(100) DEFAULT NULL,
+  `date_debut` date DEFAULT NULL,
+  `date_fin` date DEFAULT NULL,
+  `date_limite_preinscriptions` date DEFAULT NULL,
+  `series` varchar(500) DEFAULT 'LA4,LAR,LAS',
   `polo` tinyint(4) NOT NULL DEFAULT '0',
-  `droits` int(11) NOT NULL,
-  `paiement_en_ligne` varchar(50) NOT NULL,
-  `resultats` varchar(100) NOT NULL,
+  `droits` int(11) NOT NULL DEFAULT '0',
+  `paiement_en_ligne` varchar(50) DEFAULT NULL,
+  `resultats` varchar(100) DEFAULT NULL,
   `destruction` date DEFAULT NULL,
   `ID_administrateur` int(11) NOT NULL,
   PRIMARY KEY (`ID_regate`),
   KEY `FK_Regate_ID_administrateur` (`ID_administrateur`),
-  CONSTRAINT `FK_Regate_ID_administrateur` FOREIGN KEY (`ID_administrateur`) REFERENCES `administrateur` (`ID_administrateur`)
-) ENGINE=InnoDB AUTO_INCREMENT=135 DEFAULT CHARSET=latin1;
+  CONSTRAINT `FK_Regate_ID_administrateur` FOREIGN KEY (`ID_administrateur`) REFERENCES `Administrateur` (`ID_administrateur`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -134,3 +137,4 @@ CREATE TABLE `Regate` (
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2016-03-06 20:28:51
+

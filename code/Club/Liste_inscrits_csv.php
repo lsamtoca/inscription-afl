@@ -1,38 +1,35 @@
 <?php
 
-//session_start();
-//if (!isset($_SESSION["ID_regate"])) {
-//    header("Location: LoginClub.php");
-//}
-//
-//require "partage.php";
+/**
+ * This module produces a csv file 
+ * suitable to be read by FREG
+ * the scoring program used by 
+ * the Federation Francaise de Voile
+ */
 
-$csv_sep = ";";
+//$csv_sep = ";";
+define('CSV_SEP', ';');
 //$csv_newline = "\r\n"; // we use DOS-WINDOWS
-define('CSV_NEWLINE',"\r\n");
+define('CSV_NEWLINE', "\r\n");
 
 function add_csv_field($line, $str) {
-    global $csv_sep;
-    return $line . $str . $csv_sep;
+    return $line . $str . CSV_SEP;
 }
 
-function add_csv_newline($cvs) {
-    global $csv_newline;
-    return $cvs . $csv_newline;
+function addCsvNewline($csv) {
+    return $csv . CSV_NEWLINE;
 }
 
 // Compute the year of the race
-$condition = sprintf("WHERE  `ID_regate` = '%s'", $_SESSION['ID_regate']);
-$query = "SELECT *, DATE_FORMAT(`date_debut`,'%Y') as `raceYear` FROM `Regate` " 
-    . $condition;
-$conn = connect();
-$res = mysql_query($query, $conn) or die('Problème lors de la réception des enregistrements' . $query . mysql_error()); //Exécution de la requête
-$row = mysql_fetch_assoc($res);
-$raceYear = $row['raceYear'];
-
-//echo $raceYear ."\n";
+$regate = Regate_selectById($_SESSION['ID_regate']);
+$raceYear = substr($regate['date_debut'], 0, 4);
 
 
+
+/**
+ * This describes the structure of the CSV file
+ * for the 'Bateaux'
+ */
 $bat_fields = array(
     3 => array('VOILE', 'C', '9'),
     9 => array('GROUPE', 'C', '3'),
@@ -40,6 +37,10 @@ $bat_fields = array(
     11 => array('E1_EMAIL', 'C', '80')
 );
 
+/**
+ * This describes the structure of the CSV file
+ * for the 'Equipier'
+ */
 $equip_fields = array(
     3 => array('E1_LIC', 'C', '8'),
     4 => array('E1_NOM', 'C', '30'),
@@ -51,6 +52,10 @@ $equip_fields = array(
     11 => array('E1_ISAF', 'C', '12')
 );
 
+/**
+ * This describes how to assiciate fields
+ * from our DB
+ */
 $correspondence = array(
     'VOILE' => array('num_voile', ''),
     'CODE_PAYS' => array('prefix_voile', ''),
@@ -71,6 +76,9 @@ $correspondence = array(
     'E1_EMAIL' => array('mail', '')
 );
 
+/**
+ * These are the usual age categories for Lasers
+ */
 $categories = array(
     array(12, 14, 'MIN'),
     array(15, 16, 'CAD'),
@@ -85,13 +93,10 @@ $categories = array(
 function compute_age_cat($bornYear) {
 
     global $raceYear, $categories;
-
 //    echo $bornYear;
 //    echo $raceYear."\n";
-
     $age = $raceYear - $bornYear;
     $category = '???';
-
     foreach ($categories as $cat) {
         if ($age >= $cat[0] and $age <= $cat[1]) {
             $category = $cat[2];
@@ -138,8 +143,8 @@ function compute_csv_value($field, $row) {
             $ascii_str = str_replace(array('\'', '^', '"'), array(), $ascii_str);
 
             if (($value[0] == 'prenom')
-                    or ($value[0] == 'nom')
-                    or ($value[0] == 'num_voile')
+                    or ( $value[0] == 'nom')
+                    or ( $value[0] == 'num_voile')
             )
                 $ascii_str = strtoupper($ascii_str);
         }
@@ -148,16 +153,15 @@ function compute_csv_value($field, $row) {
     return $ascii_str;
 }
 
-function do_bat($row, $cle) {
+function doBateaux($row, $cle) {
     global $bat_fields;
 
-    $line = "";
+    $line = '';
     $line = add_csv_field($line, 'BAT');
     $line = add_csv_field($line, $cle);
 
     for ($i = 3; $i <= 11; $i++) {
-
-        $ascii_str = "";
+        $ascii_str = '';
         if (isset($bat_fields[$i])) {
             $field = $bat_fields[$i];
             $ascii_str = compute_csv_value($field, $row);
@@ -167,20 +171,16 @@ function do_bat($row, $cle) {
     return $line;
 }
 
-function do_equip($row, $cle) {
+function doEquipier($row, $cle) {
     global $equip_fields;
     global $correspondence;
 
-    $line = "";
+    $line = '';
     $line = add_csv_field($line, 'E01');
     $line = add_csv_field($line, $cle);
-
     for ($i = 3; $i <= 11; $i++) {
-
         $ascii_str = '';
-
         if (isset($equip_fields[$i])) {
-
             $field = $equip_fields[$i];
             $ascii_str = compute_csv_value($field, $row);
         }
@@ -189,68 +189,66 @@ function do_equip($row, $cle) {
     return $line;
 }
 
-function do_entete() {
+function doEntete() {
     $line = add_csv_field('', 'CodeLigne');
     $line = add_csv_field($line, 'Cle');
-    for ($i = 1; $i <= 10; $i++)
+    for ($i = 1; $i <= 10; $i++) {
         $line = add_csv_field($line, sprintf('Rubrique%d', $i));
-
+    }
     return $line;
 }
 
-function do_aut() {
+function doAuteur() {
     $line = add_csv_field('', 'AUT');
     $line = add_csv_field($line, '0');
     $line = add_csv_field($line, 'Luigi Santocanale, luigi.santocanale@lif.univ-mrs.fr,inscriptions-afl');
-
     return $line;
 }
 
-function generate_csv() {
+function generateCsv() {
 
     setlocale(LC_ALL, 'fr_FR');
 
-//    global $bat_fields;
-//    global $correpondance;
-    // query the database
-    $condition = sprintf("WHERE  `ID_regate` = '%s'", $_SESSION['ID_regate']);
+    $condition = 'WHERE  `ID_regate` =:ID_REGATE';
     if (isset($_GET['confirme']) and $_GET['confirme'] == '1')
         $condition.=' AND `conf`=\'1\'';
-    $query = "SELECT *, DATE_FORMAT(`naissance`,'%Y') as `E1_NAIS` FROM `Inscrit` " . $condition;
-    $conn = connect();
-    $res = mysql_query($query, $conn) or die('Problème lors de la réception des enregistrements' . $query . mysql_error()); //Exécution de la requête
+    $sql = "SELECT *, DATE_FORMAT(`naissance`,'%Y') as `E1_NAIS` FROM `Inscrit` "
+            . $condition;
+    $assoc = array('ID_REGATE' => $_SESSION['ID_regate']);
+    $req = executePreparedQuery($sql, $assoc);
 
-
-    $csv = do_entete();
+    $csv = doEntete();
+    $csv .= CSV_NEWLINE;
+    $csv .= doAuteur();
     $csv .= CSV_NEWLINE;
 
-    $csv .= do_aut();
-    $csv .= CSV_NEWLINE;
-    
     $cle = 1;
-    while ($row = mysql_fetch_assoc($res)) {
+    while ($row = $req->fetch()) {
         //Parcours du résultat de la requête
-
-        $csv.=do_bat($row, $cle);
+        $csv.=doBateaux($row, $cle);
         $csv.= CSV_NEWLINE;
-        $csv.=do_equip($row, $cle);
-        $csv.= CSV_NEWLINE; 
+        $csv.=doEquipier($row, $cle);
+        $csv.= CSV_NEWLINE;
         $cle++;
     }
-
-    mysql_close($conn);
 
     return $csv;
 }
 
-$csv = generate_csv();
+$csv = generateCsv();
 
-$date = date("ymd");
+require_once 'php/StringsCrunch.php';
+$nomRegate = 'REGATE-EXPORT-POUR-FREG'; //nom_normaliser($regate['titre']);
+$date = date("d-m-Y_h\hi");
+$nomFichier="${nomRegate}_${date}.csv";
+
 // For testing
+//echo $nomFichier;
 //exit(0);
+
 // Direct output to a client’s web browser (Excel5)
 header('Content-Type: text/csv');
-header("Content-Disposition: attachment;filename=\"LASER_$date.csv\"");
+header("Content-Disposition: attachment;filename=\"$nomFichier\"");
 header('Cache-Control: max-age=0');
 echo $csv;
 

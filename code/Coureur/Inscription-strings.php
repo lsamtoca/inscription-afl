@@ -12,6 +12,7 @@ if (isset($post['lang'])) {
 }
 
 // IF A LANGUAGE IS NOT YET IMPLEMENTED USE ENGLISH
+// TODO : This should noe use $global['availableLangauges']
 if (!in_array($lang, array('fr', 'en', 'it','es'))) {
     $lang = 'en';
 }

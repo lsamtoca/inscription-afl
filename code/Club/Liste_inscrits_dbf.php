@@ -1,5 +1,6 @@
 <?php
-
+// Ce fichier est obsolete
+// n'est plus maintenu
 
 /* Format du ficheir dbf --
 

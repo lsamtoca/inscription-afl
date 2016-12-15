@@ -29,9 +29,8 @@ function construct_html_serie($id_regate, $titre_serie, $serie) {
 
     $ret = "";
     if ($req->rowCount() > 0) {
-  
-        //$ret.="<div id=\"$serie\" style=\"margin-left:auto;margin-right:auto;width:200;margin-top:10mm;margin-bottom:10mm\">" . "\n";
 
+        //$ret.="<div id=\"$serie\" style=\"margin-left:auto;margin-right:auto;width:200;margin-top:10mm;margin-bottom:10mm\">" . "\n";
 //        $ret.='<table border="1" align="center">' . "\n";
         $ret.='<tr class=\'even\'><th colspan="5">' . $titre_serie . '</th></tr>';
         $ret.='<tr class=\'even\'>';
@@ -69,7 +68,9 @@ $regate = Regate_selectById($_GET['regate']);
 $titre_regate = $regate['titre'];
 $id_regate = $regate['ID_regate'];
 
-$LA4 = construct_html_serie($id_regate, 'Laser 4.7', 'LA4');
-$LAR = construct_html_serie($id_regate, 'Laser Radial', 'LAR');
-$LAS = construct_html_serie($id_regate, 'Laser Standard', 'LAS');
+$listings = array();
+foreach ($regate['series'] as $serie) {
+    array_push($listings, construct_html_serie($id_regate, $serie['nomLong'], $serie['nom'])
+    );
+}
 
