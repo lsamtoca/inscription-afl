@@ -1,5 +1,8 @@
 <?php
 
+global $config;
+$developer=$config['developerEmail'];
+$webMaster=$config['webMasterEmail'];
 
 // Remplace quoted_printable_encode, 
 // disponible pour php > = 5.3 seulement
@@ -127,17 +130,15 @@ function formatPostMsg($to, $cc, $bcc) {
 
 function send_mail_text($sender, $to, $subject, $message, $cc = '', $bcc = '') {
 
-    global $development, $courrielDeveloppeur;
+    global $development, $developer, $webMaster;
+    
     $postMsg = '';
     if ($development) {
         $postMsg = formatPostMsg($to, $cc, $bcc);
-        $to = $courrielDeveloppeur;
+        $to = $developer;
         $cc = '';
         $bcc = '';
     }
-
-
-    $ME = "inscriptions-afl@regateslaser.info";
 
     // Composer les arguments de la fonction mail the 
     $TO = $to;
@@ -148,9 +149,9 @@ function send_mail_text($sender, $to, $subject, $message, $cc = '', $bcc = '') {
     $headers .= "Reply-To: $sender\r\n";
 
     if ($cc == "")
-        $cc = $ME;
+        $cc = $webMaster;
     else
-        $cc = $ME . ',' . $cc;
+        $cc = $webMaster . ',' . $cc;
     if ($cc != "")
         $headers .= "CC: $cc\r\n";
 
@@ -166,22 +167,20 @@ function send_mail_text($sender, $to, $subject, $message, $cc = '', $bcc = '') {
 
 function send_mail_text_attachement($sender, $to, $subject, $mesg, $cc = '', $bcc = '') {
 
-    global $development, $courrielDeveloppeur;
+    global $development, $developer,$webMaster;
     $postMsg = '';
     if ($development) {
         $postMsg = formatPostMsg($to, $cc, $bcc);
-        $to = $courrielDeveloppeur;
+        $to = $developer;
         $cc = '';
         $bcc = '';
     }
 
-    $ME = "inscriptions-afl@regateslaser.info";
-//	$CC="inscriptions-afl@regateslaser.info";
 
     if ($cc == "")
-        $cc = $ME;
+        $cc = $webMaster;
     else
-        $cc .=',' . $ME;
+        $cc .=',' . $webMaster;
 
     $SUBJECT = subject_encode_from_utf8($subject);
 

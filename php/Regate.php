@@ -2,18 +2,32 @@
 
 $Regate_htmlDateFormat = 'd/m/Y';
 
-function Regate_selectById($ID_regate,$bd=NULL) {
-    
+require_once 'php/Series.php';
+global $availableSeries;
+
+function Regate_selectById($ID_regate, $bd = NULL) {
+    global $availableSeries;
+
     $sql = 'SELECT * FROM Regate '
             . 'WHERE ID_regate = ?';
     $assoc = array($ID_regate);
-    $req = executePreparedQuery($sql,$assoc,$bd);
+    $req = executePreparedQuery($sql, $assoc, $bd);
     if ($req->RowCount() == 0) {
         pageErreur('La régate demandée n\'existe pas.');
         exit(0);
     }
     // Tout ce qu'on veut savoir sur la regate
     $regate = $req->fetch();
+
+    //
+    $series = explode(",", $regate['series']);
+    unset($regate['series']);
+    $regate['series'] = array();
+    foreach ($series as $serie) {
+        if (isset($availableSeries[$serie])) {
+            $regate['series'][$serie] = $availableSeries[$serie];
+        }
+    }
 
     return Regate_setLimite($regate);
 }
@@ -77,10 +91,10 @@ function Regate_formatFin($regate) {
     return $ret;
 }
 
-function Regate_setField($ID_regate,$field,$value) {
-    
+function Regate_setField($ID_regate, $field, $value) {
+
     $sql = "UPDATE `Regate` SET `$field`=:value "
-        . "WHERE `ID_REGATE`=:ID";
-    $assoc=array('value' => $value,'ID' => $ID_regate);
+            . "WHERE `ID_REGATE`=:ID";
+    $assoc = array('value' => $value, 'ID' => $ID_regate);
     executePreparedQuery($sql, $assoc);
 }

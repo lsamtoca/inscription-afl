@@ -2,7 +2,7 @@
 
 // HTML PRE AND POST
 function xhtml_pre1($title, $type = 'transitional') {//Afficher le prefixe xhtml
-    global $testing, $development;
+    global $testing, $development,$config;
 
     $xhtmlStrict = "<!DOCTYPE html PUBLIC "
             . "\"-//W3C//DTD XHTML 1.0 Strict//EN\" "
@@ -28,14 +28,17 @@ function xhtml_pre1($title, $type = 'transitional') {//Afficher le prefixe xhtml
     }
 
     $base = dirname($_SERVER['PHP_SELF']);
+    $favicon="img/".$config['favIcon'];
+    
     echo "$docType
 <html xmlns=\"http://www.w3.org/1999/xhtml\">
 <head>
 $noRobots
 <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />
 <base href=\"$base/\" />
-<link rel=\"STYLESHEET\" type=\"text/css\" href=\"afl.css\" />
-<link rel=\"icon\" type=\"image/png\" href=\"img/favicon.png\" />
+<link rel=\"STYLESHEET\" type=\"text/css\" href=\"style.css\" />
+<link rel=\"STYLESHEET\" type=\"text/css\" href=\"localStyle.css\" />
+<link rel=\"icon\" type=\"image/png\" href=\"$favicon\" />
 <title>$title</title>\n";
 }
 
@@ -57,6 +60,7 @@ function lgtrick($image) {
 }
 
 function background() {
+    global $config;
 
     if (
             isset($_GET['nobackground'])
@@ -65,23 +69,20 @@ function background() {
         return;
     }
 
-    ob_start();
-    passthru('ls img/backgrounds/*.jpg', $ret_val);
-    $listing = ob_get_contents();
-    ob_end_clean();
-    $images = explode("\n", trim($listing));
-    $bgimage = $images[rand(0, sizeof($images) - 1)];
-    //          $bg='img/background.jpg';
+    $backgroundImage = $config['defaultBackground'];
 
-    lgtrick($bgimage);
+    lgtrick($backgroundImage);
     //echo "<div><img src='$bgimage' alt='background image' id='bg' /></div><!-- background -->" . "\n\n";
 }
 
 function xhtml_pre2($title) {//Afficher le prefixe xhtml
+    global $config;
+    $mainMsg = $config['titleMsg'];
+
     background();
     echo "</head>\n<body>\n\n";
     echo "<div id='content' class='white_over_dark' >\n\n";
-    echo "<div id=\"title\"><h2>Pré-inscriptions aux régates de l'AFL</h2></div>\n";
+    echo "<div id=\"title\"><h2>$mainMsg</h2></div>\n";
     echo "<h2>$title</h2>\n";
 }
 
@@ -142,7 +143,7 @@ function goback() {
     return $goback;
 }
 
-function echoGoBack(){
+function echoGoBack() {
     $goback = goback();
     echo "<a href=\"$goback\">&laquo; Retour</a><h3>";
 }
@@ -259,13 +260,13 @@ function echoMenu($choices) {
 
 $sousMenuHome = array(
     array(
-        'message' => multipleLanguage('about','A propos'),
+        'message' => multipleLanguage('about', 'A propos'),
         'link' => 'about',
     )
 );
 
 $menuItem_Home = array(
-    'message' => multipleLanguage('home','Accueil'),
+    'message' => multipleLanguage('home', 'Accueil'),
     'link' => 'index',
     'subMenu' => $sousMenuHome
 );

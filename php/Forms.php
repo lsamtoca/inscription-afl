@@ -7,19 +7,19 @@ function echoMsg($id, $content = '') {
     . "</span>";
 }
 
-function echoRightLabel($id, $content='') {
+function echoRightLabel($id, $content = '') {
     echo "<label class='right'>";
     echoMsg("l_$id", $content);
     echo "</label>\n\n";
 }
 
-function echoLeftLabel($id, $content='') {
+function echoLeftLabel($id, $content = '') {
     echo "<label class='left'>";
     echoMsg("l_$id", $content);
     echo "</label>\n\n";
 }
 
-function echo_input($name,$formInputs) {
+function echo_input($name, $formInputs) {
 
     $object = $formInputs[$name];
 
@@ -45,10 +45,10 @@ function echo_input($name,$formInputs) {
 
                 $ischecked = '';
                 if (isset($object['default']) && $object['default'] == $val)
-                    $ischecked = 'checked';
+                    $ischecked = "checked='true'";
 
-                echo "<input type = 'radio' name = '$name' id = 'radio_$id' value = '$val' $ischecked />\n";
-                echoRightLabel($id,$label);
+                echo "<input type='radio' name='$name' id='radio_$id' value='$val' $ischecked />\n";
+                echoRightLabel($id, $label);
             }
             break;
 
@@ -72,5 +72,36 @@ function echo_input($name,$formInputs) {
             }
 //                echo "<label class = 'left msg' id = 'l_$name'></label>\n";
             echo "<input name = '$name' type = 'text' id = '$name' value = '$val' $strsize />\n\n";
+
+            break;
+
+        case 'checkbox':
+            $checked = "";
+            if ($object['value'] == 1) {
+                $checked = "checked ";
+            }
+            $label = $object['label'];
+            echo "<input type='checkbox' name='$name' $checked/> $label </br>\n";
+
+            break;
+
+        case 'orderedMChoice':
+            echo $object['label'] . " :";
+            echo "<ul class='sortable'>\n";
+            foreach ($object['choices'] as $nom => $choice) {
+                $checked = "";
+                if ($choice['checked']) {
+                    $checked = "checked='checked' ";
+                }
+                $label = $choice['label'];
+                //$value = $choice['value'];
+                //echo "\t<li class='ui-state-default'>";
+                echo "\t<li>";
+                echo "<span class='ui-icon ui-icon-arrowthick-2-n-s'></span>";
+                echo "<input type='checkbox' "
+                . "name='$name$nom' $checked/> $label";
+                echo "</li>\n";
+            }
+            echo "</ul>\n";
     }
 }
