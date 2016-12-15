@@ -10,37 +10,10 @@ if ($_SERVER['HTTP_HOST'] == 'localhost') {
     // That is for my Mac !!!
     //      $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_WARNING;
 } else {
-    // Le fichier suivant, à placer dans un endroit protegé, definit les variables
-    // $host, $user, $pwd, $db
-    // pout l'acces à la bd
-
-    require '../basedesnoms/.AFLdb.php';
+    require $config['bdFile'];
 }
 
 $pdo_path = "mysql:host=$host;dbname=$db";
-
-// Cette fonction est déjà definie dans
-// basedesnoms/.AFLdb.php
-// Il faudra eventuellement la deplacer
-
-if (!function_exists('connect')) {
-
-    function connect() {
-        global $host;
-        global $pwd;
-        global $user;
-        global $db;
-
-        $con = mysql_connect("$host", "$user", "$pwd")
-                or
-                die("Erreur connexion : " . mysql_error());
-
-        mysql_select_db($db, $con);
-
-        return $con;
-    }
-
-}
 
 function newBd() {
     global $pdo_path, $user, $pwd, $pdo_options;
