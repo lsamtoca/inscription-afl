@@ -36,3 +36,5 @@ moduleLog = true
 moduleDevelOrProduction = true
 moduleLanguage = true
 moduleBackgrounds=false
+
+moduleDonate=true

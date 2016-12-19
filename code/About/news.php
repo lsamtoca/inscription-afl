@@ -1,5 +1,3 @@
-<div  class="contenu" style="padding:20pt">
-    <h3>WebRegatta, Version 3.0, décembre 2015.</h3>
 
     <h4>Description</h4>
     
@@ -61,8 +59,13 @@
 
     </ul>
     -->
+
+    <h4>Nouveautés de la Version 4.0, décembre 2016.</h4>
     
-    <h4>Nouveautés</h4>
+    Il est deshormais possible utiliser ce logiciel pour n'importe quelle serié de deriveur solitaire.
+    
+    <h4>Nouveautés de la Version 3.0, décembre 2015.</h4>
+
     <h5>Page gestion de la régate</h5>
     <ul>
         <li>Le code pour la création des fiches d'accueil des participants a été amélioré.</li>
@@ -109,7 +112,3 @@
         Luigi Santocanale, Pierre Roche. </h5>
 
     <h5>Anciens concepteurs : David Kossovski.</h5>
-
-
-
-</div>

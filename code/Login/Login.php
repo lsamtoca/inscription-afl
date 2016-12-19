@@ -78,8 +78,7 @@ if (isset($_POST['submit'])) {
 }
 
 function sendEmailWithNonceLink($user, $nonce) {
-    global $courrielDeveloppeur;
-    global $hashGetString;
+    global $hashGetString, $config;
 
     // Format the body of answer
     $urlChpwd = format_url_login();
@@ -89,7 +88,10 @@ function sendEmailWithNonceLink($user, $nonce) {
     $destinataire = $user['courriel'];
     $login = $user['login'];
 
-    $cc = $sender = $courrielDeveloppeur;
+    $sender = $config['webMasterEmail'];
+    // No need for this, as the webMaster is in CC of every Email 
+    // $cc = $config['webMasterEmail'];
+    $cc = '';
     $to = $destinataire;
     $subject = 'Jeton pour reinitialiser le mot de passe '
             . 'sur le site des pré-inscriptions de l\'AFL';
@@ -101,7 +103,7 @@ function sendEmailWithNonceLink($user, $nonce) {
             . "\n\n"
             . "On vous rappelle votre login : $login"
             . "\n\n"
-            . "Cordialement, \n\t l'AFL";
+            . "Cordialement, \n\t $config[signature]";
 
     $result = send_mail_text($sender, $to, $subject, $message, $cc);
 
@@ -141,13 +143,16 @@ function sendEmailWithNonceSLink($users) {
         $nonceString = encodeHashId($user['nonce'], $user['ID']);
         $urlChpwdNonce = $urlChpwd . "&$hashGetString=$nonceString";
         
-        $text="Vous pouvez modifier le mot de passe pour l'utilisatur $user[login] en suivant ce lien :\n"
+        $text="Vous pouvez modifier le mot de passe pour l'utilisatur '$user[login]' en suivant ce lien :\n"
             . "$urlChpwdNonce\n\n";
         $mainText.=$text;
     }
 
   
-    $cc = $sender = $config['webMasterEmail'];
+    $sender = $config['webMasterEmail'];
+    // No need for this, asthe webMaster is in CC of every Email 
+    // $cc = $config['webMasterEmail'];
+    $cc = '';
     $to = $destinataire;
     $subject = 'Jeton pour reinitialiser le mot de passe '
             . "sur le site ????";
@@ -155,9 +160,9 @@ function sendEmailWithNonceSLink($users) {
     $message = "Bonjour,\n\n"
             . $mainText
             . "\n\n"
-            . 'Ces liens seront valable pendant 24 heures de maintenant.'
-            . "\n\n"
-            . "Cordialement, \n\t $config[signature]";
+//            . 'Ces liens seront valable pendant 24 heures de maintenant.'
+//            . "\n\n"
+            . "Cordialement, \n\n\t $config[signature]";
 
     $result = send_mail_text($sender, $to, $subject, $message, $cc);
 
@@ -173,8 +178,8 @@ function sendEmailWithNonceSLink($users) {
 
 function doSetNonceSAndSendEmail($courriel) {
 
-    $users = User_selectByLastCourriel($courriel);
-    if ($user == NULL) {
+    $users = User_selectByCourriel($courriel);
+    if (count($users) == 0) {
         $message = "Ce courriel ne correspond à aucun utilisateur";
         pageErreur($message);
         exit(1);
@@ -207,6 +212,7 @@ if ($config['pwdRecoveryOn'] and isset($_POST['mdpOublie'])) {
     exit(0);
 }
 
+// THIS HANDLE PASWIRD RECOVERY
 if ($config['pwdRecoveryOn'] and isset($_GET[$hashGetString])) {
 
     $hashstring = $_GET[$hashGetString];

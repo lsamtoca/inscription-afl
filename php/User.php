@@ -61,9 +61,9 @@ function User_selectByLoginAndMdp($login, $codedMdp) {
 
 function User_selectByIdAndNonce($id, $nonce) {
     global $users;
-    if($nonce == '')
+    if ($nonce == '')
         return NULL;
-    
+
     $sql = "select * from $users as Users where "
             . "Users.id=:ID and Users.nonce=:NONCE ;";
     $assoc = array('ID' => $id, 'NONCE' => $nonce);
@@ -118,7 +118,7 @@ function User_selectByCourriel($courriel) {
     if ($nbligne == 0) {
         return NULL;
     }
-    return $req->fetch_all();
+    return $req->fetchall();
 }
 
 function User_setNonce($user) {
@@ -131,10 +131,10 @@ function User_setNonce($user) {
             break;
         }
     }
-    if($i == 20){
+    if ($i == 20) {
         return NULL;
     }
-    
+
     $role = $user['role'];
     switch ($role) {
         case 'Admin':
@@ -146,7 +146,7 @@ function User_setNonce($user) {
         default:
             return NULL;
             break;
-   }
+    }
     return $nonce;
 }
 

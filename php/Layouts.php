@@ -2,7 +2,7 @@
 
 // HTML PRE AND POST
 function xhtml_pre1($title, $type = 'transitional') {//Afficher le prefixe xhtml
-    global $testing, $development,$config;
+    global $testing, $development, $config;
 
     $xhtmlStrict = "<!DOCTYPE html PUBLIC "
             . "\"-//W3C//DTD XHTML 1.0 Strict//EN\" "
@@ -28,8 +28,8 @@ function xhtml_pre1($title, $type = 'transitional') {//Afficher le prefixe xhtml
     }
 
     $base = dirname($_SERVER['PHP_SELF']);
-    $favicon="img/".$config['favIcon'];
-    
+    $favicon = "img/" . $config['favIcon'];
+
     echo "$docType
 <html xmlns=\"http://www.w3.org/1999/xhtml\">
 <head>
@@ -105,30 +105,30 @@ function xhtml_post() {//Afficher le postfixe xhtml
 
 /*
 
-function html_pre($title) { // Afficher le prefixe html
-    echo "
-<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">
+  function html_pre($title) { // Afficher le prefixe html
+  echo "
+  <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">
 
-<html>
-<head>
-<meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\" >
-<link rel=\"STYLESHEET\" type=\"text/css\" href=\"css/style.css\" >
-<title>
-    $title
-</title>
-    ";
+  <html>
+  <head>
+  <meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\" >
+  <link rel=\"STYLESHEET\" type=\"text/css\" href=\"css/style.css\" >
+  <title>
+  $title
+  </title>
+  ";
 
-    echo "</head>
-<body>
-<h1>$title</h1>
-    "
-    ;
-}
- 
+  echo "</head>
+  <body>
+  <h1>$title</h1>
+  "
+  ;
+  }
 
-function html_post() { // Afficher le postfixe html
-    xhtml_post();
-}
+
+  function html_post() { // Afficher le postfixe html
+  xhtml_post();
+  }
 
  */
 
@@ -267,6 +267,13 @@ $sousMenuHome = array(
     )
 );
 
+//if ($config['moduleDonate']) {
+    array_push($sousMenuHome, array(
+        'message' => multipleLanguage('donate', 'Faire un don'),
+        'link' => 'about'
+        ));
+//}
+
 $menuItem_Home = array(
     'message' => multipleLanguage('home', 'Accueil'),
     'link' => 'index',
@@ -286,13 +293,6 @@ foreach ($config['availableLanguages'] as $language) {
     );
 }
 
-//$sousMenuLanguage = array(
-//    array('message' => languageSelector('fr', 'Français')),
-//    array('message' => languageSelector('en', 'English')),
-//    array('message' => languageSelector('it', 'Italiano')),
-//    array('message' => languageSelector('es', 'Español')),
-//    array('message' => languageSelector('pt', 'Português')),
-//);
 $menuItem_Language = array(
     'message' => 'Choose your language',
     'subMenu' => $sousMenuLanguage

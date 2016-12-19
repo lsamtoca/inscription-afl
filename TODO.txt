@@ -2,6 +2,7 @@ URGENT
 * mettre à jour les fichier properties de facon avec les adaptations
 specigiques pour l'AFL
 TODO
+* sécuriser la pwd recovery
 * étudier comment faire les dériveurs en équipage
 * ajouter un formulaire pour demande ouverture régate
 * methode pour envoyer ses photos

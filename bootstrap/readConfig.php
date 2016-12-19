@@ -39,3 +39,5 @@ foreach ($languages as $language) {
     array_push($config['availableLanguages'], explode('-', $language));
 }
 
+//$debugger = new debugger();
+//$debugger->config();

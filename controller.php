@@ -56,6 +56,8 @@ switch ($aut) {
         break;
 }
 
+//echo $path;
+//exit(0);
 
 include_once($path);
 exit(0);
