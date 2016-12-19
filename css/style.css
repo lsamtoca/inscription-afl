@@ -242,7 +242,7 @@ span.menu {
 }
 
 .help:before{
-    content:url('img/info.png');
+    content:url('../img/info.png');
     display:inline-block;
     vertical-align: top;
     position:relative;

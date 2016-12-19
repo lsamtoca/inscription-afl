@@ -1,18 +1,16 @@
-* ajouter la possibilité de faire des optmistis, finn, europa, etc. 
+URGENT
+* mettre à jour les fichier properties de facon avec les adaptations
+specigiques pour l'AFL
+TODO
 * étudier comment faire les dériveurs en équipage
 * ajouter un formulaire pour demande ouverture régate
 * methode pour envoyer ses photos
-* Faire un fichier config.ini, qui contiendra, 
-entre autres avalaible languages, default language, 
-passwordrecoveryon, availableseries, and so on, 
-methodes d'exportation
 
 Not urgent
-* comprendre pourquoi Liste_regates_dbf ne marche pas //
--- delayed, since we do not it anymore, taken out from the project
-* ameliorer le layout (afl.css) de facon que que le scroollable 
+* ameliorer le style.css de facon que que le scroollable 
 soit tout en bas du header
 
 Done :
 * in password recovery find email case insensitive //
 -- this is actually the default behavior in a select statement in MySQL
+* ajout des deriveurs solitaires

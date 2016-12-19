@@ -4,18 +4,6 @@ $base = dirname(dirname(dirname(__FILE__)));
 require_once "$base/" . 'php/ParseProperties.php';
 //require_once 'php/ParseProperties.php';
 
-// SET A DEFAULT LANGUAGE
-if (isset($post['lang'])) {
-    $lang = $post['lang'];
-} else {
-    $lang = 'fr';
-}
-
-// IF A LANGUAGE IS NOT YET IMPLEMENTED USE ENGLISH
-// TODO : This should noe use $global['availableLangauges']
-if (!in_array($lang, array('fr', 'en', 'it','es'))) {
-    $lang = 'en';
-}
 
 /*
   //$lang = 'it';
@@ -54,13 +42,12 @@ function messageAckInsertion($prenom, $email = '') {
         $dict['toWhichEmail'] = $dict['lastemail'];
     } else {
         $dict['toWhichEmail'] = fixVariablesInProperties(
-                $dict['youremail'],
-                array('email'=> $email));
+                $dict['youremail'], array('email' => $email));
     }
-    
+
     $messageAckInsertion = fixVariablesInProperties(
             $dict['messageAckInsertion'], $dict);
-    return $messageAckInsertion ." ". $dict['messageUseAck'];
+    return $messageAckInsertion . " " . $dict['messageUseAck'];
 }
 
 function messageAckConfirmation($prenom, $url_listePreiscrits) {
@@ -74,10 +61,10 @@ function messageAckConfirmation($prenom, $url_listePreiscrits) {
 }
 
 // Email asking confirmation
-function message_email($prenom, $titre_regate, $url_confirmation, 
-        $url_paiement = '', $url_aut_parentale,$est_mineur = false) {
+function message_email($prenom, $titre_regate, $url_confirmation, $url_paiement = '', $url_aut_parentale, $est_mineur = false) {
 
-    global $dict;
+    global $dict, $config;
+
     $dict['url_paiement'] = $url_paiement;
     $dict['url_confirmation'] = $url_confirmation;
     $dict['url_aut_parentale'] = $url_aut_parentale;
@@ -88,14 +75,18 @@ function message_email($prenom, $titre_regate, $url_confirmation,
         $dict['message_paiement'] = '';
     } else {
         $dict['message_paiement'] = fixVariablesInProperties(
-                        $dict['message_paiement'], $dict) ;
+                $dict['message_paiement'], $dict);
     }
 
     if (!$est_mineur) {
         $dict['message_mineur'] = '';
     } else {
         $dict['message_mineur'] = fixVariablesInProperties(
-                        $dict['message_mineur'], $dict);
+                $dict['message_mineur'], $dict);
+    }
+
+    if ($config['whoAmI'] == 'AFL') {
+        $dict['signature'] = $dict['signatureAFL'];
     }
 
     $message_email = fixVariablesInProperties($dict['message_email'], $dict);
@@ -114,25 +105,41 @@ function testIt() {
 
     echo "\n\n*****Ack Insertion From Search:\n";
     echo messageAckInsertion('Luigi');
- 
+
     echo "\n\n*****Ack Insertion From Scratch:\n";
-    echo messageAckInsertion('Luigi','l.s.@lif.com');
- 
+    echo messageAckInsertion('Luigi', 'l.s.@lif.com');
+
     echo "\n\n*****Ack Confirmation:\n";
     echo messageAckConfirmation('Luigi', 'httP:url_liste');
     echo "\n\n*****Email:\n";
-    echo message_email('Luigi', 'Regata del cavolo', 
-            'http:confirmation_ici', 
-            'http:payement_ici',
-            'http:aut_parentale',
-            TRUE);
+    echo message_email('Luigi', 'Regata del cavolo', 'http:confirmation_ici', 'http:payement_ici', 'http:aut_parentale', TRUE);
     echo "\n\n\n";
 }
 
 $thisTesting = False;
 if ($thisTesting) {
+    require_once('../../bootstrap/readConfig.php');
+//    echo "Who am I : $config[whoAmI]";
     testIt();
     exit(0);
+}
+
+// SET A DEFAULT LANGUAGE
+if (isset($post['lang'])) {
+    $lang = $post['lang'];
+} else {
+    $lang = 'fr';
+}
+
+// IF A LANGUAGE IS NOT YET IMPLEMENTED USE ENGLISH
+// TODO : This should noe use $config['availableLanguuges']
+//function first($array) {
+//    return $array[0];
+//}
+if (!in_array($lang, array_map(function ($array) {
+                    return $array[0];
+                }, $config['availableLanguages']))) {
+    $lang = 'en';
 }
 $dict = getLang($lang);
 

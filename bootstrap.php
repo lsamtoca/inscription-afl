@@ -5,6 +5,7 @@ ini_set('display_errors', '1');
 date_default_timezone_set('Europe/Paris');
 
 // Bootstrap -- the very least
+include('bootstrap/autoload.php');
 include('bootstrap/assert.php');
 // Read configuration file
 // this builds the global array $config
@@ -34,7 +35,10 @@ testModule('chooseBackground') and include('bootstrap/chooseBackground.php');
 //define('$config['pwdRecoveryOn']', $config['pwdRecoveryOn']);
 require_once('databases/bds.php');
 require_once('php/Layouts.php');
-require_once('php/Login.php');
+
+// Below not needed anymore as we have set an autoload
+//require_once('php/Login.php'); 
+
 require_once('php/Urls.php');
 require_once('php/Formats.php');
 //require_once('php/SuperAdmin.php');

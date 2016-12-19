@@ -39,5 +39,3 @@ foreach ($languages as $language) {
     array_push($config['availableLanguages'], explode('-', $language));
 }
 
- //print_r($config['availableLanguages']);
- //exit(0);

@@ -46,7 +46,7 @@
                     <th>Série</th>
                     <th>Licence</th>
                     <th>Numéros de licence</th>
-                    <th>Adhérent AFL</th>
+                    <th>Adhérent à la classe</th>
                     <th>Confirmation</th>
                     <th>Courriel</th>
                     <th>Confirmer</th>
@@ -72,7 +72,7 @@
                     } else {
                         $conf = 'non';
                     }
-                    $serie = $availableSeries[$donnees['serie']]['nomLong'];
+                    $serie = $series->available[$donnees['serie']]['nomLong'];
                     //
                     if ($donnees['statut'] == 'Licencie') {
                         $statut = 'Licencié FFV';

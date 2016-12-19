@@ -24,7 +24,7 @@ favIcon = favicon.png
 
 ;; Qui sommes nous
 ; sera utilisédans un futur
-whoAreWe =l'AFL
+whoAmI=AFL
 
 
 ;; Various modules

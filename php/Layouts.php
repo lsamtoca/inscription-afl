@@ -36,8 +36,8 @@ function xhtml_pre1($title, $type = 'transitional') {//Afficher le prefixe xhtml
 $noRobots
 <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />
 <base href=\"$base/\" />
-<link rel=\"STYLESHEET\" type=\"text/css\" href=\"style.css\" />
-<link rel=\"STYLESHEET\" type=\"text/css\" href=\"localStyle.css\" />
+<link rel=\"STYLESHEET\" type=\"text/css\" href=\"css/style.css\" />
+<link rel=\"STYLESHEET\" type=\"text/css\" href=\"css/localStyle.css\" />
 <link rel=\"icon\" type=\"image/png\" href=\"$favicon\" />
 <title>$title</title>\n";
 }
@@ -103,6 +103,8 @@ function xhtml_post() {//Afficher le postfixe xhtml
     echo "</body>\n</html>\n";
 }
 
+/*
+
 function html_pre($title) { // Afficher le prefixe html
     echo "
 <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">
@@ -110,14 +112,11 @@ function html_pre($title) { // Afficher le prefixe html
 <html>
 <head>
 <meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\" >
-<link rel=\"STYLESHEET\" type=\"text/css\" href=\"afl.css\" >
+<link rel=\"STYLESHEET\" type=\"text/css\" href=\"css/style.css\" >
 <title>
     $title
 </title>
     ";
-
-// Pour la feuille de style
-// echo "<link rel=\"STYLESHEET\" type=\"text/css\" href=\"../../active.css\" >";
 
     echo "</head>
 <body>
@@ -125,10 +124,13 @@ function html_pre($title) { // Afficher le prefixe html
     "
     ;
 }
+ 
 
 function html_post() { // Afficher le postfixe html
     xhtml_post();
 }
+
+ */
 
 function goback() {
     $referer = '';

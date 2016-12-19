@@ -1,5 +1,7 @@
 <?php
 
+global $config;
+
 $regate = Regate_selectById($_SESSION['ID_regate']);
 //$series = array_keys($regate['series']);
 
@@ -10,7 +12,6 @@ if (
     $series = implode('/', array_keys($regate['series']));
     pageErreur("Il faut spécifier une série ($series)");
     exit(1);
-    //    die("Il faut spécifier une série");
 }
 
 
@@ -134,15 +135,27 @@ $donnees = array(
 //    'Autorisation parentale'=> '',
 );
 
-$donnees_sur_lieu = array(
-    "Carte publicité\n(oui/non)" => '',
-    "No tél à rejoindre\nen cas de besoin" => '',
-    "Repas\n(oui/non)" => '',
-    'Visa médical OK ?' => '',
-    'Licence OK ?' => '',
-    'AFL OK ?' => '',
-    'Carte ILCA OK ?' => '',
-);
+if ($config['whoAmI'] == 'AFL') {
+    $donnees_sur_lieu = array(
+        "Carte publicité\n(oui/non)" => '',
+        "No tél à rejoindre\nen cas de besoin" => '',
+        "Repas\n(oui/non)" => '',
+        'Visa médical OK ?' => '',
+        'Licence OK ?' => '',
+        'AFL OK ?' => '',
+        'Carte ILCA OK ?' => '',
+    );
+} else {
+    $donnees_sur_lieu = array(
+        "Carte publicité\n(oui/non)" => '',
+        "No tél à rejoindre\nen cas de besoin" => '',
+        "Repas\n(oui/non)" => '',
+        'Visa médical OK ?' => '',
+        'Licence OK ?' => '',
+        'Association à la classe OK ?' => '',
+        'Carte ILCA OK ?' => '',
+    );
+}
 
 function do_form($participant) {
     global $engagement, $decl_parentale, $donnees, $donnees_sur_lieu;

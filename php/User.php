@@ -106,6 +106,21 @@ function User_selectByLastCourriel($courriel) {
     return $req->fetch();
 }
 
+function User_selectByCourriel($courriel) {
+    global $users;
+
+    $sql = "select * from $users as Users where "
+            . "Users.courriel=:COURRIEL order by `date` Desc;";
+    $assoc = array('COURRIEL' => $courriel);
+    $req = executePreparedQuery($sql, $assoc);
+
+    $nbligne = $req->rowCount();
+    if ($nbligne == 0) {
+        return NULL;
+    }
+    return $req->fetch_all();
+}
+
 function User_setNonce($user) {
 
     $id = $user['ID'];

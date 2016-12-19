@@ -161,9 +161,8 @@
             <hr /><!-- Series -->
             <!-- <label>Séries :</label> <br /> -->
             <?php
-            require_once 'php/Series.php';
             require_once 'php/Forms.php';
-            global $availableSeries;
+            $series = new Series();
 
             /*
               foreach ($availableSeries as $serie) {
@@ -190,7 +189,7 @@
                     'checked' => true
                 );
             }
-            foreach ($availableSeries as $nom => $serie) {
+            foreach ($series->available as $nom => $serie) {
                 if (!isset($choices[$nom])) {
                     $choices[$nom] = array(
                         'label' => $serie['nomLong'],
@@ -207,7 +206,7 @@
                     'choices' => $choices
                 )
             );
-            echo_input('series', $formInputs); 
+            echo_input('series', $formInputs);
             ?>
 
             <hr /><!-- Sous -->

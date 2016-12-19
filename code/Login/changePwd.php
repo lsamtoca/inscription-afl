@@ -14,7 +14,7 @@ $admin = $login->adminCorrectlyLogged();
 if ($admin) {
     $club = false;
 }
-if (!$club and ! $admin) {
+if (!$club and !$admin) {
     header("Location: Login.php");
 }
 

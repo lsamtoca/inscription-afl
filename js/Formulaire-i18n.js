@@ -16,8 +16,6 @@ $(document).ready(function () {
     if (debug)
         console.log('>> Ajout du i18n');
 
-    //loadBundles(documentLanguage);
-    //$('#lang').live('click', switchLanguage);
     $('.languageSelector').each(function () {
         $(this).live('click',
                 function () {
@@ -27,27 +25,18 @@ $(document).ready(function () {
                     loadBundles(documentLanguage);
                 })
     });
-    //var userLang = navigator.language || navigator.userLanguage;
-    //var windowLang = window.navigator.language || window.navigator.userLanguage;
-    //alert(userLang+' '+windowLang);
+
     var userLang = documentLanguage;
     var selector = '.languageSelector[title="' + userLang + '"]';
-    console.log(selector);
-    $(selector).trigger("click");
+    if (debug)
+        console.log(selector);
+
+    $(selector).trigger('click');
 
     if (debug)
         console.log('<< i18n ajouté');
 });
 
-/*
- function switchLanguage() {
- if (documentLanguage == 'fr')
- documentLanguage = 'en';
- else
- documentLanguage = 'fr';
- loadBundles(documentLanguage);
- }
- */
 
 function loadBundles(lang) {
     $.i18n.properties({
@@ -74,6 +63,7 @@ function doUpdate() {
     updateInput_lang();
 }
 
+
 function msgUndefinedLog(msg) {
     if ($.i18n.prop(msg) == '[' + msg + ']') {
         if (debug) {
@@ -85,6 +75,25 @@ function msgUndefinedLog(msg) {
 }
 
 function updateMultipleMessages() {
+
+    // Hack to distinguish AFL from OTHERS
+    if (typeof iAmAFL != 'undefined') {
+        if (iAmAFL)
+        {
+            if (!msgUndefinedLog('msg_non_licencieAFL'))
+                msg_non_licencie = msg_non_licencieAFL;
+            if (!msgUndefinedLog('msg_l_adherantAFL'))
+                msg_l_adherant = msg_l_adherantAFL;
+            if (!msgUndefinedLog('msg_l_serieAFL'))
+                msg_l_serie = msg_l_serieAFL;
+        }
+    }
+
+    // For each element of class .msg of 
+    // identifier $id
+    // look for the value of msg_$id 
+    // and update the content
+
     $('.msg').each(function () {
         var id = $(this).attr('id');
         var msg = 'msg_' + id;

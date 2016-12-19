@@ -3,13 +3,10 @@
 global $regate;
 
 $series = array();
-
 foreach ($regate['series'] as $serie) {
     array_push($series, array($serie['nom'], $serie['nomLong'])
     );
 }
-
-
 
 $mainformInputs = array(
     'Nom' => array(
@@ -72,8 +69,7 @@ $mainformInputs = array(
         'default' => 'Autre'
     ),
     'adherant' => array(
-         // TODO : adapter pour LaPelle
-        'label' => 'Adhérant AFL',
+        'label' => 'Adhérant à la classe',
         'rendering' => 'radio',
         'values' => array('1', '0'),
         'default' => '0'
@@ -105,3 +101,20 @@ $mainformInputs = array(
     )
 );
 
+// Adaptations
+// 
+// Adaptation pour AFL
+if ($config['whoAmI'] == 'AFL') {
+    $mainformInputs['adherant'] = array(
+        // TODO : adapter pour LaPelle
+        'label' => 'Adhérant AFL',
+        'rendering' => 'radio',
+        'values' => array('1', '0'),
+        'default' => '0'
+    );
+}
+
+if(count($series) > 4){
+    $mainformInputs['serie']['rendering'] = 'menu';
+    $mainformInputs['serie']['label'] = 'Série';
+}

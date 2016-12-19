@@ -1,7 +1,6 @@
 <?php
 // This, to be sure, should go under ssh
-
-require_once 'php/Login.php';
+//require_once 'php/Login.php';
 require_once 'php/User.php';
 require_once 'php/mailer.php';
 
@@ -129,6 +128,64 @@ function doSetNonceAndSendEmail($courriel) {
     sendEmailWithNonceLink($user, $nonce);
 }
 
+function sendEmailWithNonceSLink($users) {
+    global $config;
+    global $hashGetString;
+
+    $site = 'des pré-inscriptions aux régates de '.$config['signature'];
+    $destinataire = $users[0]['courriel'];
+  
+    $mainText = '';
+    foreach ($users as $user) {
+        $urlChpwd = format_url_login();
+        $nonceString = encodeHashId($user['nonce'], $user['ID']);
+        $urlChpwdNonce = $urlChpwd . "&$hashGetString=$nonceString";
+        
+        $text="Vous pouvez modifier le mot de passe pour l'utilisatur $user[login] en suivant ce lien :\n"
+            . "$urlChpwdNonce\n\n";
+        $mainText.=$text;
+    }
+
+  
+    $cc = $sender = $config['webMasterEmail'];
+    $to = $destinataire;
+    $subject = 'Jeton pour reinitialiser le mot de passe '
+            . "sur le site ????";
+
+    $message = "Bonjour,\n\n"
+            . $mainText
+            . "\n\n"
+            . 'Ces liens seront valable pendant 24 heures de maintenant.'
+            . "\n\n"
+            . "Cordialement, \n\t $config[signature]";
+
+    $result = send_mail_text($sender, $to, $subject, $message, $cc);
+
+    if ($result) {
+        $message = "Un courriel permettant de reinitialiser vos identifiants "
+                . "a été envoyé à votre adresse email";
+        pageAnswer($message, 'index.php');
+    } else {
+        $message = "Problème lors de l'envoie d'un courriel";
+        pageErreur($message);
+    }
+}
+
+function doSetNonceSAndSendEmail($courriel) {
+
+    $users = User_selectByLastCourriel($courriel);
+    if ($user == NULL) {
+        $message = "Ce courriel ne correspond à aucun utilisateur";
+        pageErreur($message);
+        exit(1);
+    }
+
+    foreach ($users as $user) {
+        $user['nonce'] = User_setNonce($user);
+    }
+    sendEmailWithNonceSLink($users);
+}
+
 if ($config['pwdRecoveryOn'] and isset($_POST['mdpOublie'])) {
 
     //echo "couocu";
@@ -139,7 +196,10 @@ if ($config['pwdRecoveryOn'] and isset($_POST['mdpOublie'])) {
         pageErreur($message);
     }
 
-    doSetNonceAndSendEmail($courriel);
+    // To send a link to the last user with this courriel
+    //    doSetNonceAndSendEmail($courriel);
+    // To send links to all the users with this courriel
+    doSetNonceSAndSendEmail($courriel);
     $message = "Nous vous avons envoyé un courriel"
             . "contenant un lien qui vous permettra de "
             . "re-initialiser votre mot de passe";
@@ -160,7 +220,7 @@ if ($config['pwdRecoveryOn'] and isset($_GET[$hashGetString])) {
         pageErreur($message);
         exit(1);
     }
-    $_SESSION['withOldPwd']= False;
+    $_SESSION['withOldPwd'] = False;
     header("Location: changePwd.php");
     exit(0);
 }
@@ -184,7 +244,7 @@ doMenu();
             </div>
         </fieldset>
 
-        <?php if ($config['pwdRecoveryOn']): ?>
+<?php if ($config['pwdRecoveryOn']): ?>
             <br />
             <br />
             <form action="" method="post">
@@ -199,8 +259,9 @@ doMenu();
                 </fieldset>
 
             </form>
-        <?php endif; ?>
+<?php endif; ?>
 </div>
 
-<?php
-xhtml_post();
+        <?php
+        xhtml_post();
+        

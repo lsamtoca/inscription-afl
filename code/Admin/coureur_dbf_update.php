@@ -15,8 +15,8 @@ function htmldump($obj) {
     echo '</pre>';
 }
 
-function downLoadCoureudDbf() {
-    global $locaFile, $remoteFtpHost, $remoteFile;
+function downLoadDbf($remoteFile, $localFile) {
+    global $remoteFtpHost;
 
     if (false) {
         /* Try via wget */
@@ -47,8 +47,8 @@ function downLoadCoureudDbf() {
             // try to download $server_file and save to $local_file
 
             ftp_close($conn_id);
-            $message = "Un problème est survenu en essayant  de télécharger le fichier coureur.dbf depuis la FFV.\n" .
-                    "Idée pour resoudre ce problème : donnez les permissions 646 au fichier dbf/COUREUR.dbf en local";
+            $message = "Un problème est survenu en essayant  de télécharger le fichier $remoteFile depuis la FFV.\n" .
+                    "Idée pour resoudre ce problème : donnez les permissions 646 au fichier $localFile en local";
             pageErreur($message);
             exit(0);
         }
@@ -121,9 +121,8 @@ class DbfFile {
 
 }
 
-function updateCoureur() {
+function updateFromDbf($localFile, $table) {
 
-    global $localFile;
 
     function quoteString($str) {
         return '`' . $str . '`';
@@ -138,7 +137,7 @@ function updateCoureur() {
         $bd = newBd();
 
 // Creation de la table MYSQL
-        $sql = "DROP TABLE IF EXISTS `COUREUR.DBF`";
+        $sql = "DROP TABLE IF EXISTS `$table`";
         $req = $bd->prepare($sql);
         $req->execute();
 
@@ -147,7 +146,7 @@ function updateCoureur() {
             $colNames[$key] = $column['name'];
             $sqls[$key] = quoteString($column['name']) . ' VARCHAR(' . $column['length'] . ')';
         }
-        $sql = "CREATE TABLE `COUREUR.DBF` ("
+        $sql = "CREATE TABLE `$table` ("
                 . implode(", ", $sqls)
                 . ");";
         //echo "<br />" . $sql . "<br />";
@@ -156,15 +155,15 @@ function updateCoureur() {
 
         $columns = implode(',', $colNames);
         $values = ":" . implode(',:', $colNames);
-        $sql = "insert into `COUREUR.DBF` ($columns) VALUES ($values)";
+        $sql = "insert into `$table` ($columns) VALUES ($values)";
         $req = $bd->prepare($sql);
 
         for ($i = 1; $i <= $dbfFile->no_records; $i++) {
 //        for ($i = 1; $i <= 200; $i++) {
 
             $row = $dbfFile->getRow($i);
-        //            htmldump($row);
-                    $req->execute($row);
+            //            htmldump($row);
+            $req->execute($row);
         }
     } catch (Exception $e) {
 // En cas d'erreur, on affiche un message et on arrête tout
@@ -172,17 +171,30 @@ function updateCoureur() {
     }
 }
 
-downLoadCoureudDbf();
-updateCoureur();
+function updateCoureur() {
+    downLoadDbf('tmpDbf/coureur.dbf', 'dbf/COUREUR.DBF');
+    updateFromDbf('dbf/COUREUR.DBF', 'COUREUR.DBF');
+}
 
-?>
-<?php xhtml_pre('Mise à jour du fichier COUREUR.DBF'); ?>
-<?php
+function updateSerie() {
+    global $locaFile, $remoteFile;
 
-$msg = "Le fichier COUREUR.DBF a été mis à jour";
-redirect($msg, 3000, 'Admin.php');
-?>
-<?php
+    downLoadDbf('tmpDbf/Tbl_VL_N.dbf', 'dbf/SERIE.DBF');
+    updateFromDbf('dbf/SERIE.DBF', 'SERIE.DBF');
+}
 
-xhtml_post();
+function giveAnswer($fic) {
+    $msg = "Le fichier $fic a été mis à jour";
+//redirect($msg, 3000, 'Admin.php');
+    pageAnswer($msg, 'Admin.php');
+}
+
+if (isset($_GET['serie'])) {
+    updateSerie();
+    giveAnswer('SERIE.DBF');
+} else {
+    updateCoureur();
+    giveAnswer('COUREUR.DBF');
+}
+
 

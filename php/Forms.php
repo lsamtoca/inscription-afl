@@ -85,6 +85,16 @@ function echo_input($name, $formInputs) {
 
             break;
 
+        case 'menu':
+            echoLeftLabel($name, $object['label']);
+            echo "<select name=$name>";
+            foreach($object['values'] as $value){
+                echo "\t<option value=$value[0]>$value[1]</option>\n";
+            }
+            echo '</select>';
+
+            break;
+
         case 'orderedMChoice':
             echo $object['label'] . " :";
             echo "<ul class='sortable'>\n";

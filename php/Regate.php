@@ -2,11 +2,8 @@
 
 $Regate_htmlDateFormat = 'd/m/Y';
 
-require_once 'php/Series.php';
-global $availableSeries;
-
 function Regate_selectById($ID_regate, $bd = NULL) {
-    global $availableSeries;
+    $series = new Series();
 
     $sql = 'SELECT * FROM Regate '
             . 'WHERE ID_regate = ?';
@@ -18,14 +15,15 @@ function Regate_selectById($ID_regate, $bd = NULL) {
     }
     // Tout ce qu'on veut savoir sur la regate
     $regate = $req->fetch();
-
     //
-    $series = explode(",", $regate['series']);
+    $seriesOfThis = explode(",", $regate['series']);
+//    print_r($seriesOfThis);
+//    print_r($series->available);
     unset($regate['series']);
     $regate['series'] = array();
-    foreach ($series as $serie) {
-        if (isset($availableSeries[$serie])) {
-            $regate['series'][$serie] = $availableSeries[$serie];
+    foreach ($seriesOfThis as $serie) {
+        if (isset($series->available[$serie])) {
+            $regate['series'][$serie] = $series->available[$serie];
         }
     }
 

@@ -2,6 +2,11 @@
 
 require_once 'php/Regate.php';
 
+$series=new Series();
+$availableSeries = $series->available;
+$availableSeriesString = $series->available_string;
+
+
 //global $pdo_path, $user, $pwd, $pdo_options;
 
 function get_mails($which) {
