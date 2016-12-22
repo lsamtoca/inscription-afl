@@ -19,3 +19,8 @@ class debugger {
         $this->dumpAndExit($config);
     }
 }
+
+function debug($object){
+    $deb=new Debugger();
+    $deb->dumpAndExit($object);
+}

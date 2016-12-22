@@ -1,9 +1,4 @@
-#php_flag opcache.enable Off
-
 RewriteEngine On
-#RewriteBase /inscriptions_afl_dev/
-#RewriteBase /inscriptions_afl/
-#RewriteBase /~lsantoca/inscriptions-afl/
 
 RewriteCond %{REQUEST_URI} ^(.*)/[^/]*$
 RewriteCond %{REQUEST_FILENAME} !\.css$

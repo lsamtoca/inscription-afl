@@ -2,10 +2,9 @@
 
 require_once 'php/Regate.php';
 
-$series=new Series();
+$series = new Series();
 $availableSeries = $series->available;
 $availableSeriesString = $series->available_string;
-
 
 //global $pdo_path, $user, $pwd, $pdo_options;
 
@@ -81,7 +80,7 @@ function chosen_series() {
     }
 
     $series = array_map('map', array_keys($_POST));
-    $series = array_filter($series,'filtre');
+    $series = array_filter($series, 'filtre');
     $series = array_map(function(array $ar) {
         return $ar[1];
     }, $series);
@@ -97,11 +96,10 @@ function validate_post_and_update() {
 //            $string = implode(',', array_keys($value));
 //            echo "$key->$string<br />";
 //        } else {
-   //     echo "$key->$value<br />";
+        //     echo "$key->$value<br />";
 //        }
     }
-  //  exit();
-
+    //  exit();
 // Update the informations on the database if these are set
     $fields = array(
         'titre', 'description',
@@ -214,7 +212,7 @@ if (isset($_POST['envoyer_mail'])) {
     if (isset($_SESSION['courriel']) and $_SESSION['courriel'] != '')
         $sender = $_SESSION['courriel'];
     else
-        $sender = "inscriptions-afl@regateslaser.info";
+        $sender = $config['webMasterEmail'];
     $to = $sender;
 
     $subject = clean_post_var($_POST['objet']);
@@ -232,7 +230,7 @@ if (isset($_POST['envoyer_mail'])) {
 if (isset($_POST['helpdesk'])) {
 
 // From = replyto = to
-    $developer = 'luigi.santocanale@lif.univ-mrs.fr';
+    $developer = $config['developerEmail'];
 // Ici il faudrait ajouter
 // l'admin de la regate, ainsi que Pierre
     $sender = $_SESSION['courriel'];

@@ -45,6 +45,7 @@ function doLoginWithIdAndNonce($id, $nonce) {
     global $Login;
 
     $user = User_selectByIdAndNonce($id, $nonce);
+
     if ($user != NULL) {
         switch ($user['role']) {
             case 'Admin':
@@ -94,7 +95,7 @@ function sendEmailWithNonceLink($user, $nonce) {
     $cc = '';
     $to = $destinataire;
     $subject = 'Jeton pour reinitialiser le mot de passe '
-            . 'sur le site des pré-inscriptions de l\'AFL';
+            . "sur le site des pré-inscriptions de $config[signature]";
 
     $message = "Bonjour,\n\n"
             . "vous pouvez modifier votre mot de passe en suivant ce lien : "
@@ -134,28 +135,28 @@ function sendEmailWithNonceSLink($users) {
     global $config;
     global $hashGetString;
 
-    $site = 'des pré-inscriptions aux régates de '.$config['signature'];
+    //$site = 'des pré-inscriptions aux régates de '.$config['signature'];
     $destinataire = $users[0]['courriel'];
-  
+
     $mainText = '';
     foreach ($users as $user) {
         $urlChpwd = format_url_login();
         $nonceString = encodeHashId($user['nonce'], $user['ID']);
         $urlChpwdNonce = $urlChpwd . "&$hashGetString=$nonceString";
-        
-        $text="Vous pouvez modifier le mot de passe pour l'utilisatur '$user[login]' en suivant ce lien :\n"
-            . "$urlChpwdNonce\n\n";
+
+        $text = "Vous pouvez modifier le mot de passe pour l'utilisatur '$user[login]' en suivant ce lien :\n"
+                . "$urlChpwdNonce\n\n";
         $mainText.=$text;
     }
 
-  
+
     $sender = $config['webMasterEmail'];
     // No need for this, asthe webMaster is in CC of every Email 
     // $cc = $config['webMasterEmail'];
     $cc = '';
     $to = $destinataire;
     $subject = 'Jeton pour reinitialiser le mot de passe '
-            . "sur le site ????";
+            . "sur le site des pré-inscriptions aux régates";
 
     $message = "Bonjour,\n\n"
             . $mainText
@@ -185,8 +186,9 @@ function doSetNonceSAndSendEmail($courriel) {
         exit(1);
     }
 
-    foreach ($users as $user) {
-        $user['nonce'] = User_setNonce($user);
+    foreach ($users as $index => $user) {
+        $newNonce = User_setNonce($user);
+        $users[$index]['nonce'] = $newNonce;
     }
     sendEmailWithNonceSLink($users);
 }
@@ -218,6 +220,7 @@ if ($config['pwdRecoveryOn'] and isset($_GET[$hashGetString])) {
     $hashstring = $_GET[$hashGetString];
     $id = decodeIdFromHashString($hashstring);
     $nonce = decodeHashFromHashString($hashstring);
+
     $utilisateur = doLoginWithIdAndNonce($id, $nonce);
     if ($utilisateur != NULL) {
         User_destroyNonce($utilisateur);
@@ -249,25 +252,24 @@ doMenu();
                 <input type="submit" name="submit" id="submit" value="Valider"/>
             </div>
         </fieldset>
+    </form>
+    
+    <?php if ($config['pwdRecoveryOn']): ?>
+        <br />
+        <br />
+        <form action="" method="post">
+            <fieldset>
+                <legend>Identifiants oubliés</legend>
+                <div>
+                    <label for="courriel">Votre courriel :</label>
+                    <input name="courriel" type="text" id="courriel"/>
 
-<?php if ($config['pwdRecoveryOn']): ?>
-            <br />
-            <br />
-            <form action="" method="post">
-                <fieldset>
-                    <legend>Identifiants oubliés</legend>
-                    <div>
-                        <label for="courriel">Votre courriel :</label>
-                        <input name="courriel" type="text" />
-
-                        <input type="submit" name="mdpOublie" value="Valider"/>
-                    </div>
-                </fieldset>
-
-            </form>
-<?php endif; ?>
+                    <input type="submit" name="mdpOublie" value="Valider"/>
+                </div>
+            </fieldset>
+        </form>
+    <?php endif; ?>
 </div>
 
-        <?php
-        xhtml_post();
-        
+<?php
+xhtml_post();

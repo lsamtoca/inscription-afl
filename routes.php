@@ -43,6 +43,8 @@ setPaths($clubFiles, 'Club', 'AutClub');
 setPaths($loginFiles, 'Login', 'AutLogin');
 $paths['Logout'] = array("code/Login/deconnexion.php", 'AutLogin');
 $paths['about'] = array("code/About/about.php", 'AutNone');
+$paths['captcha'] = array("externals/captcha/captcha_code_file.php", 'AutNone');
+//$paths['captcha'] = array("externals/securimage/securimage_show.php", 'AutNone');
 
 // Aliases
 $paths['index'] = $paths['Liste_regates'];

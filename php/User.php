@@ -61,6 +61,8 @@ function User_selectByLoginAndMdp($login, $codedMdp) {
 
 function User_selectByIdAndNonce($id, $nonce) {
     global $users;
+
+    // This prevents open doors
     if ($nonce == '')
         return NULL;
 

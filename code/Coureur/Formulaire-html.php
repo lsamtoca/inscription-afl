@@ -1,7 +1,6 @@
 <?php
 global $config, $regate, $confirmation;
 
-
 $page_title1 = 'Pré-inscription à la régate ' . $regate['titre'];
 $page_title2 = 'Pré-inscription à la régate <em>' . $regate['titre'] . '</em>';
 xhtml_pre1($page_title1);

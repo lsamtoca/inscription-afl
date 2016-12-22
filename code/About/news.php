@@ -1,4 +1,5 @@
-
+<div class="contenu">
+ 
     <h4>Description</h4>
     
     Logiciel web de pré-inscriptions aux régates en ligne.
@@ -112,3 +113,4 @@
         Luigi Santocanale, Pierre Roche. </h5>
 
     <h5>Anciens concepteurs : David Kossovski.</h5>
+</div>
