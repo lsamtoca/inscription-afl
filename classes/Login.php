@@ -14,7 +14,6 @@ class Login {
 
     public function loginAsAdmin($ID_admin) {
         $_SESSION['ID_administrateur'] = $ID_admin;
-        //header("Location: Admin.php");
     }
 
             

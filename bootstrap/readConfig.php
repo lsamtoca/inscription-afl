@@ -6,7 +6,9 @@
 //$config=parse_ini_file('config.ini',false,INI_SCANNER_TYPED);
 //$config = parse_ini_file('config.ini', false, INI_SCANNER_RAW);
 
-if (file_exists('bootstrap/config.ini')) {
+if (file_exists('bootstrap/config.ini.php')) {
+    $config = parse_ini_file('config.ini.php');
+} else if (file_exists('bootstrap/config.ini')) {
     $config = parse_ini_file('config.ini');
 } else {
     $config = parse_ini_file('config.ini.default');
@@ -25,11 +27,6 @@ if (file_exists('bootstrap/config.ini')) {
   }
   }
  */
-/*
-  print_r($config);
-  var_dump($config);
- */
-
 
 $languages = explode(',', $config['availableLanguages']);
 unset($config['availableLanguages']);
@@ -38,6 +35,3 @@ $config['availableLanguages'] = array();
 foreach ($languages as $language) {
     array_push($config['availableLanguages'], explode('-', $language));
 }
-
-//$debugger = new debugger();
-//$debugger->config();

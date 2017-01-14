@@ -10,10 +10,9 @@ class attributesHandler {
         }
         $retstr = "";
         foreach ($keys as $key) {
-//echo " $key ";
             if (isset($object->$key)) {
                 $value = (string) ($object->$key);
-                $retstr.=" $key='$value'";
+                $retstr.=" $key=\"$value\"";
             }
         }
         return $retstr;
@@ -22,7 +21,6 @@ class attributesHandler {
 }
 
 class Value {
-
     public $name = '';
     public $label = '';
     public $selected = false;
@@ -32,13 +30,59 @@ class Value {
         $this->label = $label;
         $this->selected = $selected;
     }
+}
+
+class PPrinter {
+
+    public $noTabs = 0; // We need this to be public
+
+    public function __construct($tabs = 0) {
+        $this->noTabs = $tabs;
+    }
+
+    public function echoWithTabs($msg) {
+        $tabs = str_repeat("\t", $this->noTabs);
+        echo "$tabs$msg\n";
+    }
+
+    public function echoOpen($str) {
+        $this->echoWithTabs($str);
+        $this->noTabs+=1;
+    }
+
+    public function echoClose($str) {
+        $this->noTabs-=1;
+        $this->echoWithTabs($str);
+    }
+
+    public function jsEchoArray($name, $array) {
+        $maxIndex = count($array) - 1;
+        $sep = ',';
+        $this->echoOpen("$name:{");
+        $index = 0;
+        foreach ($array as $key => $value) {
+            if ($index == $maxIndex) {
+                $sep = '';
+            }
+            if (!is_array($value)) {
+                $this->echoWithTabs("$key:$value$sep");
+            } else {
+                $this->jsEchoArray($key, $value);
+                $this->echoWithTabs($sep);
+            }
+            $index++;
+        }
+        $this->echoClose("}");
+    }
 
 }
 
 class Input {
-
+    
+//    static 
     private $inputTypes = array(
-        'text', 'textArea', 'menu', 'radios', 'orderedMChoice',
+        'text', 'textArea', 'menu', 'radios', 'multipleChoice',
+        'sortableMultipleChoice',
         'singleRadio', 'checkBox', 'hidden', 'menu', 'submit',
         'uniqueChoice', 'captcha'
     );
@@ -60,35 +104,59 @@ class Input {
         return $aH->getAttributes($this, $keys);
     }
 
-    private function echoMsg($content = '') {
-        if (isset($this->id)) {
-            $lid = " id='l_$this->id'";
-        } else {
-            $lid = '';
+    private function tagOpen($tag, $attributes = '') {
+        return "<$tag $attributes>";
+    }
+
+    private function tagClose($tag, $comments = '') {
+        $addenda = '';
+        if ($comments != '') {
+            $addenda = " <!-- $comments -->";
         }
-        echo
-        "<span class='msg'$lid>"
-        . "$content"
-        . "</span>";
+        return "</$tag >$addenda";
     }
 
-    private function echoLabelMsg() {
-        $attributes = $this->getAttrStr(['labelclass', 'labelid']);
-        $modAttributes = str_replace('label', '', $attributes);
-        echo "<label$modAttributes>";
-        $this->echoMsg($this->label);
-        echo "</label>\n\n";
+    private function tagWithContent($tag, $content, $attributes = '') {
+        $string = "<$tag $attributes>$content</$tag>";
+        return $string;
     }
 
-    private function echoLabel() {
-        $attributes = $this->getAttrStr(['labelclass', 'labelid']);
-        $modAttributes = str_replace('label', '', $attributes);
-        $this->printer->echoWithTabs("<label$modAttributes>$this->label : </label>");
+    private function closedTag($tag, $attributes = '') {
+        $string = "<$tag $attributes/>";
+        return $string;
+    }
+
+    private function echoLabel($label = '') {
+        if ($label == '' && isset($this->label)) {
+            $label = $this->label;
+        }
+        //
+        $attributesPre = $this->getAttrStr(['labelclass', 'labelid']);
+        $attributes = str_replace('label', '', $attributesPre);
+        $stringToPrint = $this->tagWithContent('label', $label, $attributes);
+        $this->printer->echoWithTabs($stringToPrint);
+        //
         if (isset($this->nobreak) && $this->nobreak) {
             
         } else {
             $this->printer->echoWithTabs("<br /><br />");
         }
+    }
+
+    // MLMessage -- Multi Lingual Message
+    private function mLMessage($content = '') {
+        if (isset($this->id)) {
+            $lid = " id='l_$this->id'";
+        } else {
+            $lid = '';
+        }
+        $attributes = "class='msg'" . $lid;
+        return $this->tagWithContent('span', $content, $attributes);
+    }
+
+    private function echoLabelMLmessage($content = '') {
+        $content = $this->mLMessage($this->label);
+        $this->echoLabel($content);
     }
 
     private function echoCaptcha() {
@@ -100,7 +168,8 @@ class Input {
         $rand = rand();
 
         echo "\n";
-        $this->printer->echoWithTabs("<img src='$url?rand=$rand' id='captchaimg' />");
+        $attributes = "src='$url?rand=$rand' id='captchaimg'";
+        $this->printer->echoWithTabs($this->closedTag('img', $attributes));
         $input = new Input('text', 'captcha', [
             'label' => 'Rentrez le code à la gauche',
             'size' => 6,
@@ -114,10 +183,11 @@ class Input {
             $this->labelclass = 'left';
             $this->echoLabel();
         }
-        $attributes = $this->getAttrStr([
-            'id', 'class', 'size', 'value',
-            'style', 'disabled']);
-        $this->printer->echoWithTabs("<input type='text' name='$this->name'$attributes/>");
+        $attributes = "type='text' name='$this->name'" .
+                $this->getAttrStr([
+                    'id', 'class', 'size', 'value',
+                    'style', 'disabled']);
+        $this->printer->echoWithTabs("<input $attributes/>");
     }
 
     private function echoTextArea() {
@@ -138,27 +208,58 @@ class Input {
     }
 
     private function echoCheckBox() {
-        $attributes = $this->getAttrStr(['checked']);
-        echo "<input type='checkbox' name='$this->name' $attributes/>$this->label</br>\n";
+        //$attributes = $this->getAttrStr(['checked']);
+        $checked = '';
+        if ($this->checked) {
+            $checked = ' checked';
+        }
+        $this->printer->echoWithTabs(
+                "<input type='checkbox'"
+                . " name='$this->name' value='$this->value'"
+                . "$checked/>");
+        $this->nobreak = true;
+        $this->echoLabel();
     }
 
 // Multiplechoices
-    private function echoOrderedMChoice() {
-//choices
-        echo $this->label . " :";
-        echo "<ul class='sortable'>\n";
+    private function echoSortableMultipleChoice() {
+        $this->echoLabel();
+        $this->printer->echoOpen($this->tagOpen('ul', "class='sortable'"));
         foreach ($this->values as $value) {
-            $checkBox = new Input('checkBox', "$this->name$_value[name]");
+            $checkBox = new Input('checkBox', "$this->name-$value->name");
+            $checkBox->value = $value->name;
             if ($value->selected) {
                 $checkBox->checked = true;
             }
             $checkBox->label = $value->label;
-            echo "\t<li>";
-            echo "<span class='ui-icon ui-icon-arrowthick-2-n-s'></span>";
-            $checkBox->display();
-            echo "</li>\n";
+            //
+            $this->printer->echoOpen($this->tagOpen('li'));
+            $this->printer->echoWithTabs(
+                    $this->tagWithContent('span','', "class='ui-icon ui-icon-arrowthick-2-n-s'"));
+            $checkBox->display($this->printer->noTabs);
+            $this->printer->echoClose($this->tagClose('li'));
         }
-        echo "</ul>\n";
+        $this->printer->echoClose($this->tagCLose('ul'));
+    }
+
+    private function echoMultipleChoice() {
+        $this->echoLabel();
+        $this->printer->echoOpen($this->tagOpen('ul'));
+        foreach ($this->values as $value) {
+            $checkBox = new Input('checkBox', "$this->name-$value->name");
+            $checkBox->value = $value->name;
+            if ($value->selected) {
+                $checkBox->checked = true;
+            }
+            $checkBox->label = $value->label;
+            //
+            $this->printer->echoOpen($this->tagOpen('li'));
+//            $this->printer->echoWithTabs(
+//                    $this->closedTag('span', "class='ui-icon ui-icon-arrowthick-2-n-s"));
+            $checkBox->display($this->printer->noTabs);
+            $this->printer->echoClose($this->tagClose('li'));
+        }
+        $this->printer->echoClose($this->tagCLose('ul'));
     }
 
 // Only one choice available
@@ -167,28 +268,29 @@ class Input {
             $this->labelclass = 'left';
             $this->echoLabel();
         }
-        echo "<select name=$this->name>\n";
+        $this->printer->echoOpen("<select name=$this->name>");
         foreach ($this->values as $value) {
-            echo "\t<option value='$value->name'>$value->label</option>"
-            . "\n";
+            $this->printer->echoWithTabs("<option value='$value->name'>$value->label</option>");
         }
-        echo "</select>\n";
+        $this->printer->echoClose("</select>");
     }
 
     private function echoSingleRadio() {
-        $attributes = $this->getAttrStr(['checked']);
-        echo "<input type='radio' name='$this->name' value='$this->value'$attributes/>"
-        . "\n";
+        $attributes = "type='radio' name='$this->name' value='$this->value'" . $this->getAttrStr(['checked']);
+        $string = $this->closedTag('input', $attributes);
+        $this->printer->echoWithTabs($string);
         $this->labelclass = 'right';
+        $this->nobreak = true;
         $this->echoLabel();
     }
 
     private function echoRadios() {
         if (isset($this->label)) {
-            $this->echoLabel('left');
+            $this->labelclassl = 'left';
+            $this->echoLabel();
         }
         foreach ($this->values as $value) {
-            $radioButton = new Input('singleRadio', "$this->name" . "_$value->name");
+            $radioButton = new Input('singleRadio', "$this->name");
             $radioButton->label = $value->label;
             $radioButton->value = $value->name;
 
@@ -197,7 +299,7 @@ class Input {
             } else {
                 unset($radioButton->checked);
             }
-            $radioButton->display();
+            $radioButton->display($this->printer->noTabs);
         }
     }
 
@@ -215,6 +317,18 @@ class Input {
                 "<input type='submit' name='$this->name' value='$this->value'/>");
     }
 
+    private function valuesFromArray($arrayOfValues) {
+        foreach ($arrayOfValues as $val) {
+            $name = $val['name'];
+            $label = $val['label'];
+            $value = new Value($name, $label);
+            if (isset($val['selected'])) {
+                $value->selected = $val['selected'];
+            }
+            $this->values[$name] = $value;
+        }
+    }
+
     public function __construct($type, $name, $parameters = array()) {
         $this->name = $name;
         if (!in_array($type, $this->inputTypes)) {
@@ -222,7 +336,13 @@ class Input {
         }
         $this->type = $type;
         foreach ($parameters as $key => $value) {
-            $this->$key = $value;
+            switch ($key) {
+                case 'values':
+                    $this->valuesFromArray($value);
+                    break;
+                default:
+                    $this->$key = $value;
+            }
         }
         $this->printer = new PPrinter();
         return $this;
@@ -237,8 +357,11 @@ class Input {
             case 'menu':
                 $this->echoMenu();
                 break;
-            case 'orderedMChoice':
-                $this->echoOrderedMChoice();
+            case 'multipleChoice':
+                $this->echoMultipleChoice();
+                break;
+            case 'sortableMultipleChoice':
+                $this->echoSortableMultipleChoice();
                 break;
             case 'checkBox':
                 $this->echoCheckBox();
@@ -266,63 +389,6 @@ class Input {
                 $this->echoText();
                 break;
         }
-    }
-
-    public function valuesFromArray($arrayOfValues) {
-        foreach ($arrayOfValues as $val) {
-            $name = $val['name'];
-            $label = $val['label'];
-            $value = new Value($name, $label);
-            if (isset($val['selected'])) {
-                $value->selected = $val['selected'];
-            }
-            array_push($this->values, $value);
-        }
-    }
-
-}
-
-class PPrinter {
-
-    public $noTabs = 0;
-
-    public function __construct($tabs = 0) {
-        $this->noTabs = $tabs;
-    }
-
-    public function echoWithTabs($msg) {
-        $tabs = str_repeat("\t", $this->noTabs);
-        echo "$tabs$msg\n";
-    }
-
-    public function echoOpen($str) {
-        $this->echoWithTabs($str);
-        $this->noTabs+=1;
-    }
-
-    public function echoClose($str) {
-        $this->noTabs-=1;
-        $this->echoWithTabs($str);
-    }
-
-    public function jsEchoArray($name, $array) {
-        $maxIndex = count($array)-1;
-        $sep = ',';
-        $this->echoOpen("$name:{");
-        $index = 0;
-        foreach ($array as $key => $value) {
-            if ($index == $maxIndex) {
-                $sep = '';
-            }
-            if (!is_array($value)) {
-                $this->echoWithTabs("$key:$value$sep");
-            } else {
-                $this->jsEchoArray($key, $value);
-                $this->echoWithTabs($sep);
-            }
-            $index++;
-        }
-        $this->echoClose("}");
     }
 
 }
@@ -398,28 +464,28 @@ class Form {
         $rules = array();
         $messages = array();
         foreach ($this->inputs as $input) {
-            $rule=array();
-            $message=array();
+            $rule = array();
+            $message = array();
             if (isset($input->validations)) {
                 foreach ($input->validations as $key => $validation) {
                     if (!isset($validation['value'])) {
                         $validation['value'] = 'true';
                     }
-                    $rule[$validation['type']]=$validation['value'];
-                    $message[$validation['type']]="\"$validation[message]\"";
+                    $rule[$validation['type']] = $validation['value'];
+                    $message[$validation['type']] = "\"$validation[message]\"";
                 }
-                $rules[$input->name]=$rule;
-                $messages[$input->name]=$message;
+                $rules[$input->name] = $rule;
+                $messages[$input->name] = $message;
             }
-            if($this->captcha){
-                $rules['captcha'] = ['required'=>'true'];
-                $messages['captcha'] =['required' => '"Ce champ est obligatoire"'];
+            if ($this->captcha) {
+                $rules['captcha'] = ['required' => 'true'];
+                $messages['captcha'] = ['required' => '"Ce champ est obligatoire"'];
             }
         }
-        $this->printer->jsEchoArray('rules', $rules);        
+        $this->printer->jsEchoArray('rules', $rules);
         $this->printer->echoWithTabs(",");
         $this->printer->jsEchoArray('messages', $messages);
- 
+
         $this->printer->echoClose("});");
         $this->printer->echoClose("});");
         $this->printer->echoClose("</script>\n");
@@ -433,13 +499,60 @@ class Form {
         return isset($_POST['captcha']) && $_POST['captcha'] == $_SESSION['captcha'];
     }
 
-    public function fromPost() {
-        $i = 0;
-        foreach ($this->inputs as $input) {
-            if (isset($_POST[$input->name])) {
-                $this->inputs[$i]->value = $_POST[$input->name];
+    private function fromPostMChoice($input) {
+        $values = array();
+        $name = $input->name;
+        foreach ($input->values as $key => $value) {
+            if (filter_has_var(INPUT_POST, $name-$value->name)) {
+                $this->inputs[$name]->values[$key]->selected = true;
+                array_push($values, $value->name);
             }
-            $i++;
+        }
+        $this->inputs[$name]->value = implode(",", $values);
+    }
+
+    private function fromPostSMChoice($input) {
+        $name = $input->name;
+        $inPostKeys = array();
+        $notInPostKeys = array();
+        $newValues = array();
+
+        $keys = array_keys($input->values);
+        foreach($keys as $key){
+            $pKeys[$key] = "$name-$key";
+        }
+        foreach ($_POST as $pKey => $value) {
+            if (in_array($pKey, $pKeys)) {
+                $key =  substr($pKey,  strlen($name) + 1);
+                $newValues[$key] = $input->values[$key];
+                $newValues[$key]->selected = true;
+                array_push($inPostKeys, $key);
+            }
+        }
+        foreach ($keys as $key) {
+            if (!isset($newValues[$key])) {
+                $newValues[$key] = $input->values[$key];
+                $newValues[$key]->selected = false;
+            }
+        }
+        $this->inputs[$name]->value = implode(",", $inPostKeys);
+        $this->inputs[$name]->values = $newValues;
+    }
+
+    public function fromPost($defaultFilter=FILTER_DEFAULT) {
+        foreach ($this->inputs as $name => $input) {
+            switch ($input->type) {
+                case 'sortableMultipleChoice':
+                    $this->fromPostSMChoice($input);
+                    break;
+                case 'multipleChoice':
+                    $this->fromPostMChoice($input);
+                    break;
+                default:
+                    if (filter_has_var(INPUT_POST, $name)) {
+                        $this->inputs[$name]->value = filter_input(INPUT_POST,$name,$defaultFilter);
+                    }
+            }
         }
     }
 
@@ -462,68 +575,12 @@ class Form {
         }
     }
 
-}
-
-class MailForm {
-
-    public $form;
-    private $subject;
-    private $expediteur;
-    private $message;
-
-    public function __construct($parameters = array()) {
-        $this->form = new Form('mailform', $parameters);
-        $this->form->submitValue = 'Envoyer';
-
-        $this->subject = new Input('text', 'subject', [
-            'label' => 'Objet',
-            'value' => 'Installer WebRegatta',
-            'style' => 'width:50%',
-            'disabled' => true,
-            'validations' => [
-                ['type' => 'required', 'message' => 'Ce champ est obligatoire']
-            ]
-        ]);
-        $this->expediteur = new Input(
-                'text', 'sender', [
-            'label' => 'Votre courriel',
-            'style' => 'width:50%',
-            'validations' => [
-                ['type' => 'required', 'message' => 'Ce champ est obligatoire'],
-                ['type' => 'email', 'message' => 'Ceci n\'est pas un adresse email valide']
-            ]
-                ]
-        );
-        $this->message = new Input(
-                'textArea', 'message', ['label' => 'Votre message', 'rows' => 10, 'cols' => '120']);
-
-        $this->form->inputs = [$this->expediteur, $this->subject, $this->message];
-        $this->form->captcha = true;
-    }
-
-    public function display() {
-        $this->form->display();
+    public function linkInputs() {
+        foreach ($this as $property) {
+            if ($property instanceOf Input) {
+                $this->inputs[$property->name] = $property;
+            }
+        }
     }
 
 }
-
-//$mailform = new MailForm('mailform');
-//$mailform->display();
-/*
-
-  $menu = new Input('uniqueChoice', 'menu');
-  $arrayOfValues = [
-  ['name' => 'coucou', 'label' => 'caca'],
-  ['name' => 'pipi', 'label' => 'pipi'],
-  ['name' => 'poupu', 'label' => 'poupu'],
-  ];
-  $menu->valuesFromArray($arrayOfValues);
-  $menu->value = 'pipi';
-  $menu->rendering = 'radios';
-
-  $form = new Form('test');
-  array_push($form->inputs, $menu);
-
-  $form->display();
-
- */

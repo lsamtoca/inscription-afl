@@ -263,16 +263,27 @@ function echoMenu($choices) {
 $sousMenuHome = array(
     array(
         'message' => multipleLanguage('about', 'A propos'),
-        'link' => 'about',
+        'link' => 'about#aPropos',
+    ),
+    array(
+        'message' => multipleLanguage('oRace', 'Ouvrir une régate'),
+        'link' => 'about#openRace',
     )
 );
 
-//if ($config['moduleDonate']) {
+if ($config['moduleDonate']) {
     array_push($sousMenuHome, array(
         'message' => multipleLanguage('donate', 'Faire un don'),
-        'link' => 'about'
-        ));
-//}
+        'link' => 'about#faireUnDon'
+    ));
+}
+
+if ($config['moduleAdvertise']) {
+    array_push($sousMenuHome, array(
+        'message' => multipleLanguage('ceLogiciel', 'Obtenir ce logiciel'),
+        'link' => 'about#ceLogiciel'
+    ));
+}
 
 $menuItem_Home = array(
     'message' => multipleLanguage('home', 'Accueil'),

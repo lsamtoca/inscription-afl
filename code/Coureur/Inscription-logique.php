@@ -3,6 +3,7 @@
 // Difficile de comprendre qqchose de ce code ...
 // Reorganisation ???
 
+
 require_once 'php/hash.php';
 require_once 'php/Inscrit.php';
 require_once 'php/Regate.php';
@@ -235,6 +236,7 @@ function do_insert($hash) {
     $inscrit = Inscrit_selectByHashAndOthers(
             $hash, $post['Nom'], $post['Prenom'], $post['IDR']);
     return $inscrit['ID_inscrit'];
+    exit(0);
 }
 
 // Compose the mail...
@@ -286,6 +288,10 @@ function compose_mail($ID_inscrit, $ID_regate, $titre_regate, $courriel_cv) {
 // Here it starts the main code
 global $post;
 $post = validatePOST();
+//$debugger=new Debugger();
+//$debugger->dump($_POST);
+//$debugger->dumpAndExit($post);
+
 
 // On vient par la seulement si on a complete le formulaire !!!
 // Mais on peut venir par la aussi si on a cherché par LICENCE et ...

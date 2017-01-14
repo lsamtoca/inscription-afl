@@ -2,6 +2,7 @@
 
 $Regate_htmlDateFormat = 'd/m/Y';
 
+
 function Regate_selectById($ID_regate, $bd = NULL) {
     $series = new Series();
 
@@ -34,7 +35,11 @@ function Regate_setLimite($regate) {
     date_default_timezone_set('Europe/Paris');
     $limite = new DateTime($regate['date_limite_preinscriptions']);
     $limite->setTime(23, 59);
+    if ($limite == NULL) {
+        throw new Exception('Problème avec la date');
+    }
     $regate['limite'] = $limite;
+
     return $regate;
 }
 
@@ -72,10 +77,12 @@ function Regate_formatDeadline($regate) {
 function Regate_formatDebut($regate) {
 
     global $Regate_htmlDateFormat;
+    echo $Regate_htmlDateFormat;
 
     list($year, $month, $day) = sscanf($regate['date_debut'], "%4d-%2d-%2d");
+ 
     $ret = str_replace(array('d', 'm', 'Y'), array($day, $month, $year), $Regate_htmlDateFormat);
-
+    
     return $ret;
 }
 

@@ -18,8 +18,8 @@ xhtml_pre1('Administration des régates (événements et clubs)');
 
 
 
-<?php 
-xhtml_pre2('Administration des régates (événements et clubs)'); 
+<?php
+xhtml_pre2('Administration des régates (événements et clubs)');
 doMenu();
 ?>
 
@@ -37,8 +37,13 @@ doMenu();
     <h3>Mettre à jour le fichier COUREUR.DBF</h3>
     <?php include 'Admin-html-update-COUREUR-DBF.php'; ?>
 
+    <h3>Contacter les utilisateurs</h3>
+    <?php $courrielUtilisateurs->html(); ?>
+
     <h3 id="celogiciel">A propos de ce logiciel</h3>
-    <?php $administrateur=TRUE; include('code/About/news.php'); ?>
+    <?php $administrateur = TRUE;
+    include('code/About/news.php');
+    ?>
 
 </div><!-- accordion -->
 

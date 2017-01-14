@@ -1,7 +1,7 @@
 <div class="contenu" style="padding:20pt;font-size:120%">
     Ce logiciel a demandé beaucoup d'heures de travail pour vous permettre de naviguer plus d'heures. 
-    Si cela vous a plu, n'hésitez pas à faire un don au programmeur, de façon qu'il pourra naviguer, lui aussi, 
-    un peu plus.
+    Si le logiciel vous a plu, n'hésitez pas à faire un don. Le programmeur pourra alors naviguer
+    lui aussi un peu plus.
 
 
     <!--

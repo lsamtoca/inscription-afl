@@ -45,6 +45,7 @@ $mainformInputs = array(
         'default' => 'F'
     ),
     'serie' => array(
+        // This is not updated when re-reading from for confirmation
         'rendering' => 'radio',
         'values' => $series,
         'default' => $series[0][0]

@@ -42,10 +42,11 @@ setPaths($adminFiles, 'Admin', 'AutAdmin');
 setPaths($clubFiles, 'Club', 'AutClub');
 setPaths($loginFiles, 'Login', 'AutLogin');
 $paths['Logout'] = array("code/Login/deconnexion.php", 'AutLogin');
-$paths['about'] = array("code/About/about.php", 'AutNone');
+$paths['about'] = array("code/About/About.php", 'AutNone');
 $paths['captcha'] = array("externals/captcha/captcha_code_file.php", 'AutNone');
 //$paths['captcha'] = array("externals/securimage/securimage_show.php", 'AutNone');
-
+//$paths['TestExport'] = array('classes/TestExport.php','AutNone');
+        
 // Aliases
 $paths['index'] = $paths['Liste_regates'];
 $paths['index.php'] = $paths['Liste_regates'];

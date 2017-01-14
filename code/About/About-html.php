@@ -1,10 +1,4 @@
 <?php
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 xhtml_pre1('A propos de ce programme');
 ?>
 
@@ -21,7 +15,7 @@ xhtml_pre1('A propos de ce programme');
     });
 
 <?php if ($config['moduleDonate']): ?>
-        window.location.hash = "faireUnDon";
+        //  window.location.hash = "faireUnDon";
 <?php endif; ?>
 
 </script>
@@ -30,8 +24,6 @@ xhtml_pre1('A propos de ce programme');
 <?php
 xhtml_pre2('WebRegatta 4.0');
 doMenu();
-//$debugger = new debugger();
-//$debugger->config();
 ?>
 
 <div id='accordion'>
@@ -43,25 +35,31 @@ doMenu();
         <?php include('code/About/boutonPayPal.php'); ?>
     <?php endif; ?>
 
-    <h3>A propos de ce logiciel</h3>
+    <h3 id="openRace">Demandez l'ouverture d'une régate</h3>
+    <div class="contenu">
+        <?php
+        $formOuvrirUneRegate->displayValidation(2);
+        $formOuvrirUneRegate->display(2);
+        ?>
+    </div>
+
+
+    <h3 id="aPropos">A propos de ce logiciel</h3>
     <?php
     include('code/About/news.php');
     //echoGoBack();
     ?>
-<!--
-    <h3>Demandez ce logiciel</h3>
-    <?php
-    //include('code/About/About-html-helpdesk.php');
-    //echoGoBack();
-    ?>
--->
-    <h3>Demandez ce logiciel</h3>
-    <div class="contenu">
-        <?php
-        $form->displayValidation(2);
-        $form->display(2);
-        ?>
-    </div>
+
+    <?php if ($config['moduleAdvertise']): ?>
+        <h3 id='ceLogiciel'>Demandez ce logiciel</h3>
+        <div class="contenu">
+            <?php
+            $formWebRegatta->displayValidation(2);
+            $formWebRegatta->display(2);
+            ?>
+        </div>
+    <?php endif; ?>
+
 </div>
 <?php
 xhtml_post();

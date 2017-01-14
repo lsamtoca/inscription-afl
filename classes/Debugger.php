@@ -6,11 +6,14 @@
  * and open the template in the editor.
  */
 
-class debugger {
-    public function dumpAndExit($object){
+class Debugger {
+    public function dump($object){
         echo '<pre>';
         print_r($object);
         echo '</pre>';
+    }
+    public function dumpAndExit($object){
+        $this->dump($object);
         exit(0);
     }
     

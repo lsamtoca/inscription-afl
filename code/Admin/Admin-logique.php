@@ -4,6 +4,13 @@ require_once './php/Regate.php';
 require_once './php/User.php';
 require_once './php/mailer.php';
 
+require_once __DIR__.'/Admin-courriel-utilisateurs.php';
+$courrielUtilisateurs=new CourrielUtilisateurs();
+if($courrielUtilisateurs->isActived()){
+    $courrielUtilisateurs->sendMail();
+    exit(0);
+}
+
 function numberOfSailors($idregate) {
     $sql = 'SELECT COUNT(*) as `num` FROM Inscrit WHERE ID_regate= :IDR';
     $assoc = array('IDR' => $idregate);
@@ -165,3 +172,4 @@ if (file_exists($fileName)) {
 } else {
     $cdbf_lastupdate = '**Ce fichier n\'existe encore pas**';
 }
+

@@ -3,6 +3,7 @@ bdFile=databases/database.php
 
 ;; Pour pouvoir modifier le mot de passe
 pwdRecoveryOn = false
+;pwdRecoveryOn = true
 
 ;; Parametrage des courriels
 webMaster = My Self
@@ -19,13 +20,12 @@ defaultLanguage=fr
 titleMsg = Pré-inscriptions aux régates
 
 ;; Images
-defaultBackground = background.jpg
-favIcon = favicon.png
+defaultBackground = img/backgrounds/background.jpg
+favIcon = img/favicon.png
 
 ;; Qui sommes nous
-; sera utilisédans un futur
-whoAmI=AFL
-
+whoAmI=My self
+signature = moi meme
 
 ;; Various modules
 ;; language.php, log, undergoingWorks, develOrProduction, noLG, Backgrounds
@@ -35,6 +35,7 @@ moduleNoLG = true
 moduleLog = true
 moduleDevelOrProduction = true
 moduleLanguage = true
-moduleBackgrounds=false
+moduleChooseBackground=off
 
 moduleDonate=true
+moduleAdvertise=false

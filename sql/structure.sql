@@ -114,7 +114,7 @@ CREATE TABLE `Regate` (
   `date_debut` date DEFAULT NULL,
   `date_fin` date DEFAULT NULL,
   `date_limite_preinscriptions` date DEFAULT NULL,
-  `series` varchar(500) DEFAULT 'LA4,LAR,LAS',
+  `series` varchar(500) DEFAULT 'LAS4,LAR,LAS',
   `polo` tinyint(4) NOT NULL DEFAULT '0',
   `droits` int(11) NOT NULL DEFAULT '0',
   `paiement_en_ligne` varchar(50) DEFAULT NULL,
