@@ -8,3 +8,21 @@ RewriteCond %{REQUEST_FILENAME} !\.pdf$|\.WDZ$
 RewriteCond %{REQUEST_FILENAME} !controller.php
 RewriteCond %{REQUEST_FILENAME} !phpinfo.php
 RewriteRule ^([^?]*)$ %1/controller.php?path=$1 [NC,L,QSA]
+
+########################################
+# Set up UTF-8 encoding
+########################################
+
+AddDefaultCharset UTF-8
+AddCharset UTF-8 .php
+
+php_value default_charset "UTF-8"
+
+php_value iconv.input_encoding "UTF-8"
+php_value iconv.internal_encoding "UTF-8"
+php_value iconv.output_encoding "UTF-8"
+
+php_value mbstring.internal_encoding UTF-8
+php_value mbstring.http_output UTF-8
+php_value mbstring.encoding_translation On
+php_value mbstring.func_overload 6

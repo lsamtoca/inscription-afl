@@ -20,12 +20,12 @@
             Envoyer un courriel aux :
             <input type='radio' name='aqui' checked value='coureurs' onClick='set_mailsCoureurs()'><label>coureurs</label>
             <input type='radio' name='aqui' value='clubs' onClick='set_mailsClubs()'><label>clubs</label>
-            <input type='radio' name='aqui' value='admins' onClick='set_mailsClubs()'><label>autres administrateurs</label>
+            <input type='radio' name='aqui' value='admins' onClick='set_mailsAdmins()'><label>autres administrateurs</label>
             <hr />
             <label>To : </label>
             <br />
             <input type='text' name='to' id='to' style='width:100%;' 
-                   readonly value='{mailsCoureurs}' />
+                   value='{mailsCoureurs}' />
             <br />
             <label>CC : </label>
             <br />
@@ -40,9 +40,10 @@
             <textarea name='message' rows='20' style='width:100%;'></textarea>  
             <hr />
             <!--<input type='hidden' name='MAX_FILE_SIZE' value='12345' />-->
-            <label>Fichier à joindre : </label>    <br />
+            <!--<label>Fichier à joindre : </label>    <br />
             <input type='file' name='attachment' />
             <hr />
+            -->
             <input type='submit' name='envoyer_mail' value='Envoyer' />
         </fieldset>
     </form>

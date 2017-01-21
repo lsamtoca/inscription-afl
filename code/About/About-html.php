@@ -29,7 +29,6 @@ doMenu();
 <div id='accordion'>
     <!--<div class="contenu" style="padding:20pt;font-size:120%"-->
 
-
     <?php if ($config['moduleDonate']): ?>
         <h3 id='faireUnDon'>Faire un don</h3>
         <?php include('code/About/boutonPayPal.php'); ?>
@@ -38,8 +37,7 @@ doMenu();
     <h3 id="openRace">Demandez l'ouverture d'une régate</h3>
     <div class="contenu">
         <?php
-        $formOuvrirUneRegate->displayValidation(2);
-        $formOuvrirUneRegate->display(2);
+        $ouvrirUneRegate->html(2);
         ?>
     </div>
 
@@ -54,9 +52,7 @@ doMenu();
         <h3 id='ceLogiciel'>Demandez ce logiciel</h3>
         <div class="contenu">
             <?php
-            $formWebRegatta->displayValidation(2);
-            $formWebRegatta->display(2);
-            ?>
+            $advertise->html(2);            ?>
         </div>
     <?php endif; ?>
 

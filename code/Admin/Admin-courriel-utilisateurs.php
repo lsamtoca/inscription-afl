@@ -19,22 +19,98 @@ class CourrielUtilisateurs {
     }
 
     public function sendMail() {
+        global $config;
+
+        //  get Infos about who is th Administrator
         $sql = 'SELECT * FROM `Administrateur` WHERE `ID_administrateur`=:ID';
         $assoc = array('ID' => $_SESSION['ID_administrateur']);
         $req = executePreparedQuery($sql, $assoc);
         $admin = $req->fetch();
 
-        $to = $sender = $admin['courriel'];
+        $errMsg = '';
+        $warningMsg = '';
+        $ackMsg = '';
 
+        //  Prepare sending of mail(s)
+        
+        $mail = new MyMailer();
+        $mail->setFrom("$admin[prenom] $admin[nom] <$config[webMasterEmail]>");
+        $mail->addAddressTo("$admin[prenom] $admin[nom] <$admin[courriel]>");
+        $mail->subject=filter_input(INPUT_POST, 'objet');
+        $mail->messageText = ilter_input(INPUT_POST, 'message');
+        $mail->addAddressCc(filter_input(INPUT_POST, 'cc'));
+        
+        /*
+        $sender = $config['webMasterEmail']; 
+        $to = $admin['courriel'];
         $subject = clean_post_var($_POST['objet']);
         $message = clean_post_var($_POST['message']);
-        $bcc = $_POST['to']; // destinataires en BCC
-        $cc = $_POST['cc'];
 
-        if (send_mail_text_attachement($sender, $to, $subject, $message, $cc, $bcc)) {
+        //$cc = $_POST['cc'];
+        $cc0 = filter_input(INPUT_POST, 'cc', FILTER_SANITIZE_EMAIL);
+        $cc = filter_var($cc0, FILTER_VALIDATE_EMAIL);
+        if (!$cc) {
+            $warningMsg .= "Warning. Le courriel en CC : '$cc' n'est pas valide.\n";
+            $cc = '';
+        }
+        */
+        
+        $destinataires = explode(',', $_POST['to']); // destinataires en BCC
+        $max = count($destinataires);
+        $step = 50;
+        for ($i = 0; $i < $max; $i+=$step) {
+            $courriels = array_slice($destinataires, $i, $step);
+            // SANITIZE AND VALIDATE ALL THE COURRIELS
+ /*           foreach ($courriels as $index => $courriel) {
+                $email0 = filter_var($courriel, FILTER_SANITIZE_EMAIL);
+                $email = filter_var($email0, FILTER_VALIDATE_EMAIL);
+                if (!$email) {
+                    $noDestinataire = $i +$index +1;
+                    $warningMsg .= "Warning. Le courriel '$courriel' n'est pas valide "
+                            . "(Déstinataire $noDestinataire de $max).\n";
+                    unset($courriels[$index]);
+                } else {
+                    $courriels[$index] = $email;
+                }
+  
+  
+            } */
+            //$bcc = implode(',', $courriels);
+            // Skip this for testing purposes
+            $ret = send_mail_text($sender, $to, $subject, $message, $cc, $bcc);
+            //$ret = true;
+            if (!$ret) {
+                $errMsg .= "Error. Problème avec l'envoye à ces adresses :"
+                        . " '$bcc'\n";
+            } else {
+                $ackMsg .= "Ack. Courriel envoyé à ces adresses : '$bcc'\n";
+            }
+        }
+
+        // NOTIFY
+        $newSender = $config['webMasterEmail'];
+        $newTo = $admin['courriel'];
+        $newSubject = 'Notification WebRegatta sur l\'envoye de votre message';
+        $newMessage = "Vous avez envoyé ce message via WebRegatta:\n"
+                . "Sujet : $subject\n"
+                . "Votre Message : \n"
+                . "$message\n"
+                . "\n\nRapport sur des possibles erreurs.\n"
+                . "Avertissements :\n$warningMsg\n"
+                . "Courriels envoyés :\n$ackMsg\n"
+                . "Erreurs :\n$errMsg\n";
+        send_mail_text($newSender, $newTo, $newSubject, $newMessage);
+
+        if ($errMsg != '') { // S'il ya eut un problème
+            $msg = "Problème avec l'envoye du courriel.\n"
+                    . "Vous allez etre notifié par courriel sur ce problème";
+            pageErreur();
+        } else { //Sinon
+            // prepare and give an asnwer on the web
+            $bcc = implode(',', $destinataires);
             if (strlen($bcc) >= 40) {
                 $mails = explode(',', $bcc);
-                $bccShort = $mails[0] . ",...," . $mails[count($mails) - 1];
+                $bccShort = $mails[0] . ",...," . $mails[count($destinataires) - 1];
             } else {
                 $bccShort = $bcc;
             }
@@ -42,8 +118,8 @@ class CourrielUtilisateurs {
                     . "\n"
                     . "Message envoyé à:\n\t$bccShort";
             pageAnswer($ackMessage);
-            exit(0);
         }
+        exit(0);
     }
 
     function __construct() {
@@ -64,7 +140,7 @@ class CourrielUtilisateurs {
         $replace = array('{mailsClubs}', '{mailsCoureurs}', '{mailsAdmins}', '{self}');
         $with = array($this->mailsClubs, $this->mailsCoureurs, $this->mailsAdmins, urlSelf());
         $template = file_get_contents(__DIR__ . '/Admin-html-courriel-utilisateurs.php');
-        echo str_replace($replace, $with, $template);
+        echo utf8_encode(str_replace($replace, $with, $template));
     }
 
 }

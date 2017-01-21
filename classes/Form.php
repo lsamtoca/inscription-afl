@@ -21,6 +21,7 @@ class attributesHandler {
 }
 
 class Value {
+
     public $name = '';
     public $label = '';
     public $selected = false;
@@ -30,6 +31,7 @@ class Value {
         $this->label = $label;
         $this->selected = $selected;
     }
+
 }
 
 class PPrinter {
@@ -78,13 +80,13 @@ class PPrinter {
 }
 
 class Input {
-    
+
 //    static 
     private $inputTypes = array(
         'text', 'textArea', 'menu', 'radios', 'multipleChoice',
         'sortableMultipleChoice',
         'singleRadio', 'checkBox', 'hidden', 'menu', 'submit',
-        'uniqueChoice', 'captcha'
+        'uniqueChoice', 'captcha', 'file'
     );
     private $printer;
     public $name;
@@ -235,7 +237,7 @@ class Input {
             //
             $this->printer->echoOpen($this->tagOpen('li'));
             $this->printer->echoWithTabs(
-                    $this->tagWithContent('span','', "class='ui-icon ui-icon-arrowthick-2-n-s'"));
+                    $this->tagWithContent('span', '', "class='ui-icon ui-icon-arrowthick-2-n-s'"));
             $checkBox->display($this->printer->noTabs);
             $this->printer->echoClose($this->tagClose('li'));
         }
@@ -317,6 +319,22 @@ class Input {
                 "<input type='submit' name='$this->name' value='$this->value'/>");
     }
 
+    private function echoFile() {
+        /*
+          <!--<input type = 'hidden' name = 'MAX_FILE_SIZE' value = '12345' /> -->
+          <label>Fichier à joindre : </label> <br />
+          <input type = 'file' name = 'attachment' />
+         */
+        if (isset($this->maxFileSize)) {
+            $hidden = new Input('hidden', 'MAX_FILE_SIZE');
+            $hidden->value = $this->maxFileSize;
+            $hidden->display($this->printer->noTabs);
+        }
+        $this->echoLabel();
+        $this->printer->echoWithTabs(
+                "<input type='file' name='$this->name'/>");
+    }
+
     private function valuesFromArray($arrayOfValues) {
         foreach ($arrayOfValues as $val) {
             $name = $val['name'];
@@ -383,6 +401,9 @@ class Input {
                 break;
             case 'captcha':
                 $this->echoCaptcha();
+                break;
+            case 'file':
+                $this->echoFile();
                 break;
             default:
             case 'text':
@@ -468,6 +489,7 @@ class Form {
             $message = array();
             if (isset($input->validations)) {
                 foreach ($input->validations as $key => $validation) {
+                    // Default value is true if it has not been set
                     if (!isset($validation['value'])) {
                         $validation['value'] = 'true';
                     }
@@ -477,7 +499,7 @@ class Form {
                 $rules[$input->name] = $rule;
                 $messages[$input->name] = $message;
             }
-            if ($this->captcha) {
+            if ($input->name == 'captcha') {
                 $rules['captcha'] = ['required' => 'true'];
                 $messages['captcha'] = ['required' => '"Ce champ est obligatoire"'];
             }
@@ -503,7 +525,7 @@ class Form {
         $values = array();
         $name = $input->name;
         foreach ($input->values as $key => $value) {
-            if (filter_has_var(INPUT_POST, $name-$value->name)) {
+            if (filter_has_var(INPUT_POST, $name - $value->name)) {
                 $this->inputs[$name]->values[$key]->selected = true;
                 array_push($values, $value->name);
             }
@@ -518,12 +540,12 @@ class Form {
         $newValues = array();
 
         $keys = array_keys($input->values);
-        foreach($keys as $key){
+        foreach ($keys as $key) {
             $pKeys[$key] = "$name-$key";
         }
         foreach ($_POST as $pKey => $value) {
             if (in_array($pKey, $pKeys)) {
-                $key =  substr($pKey,  strlen($name) + 1);
+                $key = substr($pKey, strlen($name) + 1);
                 $newValues[$key] = $input->values[$key];
                 $newValues[$key]->selected = true;
                 array_push($inPostKeys, $key);
@@ -539,7 +561,7 @@ class Form {
         $this->inputs[$name]->values = $newValues;
     }
 
-    public function fromPost($defaultFilter=FILTER_DEFAULT) {
+    public function fromPost($defaultFilter = FILTER_DEFAULT) {
         foreach ($this->inputs as $name => $input) {
             switch ($input->type) {
                 case 'sortableMultipleChoice':
@@ -550,7 +572,7 @@ class Form {
                     break;
                 default:
                     if (filter_has_var(INPUT_POST, $name)) {
-                        $this->inputs[$name]->value = filter_input(INPUT_POST,$name,$defaultFilter);
+                        $this->inputs[$name]->value = filter_input(INPUT_POST, $name, $defaultFilter);
                     }
             }
         }

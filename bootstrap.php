@@ -3,6 +3,14 @@
 error_reporting(-1);
 ini_set('display_errors', '1');
 date_default_timezone_set('Europe/Paris');
+if(PHP_VERSION_ID < 50600){// if PHP < 5.6
+    //echo mb_internal_encoding();
+    //exit(0);
+    mb_internal_encoding("UTF-8");
+    iconv_set_encoding("internal_encoding", "UTF-8");
+    iconv_set_encoding("output_encoding", "UTF-8");
+    iconv_set_encoding("input_encoding", "UTF-8");
+}
 
 // Bootstrap -- the very least
 include('bootstrap/autoload.php');

@@ -3,18 +3,17 @@
 $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 
 if ($_SERVER['HTTP_HOST'] == 'localhost') {
-    $host = 'localhost';
-    $user = 'inscriptions-afl';
-    $pwd = 'inscriptions-afl';
-    $db = 'inscriptions-afl';
-    // That is for my Mac !!!
-    //      $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_WARNING;
+    $localhostDbFile = __DIR__ . '/localhostDb.php';
+    if (file_exists($localhostDbFile)) {
+        require $localhostDbFile;
+    } else {
+        require $localhostDbFile."_default";
+    }
 } else {
     require $config['bdFile'];
 }
 
 $pdo_path = "mysql:host=$host;dbname=$db";
-
 function newBd() {
     global $pdo_path, $user, $pwd, $pdo_options;
 
@@ -33,7 +32,7 @@ function executePreparedQuery($sql, $assoc, $bd = NULL, $debug = FALSE) {
         if ($bd == NULL) {
             $bd = newBd();
         }
-        
+
         if ($debug) {
             echo $sql;
         }

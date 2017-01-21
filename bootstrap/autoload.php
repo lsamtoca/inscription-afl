@@ -8,7 +8,8 @@
 
 function autoload($className) {
     $fileName = "$className.php";
-    $paths = array('classes/', 'externals/PHPExcel/');
+    $base=__DIR__.'/..';
+    $paths = array('./',"$base/classes/", "$base/externals/PHPExcel/");
     foreach ($paths as $path) {
         if (file_exists("$path/$fileName")) {
             include "$path/$fileName";
