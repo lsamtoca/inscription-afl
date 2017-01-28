@@ -66,7 +66,9 @@ doMenu($menuLanguage);
 <div id="accordion">
 
     <h3 id="infos"><?php echo $regate['titre']; ?>, infos</h3>
-    <?php include 'Formulaire-html-info_regate.php'; ?>
+    <div class="contenu" id='infos_regate'>
+        <?php include 'Formulaire-html-info_regate.php'; ?>
+    </div> <!--infos_regate-->
 
     <?php if (Regate_estOuverte($regate)): ?>
         <h3 id="formulaires"><span id="preregistration_form" class="msg"></span></h3>

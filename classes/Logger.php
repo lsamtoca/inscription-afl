@@ -29,7 +29,7 @@ class Logger {
     }
 
     public function logAck($string) {
-        $this->log('msgOK', "Ack : $string\n");
+        $this->log('msgAck', "Ack : $string\n");
     }
 
     public function errors() {
@@ -54,8 +54,8 @@ class Logger {
             $warns = "Warnings:\n$this->msgWarning\n";
         }
         $acks='';
-        if($this->msgAck){
-            "Acks :\n$this->msgAck\n";
+        if($this->msgAck != ''){
+            $acks="Acks :\n$this->msgAck\n";
         }
        
         return $errs . $warns . $acks ;

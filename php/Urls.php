@@ -58,3 +58,8 @@ function urlSelf(){
     return $requestedPath;
     //$_SERVER['PHP_SELF'];
 }
+
+function format_path_to_site() {
+    global $path_to_site_inscription;
+    return $path_to_site_inscription;
+}

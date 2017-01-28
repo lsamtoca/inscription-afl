@@ -16,8 +16,9 @@ class File {
 
 class MyMailer {
 
-    private $from = '';
-    private $replayTo = '';
+    public $from = '';
+    public $replayTo = '';
+    public $subject = '';
     private $to = array();
     private $cc = array();
     private $bcc = array();
@@ -71,11 +72,13 @@ class MyMailer {
     private function addAddress($whichArray, $address) {
         $courriel0 = filter_var($address, FILTER_SANITIZE_EMAIL);
         $courriel = filter_var($courriel0, FILTER_VALIDATE_EMAIL);
-        if (!$courriel) {
-            $this->log->logWarning("Courriel '$address' n'est pas valide");
+//        echo $courriel;
+//        exit(0);
+        if ($courriel == false) {
+            $this->log->logWarning("$whichArray : Courriel '$address' n'est pas valide");
             return false;
         } else {
-            array_push($this->$whichArray, $address);
+            array_push($this->$whichArray, $courriel);
             return true;
         }
     }
@@ -307,31 +310,28 @@ class MyMailer {
     public function send() {
         $this->setDevel();
 
-        if (count($this->files) == 0) {
-            if ($this->messageHtml == '') {
-                $this->setText();
-            } else {
-                if ($this->messageText == '') {
-                    $this->setHtml();
-                } else {
-                    $this->setMultipart();
-                }
-            }
+        $noAttachments = count($this->files);
+        if ($noAttachments == 0 && $this->messageHtml == '') {
+            $this->setText();
+        } elseif ($noAttachments == 0 && $this->messageText == '') {
+            $this->setHtml();
         } else {
             $this->setMultipart();
         }
 
         $ret = mail($this->mailTo, $this->mailSubject, $this->mailMessage, $this->mailHeaders);
+        $tos = implode(',', $this->to);
+        $ccs = implode(',', $this->cc);
+        $bccs = implode(',', $this->bcc);
+        $summary = "from : $this->from\n"
+                . "to : $tos\n"
+                . "cc : $ccs\n"
+                . "bcc : $bccs\n";
+
         if (!$ret) {
-            $tos = implode(',', $this->to);
-            $ccs = implode(',', $this->cc);
-            $bccs = implode(',', $this->bcc);
-            $errorMsg = "Problème le courriel :\n"
-                    . "from : $this->from\n"
-                    . "to : $tos\n"
-                    . "cc : $ccs"
-                    . "bcc : $bccs";
-            $this->log->logError($errorMsg);
+            $this->log->logError("Problème avec le courriel :\n$summary");
+        } else {
+            $this->log->logAck("Courriel envoyé :\n$summary");
         }
         return $ret;
     }

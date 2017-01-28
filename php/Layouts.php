@@ -1,7 +1,7 @@
 <?php
 
 // HTML PRE AND POST
-function xhtml_pre1($title, $type = 'transitional') {//Afficher le prefixe xhtml
+function xhtml_pre1($title, $type = 'transitional', $base = '') {//Afficher le prefixe xhtml
     global $testing, $development, $config;
 
     $xhtmlStrict = "<!DOCTYPE html PUBLIC "
@@ -26,8 +26,9 @@ function xhtml_pre1($title, $type = 'transitional') {//Afficher le prefixe xhtml
         $noRobots = "<!-- robots allowed. Please index this -->\n"
                 . "<meta name=\"robots\" content=\"nofollow\" />";
     }
-
-    $base = dirname($_SERVER['PHP_SELF']);
+    if ($base == '') {
+        $base = dirname($_SERVER['PHP_SELF']);
+    }
     $favicon = "img/" . $config['favIcon'];
 
     echo "$docType

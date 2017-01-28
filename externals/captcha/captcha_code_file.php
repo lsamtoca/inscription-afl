@@ -21,9 +21,14 @@ if (!isset($_SESSION)) {
 }
 
 $base = dirname(__FILE__);
+if (isset($_GET['captchaName'])) {
+    $captchaName = filter_input(INPUT_GET, 'captchaName', FILTER_SANITIZE_STRING);
+} else {
+    $captchaName = 'captcha';
+}
 
-if (!function_exists('gd_info') or !function_exists('imagettfbbox')) {
-    $_SESSION['captcha'] = '123456';
+if (!function_exists('gd_info') or ! function_exists('imagettfbbox')) {
+    $_SESSION[$captchaName] = '123456';
     $file = 'img/favicon.png';
     $type = 'image/png';
     if (file_exists($file) && is_readable($file)) {
@@ -99,7 +104,7 @@ imagettftext($image, $font_size, 0, $x, $y, $text_color, $font, $code);
 header('Content-Type: image/jpeg'); // defining the image type to be shown in browser widow
 imagejpeg($image); //showing the image
 imagedestroy($image); //destroying the image instance
-$_SESSION['captcha'] = $code;
+$_SESSION[$captchaName] = $code;
 
 function hexrgb($hexstr) {
     $int = hexdec($hexstr);

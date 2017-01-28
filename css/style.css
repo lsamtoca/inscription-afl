@@ -463,3 +463,7 @@ form label.error {
     margin-left: -1.0em; 
 }
 
+/* Forms */
+form.ulist ul {list-style-type: none; padding-left: 10px;}
+form.ulist ul > li { padding:2px; margin:2px;}
+form.ulist ul > li > label.left:after {content:" : ";}

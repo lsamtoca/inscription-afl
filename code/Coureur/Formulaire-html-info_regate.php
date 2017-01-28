@@ -1,58 +1,71 @@
 <?php
 global $regate;
 //require_once 'php/Regate.php';
+
+$regateHasDates = ($regate['date_debut'] != "00-00-0000" and $regate['date_fin'] != "00-00-0000");
+$regateHasLieu = $regate['lieu'] != '';
+$regateHasSeries = !empty($regate['series']);
+$series = array();
+foreach ($regate['series'] as $serie) {
+    array_push($series, $serie['nomLong']);
+}
+$seriesString = implode(', ', $series);
+$regateHasLimitePreInscriptions = $regate['date_limite_preinscriptions'] != '';
+$regateHasDroits = $regate['droits'] != '0';
+$regateHasInformations = $regate['informations'] != '';
+$regateIsClosed = !Regate::estOuverte($regate);
+$regateHasClub=$regate['cv_organisateur'] != '';
 ?>
-<div class="contenu" id='infos_regate'>
 
-    <!--Dates, titre, description-->
+<!--Dates, titre, description-->
+<p>
+    <?php if ($regateHasDates) : ?>
+        Du <?php echo Regate::formatDebut($regate); ?> au <?php echo Regate::formatFin($regate); ?> :
+    <?php endif; ?>
+    <b><?php echo $regate['titre']; ?></b>
+    <?php if ($regateHasLieu): ?> à <?php echo $regate['lieu']; ?><?php endif; ?>.
+</p>
+<p><?php echo $regate['description'] ?></p>
+
+<!--Club organisateur-->
+<?php if ($regateHasClub): ?>
     <p>
-        <?php if ($regate['date_debut'] != "00-00-0000" and $regate['date_fin'] != "00-00-0000"): ?>
-            Du <?php echo Regate::formatDebut($regate); ?> au <?php echo Regate::formatFin($regate); ?> :
-        <?php endif; ?>
-        <b><?php echo $regate['titre']; ?></b>
-        <?php if ($regate['lieu'] != ""): ?> à <?php echo $regate['lieu']; ?><?php endif; ?>.
+        <span class="msg">Club organisateur :</span>
+        <?php echo $regate['cv_organisateur']; ?>.
     </p>
-    <p><?php echo $regate['description'] ?></p>
+<?php endif; ?>
 
-    <!-- Séries-->
-    <?php
-    if ($regate['series'] != ''):
-        $series = array();
-        foreach ($regate['series'] as $serie) {
-            array_push($series, $serie['nomLong']);
-        }
-        $seriesString = implode(', ', $series);
-        ?>
-        <p>
-            <span class="msg">Séries :</span>
+<!-- Séries-->
+<?php if ($regateHasSeries): ?>
+    <p>
+        <span class="msg">Séries :</span>
         <?php echo $seriesString; ?>.
-        </p>
+    </p>
 <?php endif; ?>
 
-    <!--Date limite pré-inscription-->
-<?php if ($regate['date_limite_preinscriptions'] != ''): ?>
-        <p>
-            <span id="deadline" class="msg"></span>
-    <?php echo Regate::formatDeadline($regate); ?>
-        </p>
+<!--Date limite pré-inscription-->
+<?php if ($regateHasLimitePreInscriptions): ?>
+    <p>
+        <span id="deadline" class="msg"></span>
+        <?php echo Regate::formatDeadline($regate); ?>
+    </p>
 
-        <?php if (!Regate_estOuverte($regate)): ?>
-            <p><span class="msg" id="raceIsClosed"></span></p>
-        <?php endif; ?>
+    <?php if ($regateIsClosed): ?>
+        <p><span class="msg" id="raceIsClosed"></span></p>
+    <?php endif; ?>
 <?php endif; ?>
 
-    <!--Droits-->
-        <?php if ($regate['droits'] != '0'): ?>
-        <p><span class="msg" id="droits"></span>
+<!--Droits-->
+<?php if ($regateHasDroits): ?>
+    <p><span class="msg" id="droits"></span>
         <?php echo $regate['droits']; ?>
-            &#8364;</p>
+        &#8364;</p>
 <?php endif; ?>
 
-    <!--Autres informations-->
-<?php if ($regate['informations'] != ''): ?>
-        <p>
-            <span class="msg" id="autresInformations"></span>
+<!--Autres informations-->
+<?php if ($regateHasInformations): ?>
+    <p>
+        <span class="msg" id="autresInformations"></span>
         <?php echo $regate['informations']; ?>
-        </p>
+    </p>
 <?php endif; ?>
-</div> <!--infos_regate-->

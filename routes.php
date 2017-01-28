@@ -46,7 +46,8 @@ $paths['about'] = array("code/About/About.php", 'AutNone');
 $paths['captcha'] = array("externals/captcha/captcha_code_file.php", 'AutNone');
 //$paths['captcha'] = array("externals/securimage/securimage_show.php", 'AutNone');
 //$paths['TestExport'] = array('classes/TestExport.php','AutNone');
-        
+$paths['test'] = array("code/Admin/NouvelleRegate.php", 'AutNone');
+
 // Aliases
 $paths['index'] = $paths['Liste_regates'];
 $paths['index.php'] = $paths['Liste_regates'];

@@ -38,4 +38,4 @@ moduleLanguage = true
 moduleChooseBackground=off
 
 moduleDonate=true
-moduleAdvertise=false
+moduleAdvertise=true
