@@ -366,7 +366,7 @@ class Input {
                 $this->echoCheckBox();
                 break;
             case 'radios':
-                $this->echoRadio();
+                $this->echoRadios();
                 break;
             case 'singleRadio':
                 $this->echoSingleRadio();

@@ -111,7 +111,7 @@ class Menus {
         $menu->echoMenu();
     }
 
-    private static function htmlClub() {
+    private function htmlClub() {
         $menu = new Menu($this->menuHomeClub);
         $menu->echoMenu();
     }

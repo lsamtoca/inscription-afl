@@ -22,48 +22,17 @@ global $TITRE_REGATE, $DESC_REGATE,
 
 global $mails_all, $mails_confirme, $mails_pas_confirme;
 
-xhtml_pre1('Gestion de votre régate');
-?>
-
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css" />
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js" type="text/javascript"></script>
-<script src="//code.jquery.com/ui/1.9.0/jquery-ui.js" type="text/javascript"></script>
-<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.js" type="text/javascript"></script>
-<script src="js/ui.datepicker-fr.js" type="text/javascript"></script>
-
-<script src="js/myaccordion.js" type="text/javascript"></script>
-
-
-<script type="text/javascript">
-
-    $(document).ready(function () {
-
-        myaccordion_set_accordion();
-
-//        $('div.explication').accordion({
-//            collapsible: true,
-//            active: true,
-//            heightStyle: "content",
-//            event: "click hoverintent",
-//            header: "h4"
-//        });
-    });
-
-</script>
-
-<?php
-xhtml_pre2('Gestion de votre régate');
-doMenu();
+Layouts::xhtml_pre1('Gestion de votre régate');
+Layouts::requireJquery();
+Layouts::requireJqueryValidations();
+Layouts::requireJqueryDatePicker();
+Layouts::requireMyAccordion();
+Layouts::xhtml_pre2('Gestion de votre régate');
+$menus= new Menus();
+$menus->html();
 ?>
 
 <div id='accordion'>
-
-    <!--
-        <h3>Notice d'utilisation du logiciel</h3>
-        <div class="contenu">
-            Téléchargez la <a href="docs/Notice_07-03-12.pdf">notice</a> d'utilisation (mise à jour le 7/03/12). 
-        </div>
-    -->
 
     <h3 id="renseignements">Formulaire renseignements sur la régate</h3>
     <?php include('Regate-html-renseignements.php'); ?>
@@ -77,8 +46,10 @@ doMenu();
     <h3>Fiches d'enregistrement des participants</h3>
     <?php include('Regate-html-fiches.php'); ?>
 
-    <h3>Exportation des données et intégration avec FREG</h3>
-    <?php include('Regate-html-exportation.php'); ?>
+    <h3 id="exportation">Exportation des données et intégration avec FREG</h3>
+    <div class="contenu">
+        <?php $exportation->html(2)?>
+    </div>
 
     <h3 id="courriel">Envoyer un courriel aux coureurs</h3>
     <?php include('Regate-html-courriel-coureurs.php'); ?>
@@ -92,4 +63,5 @@ doMenu();
 </div>
 
 
-<?php xhtml_post(); ?>
+<?php 
+Layouts::xhtml_post(); 

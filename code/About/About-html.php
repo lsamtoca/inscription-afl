@@ -1,21 +1,12 @@
 <?php
-xhtml_pre1('A propos de ce programme');
+Layouts::xhtml_pre1('A propos de ce programme');
+Layouts::requireJquery();
+Layouts::requireJqueryValidations();
+Layouts::requireMyAccordion();
 ?>
 
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css" />
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js" type="text/javascript"></script>
-<script src="//code.jquery.com/ui/1.9.0/jquery-ui.js" type="text/javascript"></script>
-<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.js" type="text/javascript"></script>
-<script src="js/myaccordion.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-
-    $(document).ready(function () {
-        myaccordion_set_accordion();
-    });
-
 <?php if ($config['moduleDonate']): ?>
-        //  window.location.hash = "faireUnDon";
+    //  window.location.hash = "faireUnDon";
 <?php endif; ?>
 
 </script>
@@ -34,12 +25,14 @@ doMenu();
         <?php include('code/About/boutonPayPal.php'); ?>
     <?php endif; ?>
 
-    <h3 id="openRace">Demandez l'ouverture d'une régate</h3>
-    <div class="contenu">
-        <?php
-        $ouvrirUneRegate->html(2);
-        ?>
-    </div>
+    <?php if (!$config['isClub']): ?>
+        <h3 id="openRace">Demandez l'ouverture d'une régate</h3>
+        <div class="contenu">
+            <?php
+            $ouvrirUneRegate->html(2);
+            ?>
+        </div>
+    <?php endif; ?>
 
 
     <h3 id="aPropos">A propos de ce logiciel</h3>
@@ -51,11 +44,10 @@ doMenu();
     <?php if ($config['moduleAdvertise']): ?>
         <h3 id='ceLogiciel'>Demandez ce logiciel</h3>
         <div class="contenu">
-            <?php
-            $advertise->html(2);            ?>
+            <?php $advertise->html(2); ?>
         </div>
     <?php endif; ?>
 
 </div>
 <?php
-xhtml_post();
+Layouts::xhtml_post();

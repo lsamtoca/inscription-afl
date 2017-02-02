@@ -1,27 +1,10 @@
 <?php
 // TODO : is thi script used anymore
 $title = "Inscription aux régates de l'AFL";
-xhtml_pre1($title);
-?>
-
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css" />
-
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js" type="text/javascript"></script>
-<script src="//code.jquery.com/ui/1.9.0/jquery-ui.js" type="text/javascript"></script>
-<script src="js/myaccordion.js" type="text/javascript"></script>
-<script type="text/javascript">
-
-    $(document).ready(function () {
-        myaccordion_set_accordion();
-        $('#accordion').accordion({
-            active: 0
-        });
-    });
-
-</script>
-
-<?php xhtml_pre2($title); 
-
+Layouts::xhtml_pre1($title);
+Layouts::requireJquery();
+Layouts::requireMyAccordion();
+Layouts::xhtml_pre2($title); 
 doMenu();
 ?>
 

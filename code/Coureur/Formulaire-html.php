@@ -4,13 +4,15 @@ global $config, $regate, $confirmation;
 $page_title1 = 'Pré-inscription à la régate ' . $regate['titre'];
 $page_title2 = 'Pré-inscription à la régate <em>' . $regate['titre'] . '</em>';
 xhtml_pre1($page_title1);
+Layouts::requireJquery();
+//Layouts::requireJqueryDatePicker();
+//Layouts::requireJqueryI18n();
+
 ?>
 
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css" />
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js" type="text/javascript"></script>
 <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.js" type="text/javascript"></script>
-<script src="//code.jquery.com/ui/1.9.0/jquery-ui.js" type="text/javascript"></script>
+
 <script src="js/jquery.i18n.properties.js" type="text/javascript"></script>
 <script src="js/ui.datepicker-fr.js" type="text/javascript"></script>
 

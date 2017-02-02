@@ -1,6 +1,9 @@
 <?php
 
 require_once 'php/Regate.php';
+require __DIR__ . "/Exportation.php";
+$exportation=new Exportation();
+$exportation->execute();
 
 $series = new Series();
 $availableSeries = $series->available;

@@ -4,7 +4,7 @@ class Regate {
 
     static private $htmlDateFormat = 'd/m/Y';
 
-    private function setLimite($regate) {
+    private static function setLimite($regate) {
         date_default_timezone_set('Europe/Paris');
         $limite = new DateTime($regate['date_limite_preinscriptions']);
         $limite->setTime(23, 59);
@@ -37,7 +37,7 @@ class Regate {
             }
         }
 
-        return $this->setLimite($regate);
+        return self::setLimite($regate);
     }
 
     static public function estOuverte($regate) {
@@ -46,7 +46,7 @@ class Regate {
             return true;
         else {
             if (!isset($regate['limite']))
-                $regate = $this->setLimite($regate);
+                $regate = self::setLimite($regate);
 
             date_default_timezone_set('Europe/Paris');
             $now = new DateTime;

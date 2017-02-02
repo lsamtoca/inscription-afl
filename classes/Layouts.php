@@ -188,7 +188,7 @@ $noRobots
 
 
     static function requireJquery() {
-        echo '<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css" />' . "\n";
+        echo '<link rel="stylesheet" href="//code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css" />' . "\n";
         echo '<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js" type="text/javascript"></script>' . "\n";
         echo '<script src="//code.jquery.com/ui/1.9.0/jquery-ui.js" type="text/javascript"></script>."\n"';
     }
@@ -209,5 +209,10 @@ $noRobots
         . "\t});\n"
         . "</script>\n";
     }
+
+    static function  requireJqueryI18n(){
+        echo '<script src="js/jquery.i18n.properties.js" type="text/javascript"></script>'."\m"; 
+    }
+    
 
 }

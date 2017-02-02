@@ -14,7 +14,9 @@ class AnswerToForm {
     }
     
     public function execute (){
-        ;
+        if(!$this->isActive()){
+            return ;
+        }
     }
     
     public function isActive(){
