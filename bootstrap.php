@@ -13,7 +13,7 @@ if(PHP_VERSION_ID < 50600){// if PHP < 5.6
 }
 
 // Bootstrap -- the very least
-include('bootstrap/autoload.php');
+include('classes/autoload.php');
 include('bootstrap/assert.php');
 // Read configuration file
 // this builds the global array $config
