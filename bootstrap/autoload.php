@@ -8,11 +8,26 @@
 
 function autoload($className) {
     $fileName = "$className.php";
-    $base=__DIR__.'/..';
-    $paths = array('./',"$base/classes/", "$base/externals/PHPExcel/");
+    $class_root = __DIR__ . '/..';
+    $paths = array('./', "$class_root/classes/", "$class_root/externals/PHPExcel/");
+
+    $found = false;
     foreach ($paths as $path) {
         if (file_exists("$path/$fileName")) {
-            include "$path/$fileName";
+            require_once "$path/$fileName";
+            $found = true;
+        } else {
+            $directories = scandir($path);
+            foreach ($directories as $directory) {
+                if (is_dir("$path/$directory") &&
+                        file_exists("$path/$directory/$fileName")) {
+                    require_once "$path/$directory/$fileName";
+                    $found = true;
+                    break;
+                }
+            }
+        }
+        if ($found) {
             break;
         }
     }
