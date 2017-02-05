@@ -109,8 +109,6 @@ class Form {
             $captcha->display($this->printer->noTabs);
             $this->printer->echoClose("</li>");
         }
-        $this->printer->echoOpen("<li>");
-        $this->printer->echoClose("</li>");
         $this->printer->echoClose("</ul>");
 
         if (isset($this->withinFieldset) && $this->withinFieldset) {

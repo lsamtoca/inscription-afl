@@ -23,7 +23,7 @@ class AnswerToForm {
         return $this->form->isCompleted();
     }
 
-    public function html($noTabs){
+    public function html($noTabs=0){
         $this->form->displayValidation($noTabs);
         $this->form->displayUl($noTabs);
     }
