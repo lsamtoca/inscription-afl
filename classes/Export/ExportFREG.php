@@ -14,7 +14,7 @@
 
  * @author lsantoca
  */
-class ExportFREG extends ExportCsv {
+class ExportFREG extends ExportCSV {
 
     private $regate;
     private $raceYear;

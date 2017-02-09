@@ -124,7 +124,7 @@ class FichiersFFV extends AnswerToForm {
         return "Fichier $fileName : $infos. <br />\n";
     }
 
-    function html($noTabs) {
+    function html($noTabs=0) {
         echo $this->fileInfos('COUREUR.DBF');
         echo $this->fileInfos('SERIE.DBF');
         echo '<br />';

@@ -29,8 +29,9 @@
 <!--<h5>Nouvelle méthode d'importation dans FREG (depuis 2014) :</h5>-->
 <!-- On passe désormais par une form !-->
 <?php echo $formHtml; ?>
+Si l'exportation par le formulaire ci-dessus pose problèmes, SVP, veuillez le signaler. 
+Seulement pour les régates laser : vous pouvez en tout moment utiliser les anciens scripts pour l'exportation :
 <ul>
-
     <li>
         Télécharger la liste des <strong>inscrits ayant confirmé</strong> au <a href="Liste_inscrits_csv.php?confirme=1">format csv</a> ;
     </li>

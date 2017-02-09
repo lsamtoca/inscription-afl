@@ -28,7 +28,7 @@ class ListeRegates extends AnswerToForm {
         }
     }
 
-    public function html($noTabs) {
+    public function html($noTabs=0) {
         $sql = 'SELECT * FROM Regate ORDER BY `ID_regate` DESC';
         $assoc = array();
         $req = executePreparedQuery($sql, $assoc);

@@ -190,7 +190,7 @@ $noRobots
     static function requireJquery() {
         echo '<link rel="stylesheet" href="//code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css" />' . "\n";
         echo '<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js" type="text/javascript"></script>' . "\n";
-        echo '<script src="//code.jquery.com/ui/1.9.0/jquery-ui.js" type="text/javascript"></script>."\n"';
+        echo '<script src="//code.jquery.com/ui/1.9.0/jquery-ui.js" type="text/javascript"></script>'."\n";
     }
 
     static function requireJqueryValidations() {

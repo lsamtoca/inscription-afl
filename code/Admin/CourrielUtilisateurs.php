@@ -107,7 +107,7 @@ class CourrielUtilisateurs {
         return isset($_POST['envoyer_mail']);
     }
 
-    public function html() {
+    public function html($noTabs=0) {
         $replace = array('{mailsClubs}', '{mailsCoureurs}', '{mailsAdmins}', '{self}');
         $with = array($this->mailsClubs, $this->mailsCoureurs, $this->mailsAdmins, urlSelf());
         $template = file_get_contents(__DIR__ . "/$this->htmlTemplateFile");

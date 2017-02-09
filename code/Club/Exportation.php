@@ -51,7 +51,7 @@ class Exportation extends AnswerToForm {
 //        return isset($_GET['ExportFREG']);
     }
 
-    function html($noTabs) {
+    function html($noTabs=0) {
         ob_start();
         $this->form->displayUl();
         $formHtml = ob_get_clean();
