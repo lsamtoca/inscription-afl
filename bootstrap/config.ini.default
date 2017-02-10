@@ -26,6 +26,7 @@ favIcon = img/favicon.png
 ;; Qui sommes nous
 whoAmI=My self
 signature = moi meme
+isClub=true
 
 ;; Various modules
 ;; language.php, log, undergoingWorks, develOrProduction, noLG, Backgrounds

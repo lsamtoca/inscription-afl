@@ -6,9 +6,9 @@
  * and open the template in the editor.
  */
 
-class Advertise {
+class Advertise extends AnswerToForm {
 
-    private $form;
+    protected $form;
 
     public function __construct() {
 
@@ -50,6 +50,12 @@ class Advertise {
     }
 
     public function execute() {
+        global $config;
+
+        if (!$this->isAcitve()) {
+            return;
+        }
+
         if (!$this->form->isValidCaptcha()) {
             $message = "Le code de vérification est incorrecte";
             pageErreur($message);
@@ -64,7 +70,7 @@ class Advertise {
         $mail->setFrom($formArray['sender']);
         $mail->addAddressTo($config['developerEmail']);
         $mail->subject = $formArray['subject'];
-        $mail->message = $formArray['message'];
+        $mail->messageText = $formArray['message'];
         if ($mail->send()) {
             pageAnswer("Message envoyé au développeur.");
             exit(0);
@@ -79,7 +85,7 @@ class Advertise {
         return $this->form->isCompleted();
     }
 
-    public function html($noTabs) {
+    public function html($noTabs = 0) {
         $this->form->displayValidation($noTabs);
         $this->form->display($noTabs);
     }
