@@ -19,7 +19,7 @@ class Exportation extends AnswerToForm {
     public function __construct() {
         $form = new Form('exportFREG', [
             'submitValue' => 'Télechargez le fichier csv',
-            'label' => 'Paramétrisez et télechargez le fichier csv pour importation dans FREG'
+            'label' => 'Paramétrez et téléchargez le fichier csv pour importation dans FREG'
         ]);
 
         $form->inscrits = new Input('radios', 'inscrits', [
@@ -32,7 +32,7 @@ class Exportation extends AnswerToForm {
         ]);
 
         $form->groupeClasse_cat = new Input('radios', 'groupesClasse_cat', [
-            'label' => 'Methode de création du champs GROUPE et CLASSE_CAT dans FREG :',
+            'label' => 'Methode de création des champs GROUPE et CLASSE_CAT dans FREG :',
             'values' => [
                 ['name' => 'laser',
                     'label' => 'Laser',

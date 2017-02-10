@@ -357,10 +357,10 @@ class OptimistCategory extends Category {
             return $serie;
         }
         $category = self::getAGECAT($row);
-        if ($category == 'MIN') {
-            return 'OPM';
-        } else {
+        if ($category == 'BEN') {
             return 'OPB';
+        } else {
+            return 'OPM';
         }
     }
 
