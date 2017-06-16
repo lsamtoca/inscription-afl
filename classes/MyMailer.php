@@ -32,10 +32,10 @@ class MyMailer {
     private $webMaster = 'luigi.santocanale@lif.univ-mrs.fr';
     private $development = false;
     // To be used with mail function
-    private $mailTo;
-    private $mailSubject;
-    private $mailMessage;
-    private $mailHeaders;
+    private $mailTo = '';
+    private $mailSubject = '';
+    private $mailMessage = '';
+    private $mailHeaders = '';
     private $eol = "\r\n";
     // A Logger -- see class Logger.php
     private $log;
@@ -56,14 +56,15 @@ class MyMailer {
 
         // Send this mail by default to the web master
         $this->addAddressCc($this->webMaster);
-        if (
-                isset($_FILES['attachment']) &&
-                $_FILES['attachment']['error'] == 0
-        ) {
-            $path = $_FILES['attachment']['tmp_name'];
-            $name = $_FILES['attachment']['name'];
-            $type = $_FILES['attachment']['type'];
-            $this->addFile($path, $name, $type);
+
+//      Avoid the following -- for the moment being
+//        if (isset($_FILES['attachment'])) {
+//            $this->addFileFromPost('attachment');
+//        }
+
+        // For AFL site //
+        if (phpversion() == '5.4.9-4ubuntu2.4') {
+            $this->eol = PHP_EOL;
         }
 
         $this->log = new Logger();
@@ -149,6 +150,29 @@ class MyMailer {
         array_push($this->files, $file);
     }
 
+    public function addFileFromPost($postName) {
+        if (
+                isset($_FILES[$postName]) &&
+                $_FILES[$postName]['error'] == 0
+        ) {
+            $path = $_FILES[$postName]['tmp_name'];
+            $name = $_FILES[$postName]['name'];
+            $type = $_FILES[$postName]['type'];
+            $this->addFile($path, $name, $type);
+        } else {
+            if (!isset($_FILES[$postName])) {
+                $err = 'Fichier en piece jointe introuvable';
+            } else {
+                $err = 'Problème avec la pieèce jointe : probleme no : ';
+                $err.= $_FILES[$postName]['error'];
+            }
+            $this->log->logError($err);
+            return FALSE;
+        }
+
+        return TRUE;
+    }
+
     private function subject_encode_from_utf8($subject) {
         return '=?UTF-8?B?' . base64_encode($subject) . '?=';
     }
@@ -201,11 +225,11 @@ class MyMailer {
         $HEADERS .= "Reply-To: $this->replayTo" . $this->eol;
         if (count($this->cc) > 0) {
             $CC = implode(',', $this->cc);
-            $HEADERS .= "CC: $CC\r\n";
+            $HEADERS .= "CC: $CC" . $this->eol;
         }
         if (count($this->bcc) > 0) {
             $BCC = implode(',', $this->bcc);
-            $HEADERS .= "BCC: $BCC\r\n";
+            $HEADERS .= "BCC: $BCC" . $this->eol;
         }
         $HEADERS .= 'MIME-Version: 1.0' . $this->eol;
         $this->mailHeaders .= $HEADERS;
@@ -225,13 +249,28 @@ class MyMailer {
 
     private function setHeadersMultipart() {
         $random_hash = md5(time());
-        $php_mixed = "PHP-mixed-$random_hash";
-        //$php_alt = "PHP-alt-$random_hash";
-
-        $headers = "Content-Type: multipart/mixed; boundary=\"$php_mixed\"" . $this->eol;
-        $headers .= "This is a multi-part message in MIME format." . $this->eol;
+        //$random_hash='9d93192742a3adab0164224fc9462090';
+        $php_mixed = 'PHP-mixed-' . $random_hash;
+        //$php_mixed = $random_hash;
+        //$php_mixed = 'PHP-mixed-9d93192742a3adab0164224fc9462090';
+        //
+        //
+        // All the problems below with the AFL site
+        // with phpversion = 5.4.9-4ubuntu2.4
+        // Now it works of the attachemnt is a text file, 
+        // it does work if the attachement is a pdf file
+        // If I ad the file at construct time then OK
+        // Otherwise problem ??????
+        // This doesn't work on AFL as we get in the headers
+        // CoPHP-mixede: multipart/mixed; boundary="PHP-mixed-45b30038c0cabbaa8b162f1ee98d46ef"
+        // As if the the prefix of $php_mixed 'PHP-mixed' overwrites 'ntent-Typ'
+        $headers = '';
+        $headers .= 'Content-Type: multipart/mixed; boundary="';
+        $headers .= $php_mixed . '"' . $this->eol;
+        $headers .= 'This is a multi-part message in MIME format.' . $this->eol;
         $headers .= 'X-Mailer: PHP/' . phpversion();
         $this->mailHeaders .= $headers;
+        // We should echo here
 
         return $php_mixed;
     }

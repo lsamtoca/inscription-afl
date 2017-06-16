@@ -168,9 +168,10 @@ class Input {
             $this->labelclass = 'left';
             $this->echoLabel();
         }
-        $attributes = $this->getAttrStr(['id', 'class', 'rows', 'cols', 'size']);
+        $attributes = $this->getAttrStr(['id', 'class', 'rows', 'cols', 'size','maxlength']);
         $this->printer->echoWithTabs(
-                "<textarea name='$this->name'$attributes>$this->value</textarea>");
+                "<textarea name='$this->name' style='vertical-align: top;'$attributes>"
+                .$this->value."</textarea>");
     }
 
     private function echoHidden() {
@@ -239,7 +240,8 @@ class Input {
             $this->labelclass = 'left';
             $this->echoLabel();
         }
-        $this->printer->echoOpen("<select name=$this->name>");
+        $this->printer->echoOpen("<select name='$this->name'>");
+        //echo (count($this->values));
         foreach ($this->values as $value) {
             $this->printer->echoWithTabs("<option value='$value->name'>$value->label</option>");
         }

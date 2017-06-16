@@ -33,12 +33,16 @@ class ExportFREG extends ExportCSV {
         $raceName = 'REGATE-EXPORT-POUR-FREG';
         $this->name = "${raceName}_${date}.csv";
 
-        if ($methode == 'laser') {
-            $this->groupeClasse_cat = 'LaserCategory';
-        } elseif ($methode == 'optimist') {
-            $this->groupeClasse_cat = 'OptimistCategory';
-        } else {
-            $this->groupeClasse_cat = 'LaserCategory';
+        switch ($methode) {
+            case 'optimist':
+                $this->groupeClasse_cat = 'OptimistCategory';
+                break;
+            case 'planches':
+                $this->groupeClasse_cat = 'PlanchesCategory';
+                break;
+            default:
+                $this->groupeClasse_cat = 'LaserCategory';
+                break;
         }
 
         if ($confirmes == 'all') {
@@ -189,7 +193,7 @@ class Bateau {
     public function __construct($row, $cle, $groupeClasse_cat) {
         $this->translator = new Translator($groupeClasse_cat);
         $this->doBateau($row, $cle);
-        $equipier = new Equipier($row, $cle,$groupeClasse_cat);
+        $equipier = new Equipier($row, $cle, $groupeClasse_cat);
         $this->barreur = $equipier->line;
         // This need to be changed when we allow 
         // boats with more than one team mates
@@ -327,14 +331,25 @@ class LaserCategory extends Category {
     );
 
     public function computeGROUPE($row) {
-        return $row['serie'];
+        // This to be double checked w.r.t. FREG.
+        switch ($row['serie']) {
+            case 'LAS4':
+                return 'LA4';
+                break;
+            case 'LAS':
+            case 'LAR':
+                return $row['serie'];
+                break;
+            default:
+                return '???';
+        }
     }
 
     public function computeCLASSE_CAT($row) {
         $category = self::getAGECAT($row);
         $sexe = $row['sexe'];
 
-        return  $category. $sexe ;
+        return $sexe . $category;
     }
 
 }
@@ -369,6 +384,63 @@ class OptimistCategory extends Category {
         $sexe = $row['sexe'];
 
         return $sexe . $category;
+    }
+
+}
+
+class PlanchesCategory extends Category {
+
+    /**
+     * Categories for Optimist
+     */
+    protected $categories = array(
+        'MIN' => [12, 14, 'MIN', 'minime'],
+        'ESP' => [15, 20, 'ESP', 'espoir'],
+        'SENIO' => [21, 1000, 'SENIO', 'espoir']
+    );
+
+    public function computeGROUPE($row) {
+        $serie = $row['serie'];
+        switch ($serie) {
+            case 'MIS-RCB':
+                $ret = 'RCB';
+                break;
+            case 'B293':
+                $ret = 'BIC';
+                break;
+            default:
+                $ret = $serie;
+        }
+        return $ret;
+    }
+
+    public function computeCLASSE_CAT($row) {
+
+        $groupe = self::computeGROUPE($row);
+        $sexe = $row['sexe'];
+        // We want sexe 'G' | 'F', garcon ou fille
+        if ($sexe == 'M') {
+            $sexe = 'G';
+        }
+        $category = self::getAGECAT($row);
+
+        switch ($groupe) {
+            case 'BIC':
+                $classe_cat = $category . $sexe;
+                break;
+            case 'RCB':
+                $classe_cat = 'R78G';
+                break;
+            case 'RSX';
+                $classe_cat = 'SENIO';
+                if ($category == 'ESP') {
+                    $classe_cat = 'RSX85';
+                }
+                break;
+            default:
+                $classe_cat = $sexe;
+        }
+        return $classe_cat;
     }
 
 }

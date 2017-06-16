@@ -8,71 +8,55 @@ class Series {
 
     public $available = array();
     public $available_string = '';
+    private $otherSeries = array(
+            /*        array('RCO', 'RaceBoard > 3.80'),
+              array('RSX','RaceBoard 8.5'),
+              array('BIC','BIC 293D'),
+              array('SLA','Slalom')
+
+             */
+    );
 
     private function getSeriesFromDb() {
-        $sql = 'SELECT CODE AS nom,CB_LIBELLE AS nomLong, 1 as noEquipiers FROM `SERIE.DBF`  WHERE NB_EQUIPIE = 1.000000 AND NOT CODE = \'\'';
+        //$codeColumn = 'CODE';
+        $codeColumn = 'CODE_BATEA';
+
+        $sql = "SELECT CODE,CODE_BATEA,CB_LIBELLE AS nomLong, 1 as noEquipiers FROM `SERIE.DBF`"
+                . ' WHERE NB_EQUIPIE = 1.000000'
+                //. " AND NOT $codeColumn = ''"
+        ;
         $req = executePreparedQuery($sql, array());
         $result = $req->fetchall();
         $ret = array();
         foreach ($result as $bateau) {
-            $ret[$bateau['nom']] = $bateau;
+            if($bateau['CODE']==''){
+                $bateau['nom'] = $bateau['CODE_BATEA'];      
+            } elseif ($bateau['CODE_BATEA']==''){
+                $bateau['nom'] = $bateau['CODE'];   
+            } elseif ($bateau['CODE_BATEA'] == $bateau['CODE']){
+                $bateau['nom'] = $bateau['CODE'];
+            } else {
+                $bateau['nom'] = "$bateau[CODE]-$bateau[CODE_BATEA]";
+            }
+            
+            //$bateau['nom']=$bateau['nom'];
+            $index = $bateau['nom'];
+            $ret[$index] = $bateau;
+            $ret[$index]['nomLong'] = iconv('ISO-8859-1', 'UTF-8', $bateau['nomLong']);
         }
         return $ret;
     }
 
-    /*
-      private function array_push_assoc(array &$array, $key, $value) {
-      $array[$key] = $value;
-      }
+    private function add_serie($nom, $nomLong) {
+        $this->available[$nom] = array('nom' => $nom, 'nomLong' => $nomLong);
+    }
 
-      private function initializeAvailableSeries() {
-      $availableSeries = array();
-
-      $LAR = array(
-      'nom' => 'LAR',
-      'nomLong' => 'Laser Radial',
-      'noEquipiers' => 1
-      );
-
-      $LA4 = array(
-      'nom' => 'LA4',
-      'nomLong' => 'Laser 4.7',
-      'noEquipiers' => 1);
-
-      $LAS = array(
-      'nom' => 'LAS',
-      'nomLong' => 'Laser Standard',
-      'noEquipiers' => 1);
-
-      $OPT = array(
-      'nom' => 'OPT',
-      'nomLong' => 'Optimist',
-      'noEquipiers' => 1);
-
-      $FINN = array(
-      'nom' => 'FINN',
-      'nomLong' => 'Finn',
-      'noEquipiers' => 1);
-
-
-
-      $this->array_push_assoc(
-      $availableSeries, 'LA4', $LA4);
-      $this->array_push_assoc(
-      $availableSeries, 'LAR', $LAR);
-      $this->array_push_assoc(
-      $availableSeries, 'LAS', $LAS);
-      $this->array_push_assoc(
-      $availableSeries, 'OPT', $OPT);
-      $this->array_push_assoc(
-      $availableSeries, 'FINN', $FINN);
-
-      return $availableSeries;
-      }
-     */
 
     function __construct() {
         $this->available = $this->getSeriesFromDb();
+        foreach ($this->otherSeries as $array) {
+            self::add_serie($array[0], $array[1]);
+        }
         $this->available_string = implode(",", array_keys($this->available));
     }
 
