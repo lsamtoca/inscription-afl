@@ -31,11 +31,22 @@ class FichiersFFV extends AnswerToForm {
 
         $this->form->serieDbf = new Input('submit', 'serieDbf', [
             'value' => 'Mettre à jour',
-            'label' => 'Fichier SERIES.DBF ',
+            'label' => 'Fichier SERIE.DBF ',
             'help' => 'Ce fichier contient les informations'
             . ' sur les dériveurs.'
                 ]
         );
+        
+        /*
+        $this->form->planchesDbf = new Input('submit', 'planchesDbf', [
+            'value' => 'Mettre à jour',
+            'label' => 'Fichier PLANCHES.DBF ',
+            'help' => 'Ce fichier contient les informations'
+            . ' sur les planches à voile.'
+                ]
+        );
+        */
+        
         $this->form->linkInputs();
         $this->form->noSubmit = true;
     }
@@ -77,7 +88,7 @@ class FichiersFFV extends AnswerToForm {
     }
 
     function isActive() {
-        return isset($_POST['serieDbf']) || isset($_POST['coureurDbf']);
+        return isset($_POST['serieDbf']) || isset($_POST['coureurDbf']) || isset($_POST['planchesDbf']);
     }
 
     private function treatFile($dbfFile) {
@@ -88,12 +99,21 @@ class FichiersFFV extends AnswerToForm {
     }
 
     function execute() {
-        if (isset($_POST['serieDbf'])) {
-            self::downloadFileFtpAnonymous('ftp.ffvoile.net', 'tmpDbf/Tbl_VL_N.dbf', 'dbf/SERIE.DBF');
-            $this->treatFile('SERIE.DBF');
-        } else {
-            self::downloadFileFtpAnonymous('ftp.ffvoile.net', 'tmpDbf/coureur.dbf', 'dbf/COUREUR.DBF');
-            $this->treatFile('COUREUR.DBF');
+// Where are supposed to be the informations about informations about windsurfing ? 
+//       $planchesNameOfFile = 'Table_HN.dbf';
+///        $planchesNameOfFile = 'CAR_GLOB.dbf';
+
+        if (self::isActive()) {
+            if (isset($_POST['serieDbf'])) {
+                self::downloadFileFtpAnonymous('ftp.ffvoile.net', 'tmpDbf/Tbl_VL_N.dbf', 'dbf/SERIE.DBF');
+                $this->treatFile('SERIE.DBF');
+            } else if (isset($_POST['coureurDbf'])) {
+                self::downloadFileFtpAnonymous('ftp.ffvoile.net', 'tmpDbf/coureur.dbf', 'dbf/COUREUR.DBF');
+                $this->treatFile('COUREUR.DBF');
+            } else if (isset($_POST['planchesDbf'])) {
+                self::downloadFileFtpAnonymous('ftp.ffvoile.net', "tmpDbf/$planchesNameOfFile", 'dbf/PLANCHES.DBF');
+                $this->treatFile('PLANCHES.DBF');
+            }
         }
         exit(0);
     }
@@ -124,7 +144,7 @@ class FichiersFFV extends AnswerToForm {
         return "Fichier $fileName : $infos. <br />\n";
     }
 
-    function html($noTabs=0) {
+    function html($noTabs = 0) {
         echo $this->fileInfos('COUREUR.DBF');
         echo $this->fileInfos('SERIE.DBF');
         echo '<br />';

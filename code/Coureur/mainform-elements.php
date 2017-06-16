@@ -3,9 +3,8 @@
 global $regate;
 
 $series = array();
-foreach ($regate['series'] as $serie) {
-    array_push($series, array($serie['nom'], $serie['nomLong'])
-    );
+foreach (Regate::availableSeries($regate) as $serie) {
+    array_push($series, array($serie['nom'], $serie['nomLong']));
 }
 
 $mainformInputs = array(
@@ -104,8 +103,8 @@ $mainformInputs = array(
 
 // Adaptations
 // 
-// Adaptation pour AFL
-if ($config['whoAmI'] == 'AFL') {
+// Si c'est une regate Laser L
+if (Regate::estLaser($regate)) {
     $mainformInputs['adherant'] = array(
         // TODO : adapter pour LaPelle
         'label' => 'Adhérant AFL',

@@ -40,10 +40,13 @@
             <textarea name='message' rows='20' style='width:100%;'></textarea>  
             <hr />
             <!--<input type='hidden' name='MAX_FILE_SIZE' value='12345' />-->
-            <!--<label>Fichier à joindre : </label>    <br />
+            
+            
+            <label>Fichier à joindre : </label>    <br />
             <input type='file' name='attachment' />
             <hr />
-            -->
+            
+            
             <input type='submit' name='envoyer_mail' value='Envoyer' />
         </fieldset>
     </form>

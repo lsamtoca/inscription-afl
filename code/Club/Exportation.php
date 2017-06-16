@@ -31,13 +31,14 @@ class Exportation extends AnswerToForm {
             'value' => 'confirmes'
         ]);
 
-        $form->groupeClasse_cat = new Input('radios', 'groupesClasse_cat', [
+        $form->groupeClasse_cat = new Input('menu', 'groupesClasse_cat', [
             'label' => 'Methode de création des champs GROUPE et CLASSE_CAT dans FREG :',
             'values' => [
                 ['name' => 'laser',
                     'label' => 'Laser',
                     'infos' => 'A venir'],
-                ['name' => 'optimist', 'label' => 'Optimist']
+                ['name' => 'optimist', 'label' => 'Optimist'],
+                ['name' => 'planches', 'label' => 'Planches']
             ],
             'value' => 'laser'
         ]);

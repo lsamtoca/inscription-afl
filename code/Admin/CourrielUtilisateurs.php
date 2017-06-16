@@ -50,6 +50,10 @@ class CourrielUtilisateurs {
             $this->mail->addAddressCc(filter_input(INPUT_POST, 'cc'));
         }
 
+        if (isset($_FILES['attachment'])) {
+            $this->mail->addFileFromPost('attachment');
+        }
+
         $max = count($destinataires);
         $step = 50;
         $ret = true;
@@ -107,11 +111,12 @@ class CourrielUtilisateurs {
         return isset($_POST['envoyer_mail']);
     }
 
-    public function html($noTabs=0) {
+    public function html($noTabs = 0) {
         $replace = array('{mailsClubs}', '{mailsCoureurs}', '{mailsAdmins}', '{self}');
         $with = array($this->mailsClubs, $this->mailsCoureurs, $this->mailsAdmins, urlSelf());
         $template = file_get_contents(__DIR__ . "/$this->htmlTemplateFile");
-        echo utf8_encode(str_replace($replace, $with, $template));
+        //echo utf8_encode(str_replace($replace, $with, $template));
+        echo str_replace($replace, $with, $template);
     }
 
 }

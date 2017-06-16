@@ -162,6 +162,11 @@
             <!-- <label>Séries :</label> <br /> -->
             <?php
             require_once 'php/Forms.php';
+            function formatLabelSerie($serie){
+                //return $serie['nomLong'] . " ($serie[nom])";
+                //return "[$serie[nom]]  $serie[nomLong]";
+                return "$serie[nomLong] [$serie[nom]]";
+            }
             $series = new Series();
 
             /*
@@ -185,14 +190,14 @@
             $choices = array();
             foreach ($regate['series'] as $nom => $serie) {
                 $choices[$nom] = array(
-                    'label' => $serie['nomLong'],
+                    'label' => formatLabelSerie($serie),
                     'checked' => true
                 );
             }
             foreach ($series->available as $nom => $serie) {
                 if (!isset($choices[$nom])) {
                     $choices[$nom] = array(
-                        'label' => $serie['nomLong'],
+                        'label' => formatLabelSerie($serie),
                         'checked' => false
                     );
                 }

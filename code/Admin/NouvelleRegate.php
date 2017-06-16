@@ -109,7 +109,8 @@ class NouvelleRegate extends AnswerToForm {
             'default' => date("d/m/Y"),
             'size' => 10,
             'format' => "dd/mm/yy",
-                ]
+            'tableField' => 'date_debut',
+            'tableFieldTransform' => 'dateReformatJqueryToMysql'                ]
         );
 
         $this->form->date_end = new Input('datePicker', 'date_end', [
@@ -118,6 +119,15 @@ class NouvelleRegate extends AnswerToForm {
             'size' => 10,
             'format' => "dd/mm/yy",
             'tableField' => 'date_fin',
+            'tableFieldTransform' => 'dateReformatJqueryToMysql'
+                ]
+        );
+        $this->form->date_deadline = new Input('datePicker', 'date_deadline', [
+            'label' => 'Date limite des pré-inscriptions',
+            'default' => date("d/m/Y"),
+            'size' => 10,
+            'format' => "dd/mm/yy",
+            'tableField' => 'date_limite_preinscriptions',
             'tableFieldTransform' => 'dateReformatJqueryToMysql'
                 ]
         );

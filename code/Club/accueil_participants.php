@@ -2,14 +2,14 @@
 
 global $config;
 
-$regate = Regate_selectById($_SESSION['ID_regate']);
+$regate = Regate::selectById($_SESSION['ID_regate']);
 //$series = array_keys($regate['series']);
 
 if (
         !isset($_GET['serie'])
         or ( !isset($regate['series'][$_GET['serie']]))
 ) {
-    $series = implode('/', array_keys($regate['series']));
+    $series = implode('/', array_keys(Regate::availableSeriesNames($regate)));
     pageErreur("Il faut spécifier une série ($series)");
     exit(1);
 }
@@ -135,7 +135,7 @@ $donnees = array(
 //    'Autorisation parentale'=> '',
 );
 
-if ($config['whoAmI'] == 'AFL') {
+if (Regate::estLaser($regate)) {
     $donnees_sur_lieu = array(
         "Carte publicité\n(oui/non)" => '',
         "No tél à rejoindre\nen cas de besoin" => '',
@@ -153,7 +153,7 @@ if ($config['whoAmI'] == 'AFL') {
         'Visa médical OK ?' => '',
         'Licence OK ?' => '',
         'Association à la classe OK ?' => '',
-        'Carte ILCA OK ?' => '',
+        'Carte internationale OK ?' => '',
     );
 }
 

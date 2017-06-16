@@ -21,7 +21,7 @@ Layouts::requireJquery();
 <?php if ($config['moduleLanguage']): ?>
         var documentLanguage = '<?php echo LANGUAGE; ?>';
 <?php endif; ?>
-<?php if ($config['whoAmI'] == 'AFL'): ?>
+<?php if (Regate::estLaser($regate)): ?>
         var iAmAFL = true;
 <?php endif; ?>
 <?php if ($comingFromSearchDbf): ?>

@@ -29,6 +29,7 @@
 <!--<h5>Nouvelle méthode d'importation dans FREG (depuis 2014) :</h5>-->
 <!-- On passe désormais par une form !-->
 <?php echo $formHtml; ?>
+<!--
 Si l'exportation par le formulaire ci-dessus pose problèmes, SVP, veuillez le signaler. 
 Seulement pour les régates laser : vous pouvez en tout moment utiliser les anciens scripts pour l'exportation :
 <ul>
@@ -39,6 +40,7 @@ Seulement pour les régates laser : vous pouvez en tout moment utiliser les anci
         Télécharger la liste des <strong>tous les inscrits</strong> au <a href="Liste_inscrits_csv.php">format csv</a>.
     </li>
 </ul>
+-->
 <div class="explication">
     <h4>Comment intégrer le fichier csv sous FREG ?</h4>
     <div class="contenu">
@@ -59,11 +61,13 @@ Seulement pour les régates laser : vous pouvez en tout moment utiliser les anci
             n'est accessible que si vous avez déjà créé au moins un Groupe/Série dans votre régate.
         </p>
 
+        <!--
         <p>Pour vous simplifier, vous pouvez télécharger puis restaurer dans FREG cette régate :  
-            <a href="docs/Regate_Laser_type_pour_import_csv.WDZ">Regate_Laser_type_pour_import_csv.WDZ</a>.
+            <a href="docs/R_Regate_Laser_type_pour_import_csv.WDZ">R_Regate_Laser_type_pour_import_csv.WDZ</a>.
             Tous les Groupes/séries y sont déjà créés.
         </p>
 
+        -->
         <!--
         <p>
             Importez ce fichier dans FREG via le menu<br/>

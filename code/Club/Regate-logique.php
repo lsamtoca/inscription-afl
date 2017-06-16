@@ -2,7 +2,7 @@
 
 require_once 'php/Regate.php';
 require __DIR__ . "/Exportation.php";
-$exportation=new Exportation();
+$exportation = new Exportation();
 $exportation->execute();
 
 $series = new Series();
@@ -113,9 +113,11 @@ function validate_post_and_update() {
 
     $messages = '';
 // VALIDATE AND UPDATE $post
+
     foreach ($fields as $field) {
 
         if (isset($post[$field])) {
+
 
             $postOK = true;
             switch ($field) {
